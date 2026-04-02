@@ -2233,5 +2233,178 @@ renderHome();
 loadThread('jake');
 
 </script>
+
+<!-- SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+
+/* ============================================================
+   SUPABASE — Live database connection
+   ============================================================ */
+
+const SUPABASE_URL = 'https://twwvuiiscaplwkailqzi.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_aWyYHDqSCSUHFaDpcmz_4A_n5pEhu-E';
+
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+/* ---- LOAD listings from Supabase ---- */
+async function loadListingsFromDB() {
+  showDBStatus('loading');
+  try {
+    const { data, error } = await db
+      .from('listings')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      if (error.code === '42P01') {
+        showDBStatus('needs_setup');
+        return;
+      }
+      console.error('Supabase error:', error);
+      showDBStatus('error');
+      return;
+    }
+
+    if (data && data.length > 0) {
+      const dbListings = data.map(row => ({
+        id: row.id,
+        cat: row.category,
+        emoji: row.emoji,
+        bg: row.category === 'food' ? '#E8F5E8' : row.category === 'skill' ? '#FEF3E2' : '#FDF0EC',
+        title: row.title,
+        desc: row.description || 'No description.',
+        trade: row.trade_for || 'Open to offers',
+        user: row.user_name || 'Neighbor',
+        initials: (row.user_name || 'N').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2),
+        av: 'av-green',
+        dist: row.neighborhood || 'Denver',
+        badge: 'New'
+      }));
+      listings.unshift(...dbListings);
+    }
+    showDBStatus('connected');
+    renderHome();
+    renderBrowse();
+  } catch(e) {
+    console.error('Connection error:', e);
+    showDBStatus('error');
+  }
+}
+
+/* ---- SAVE listing to Supabase ---- */
+async function saveListingToDB(listing) {
+  try {
+    const { data, error } = await db
+      .from('listings')
+      .insert([{
+        title: listing.title,
+        description: listing.desc,
+        category: listing.cat,
+        emoji: listing.emoji,
+        trade_for: listing.trade,
+        neighborhood: listing.hood,
+        user_name: 'You'
+      }])
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Save error:', error);
+      showToast('Posted locally — database setup needed to save permanently.');
+      return null;
+    }
+    return data;
+  } catch(e) {
+    console.error('Save failed:', e);
+    return null;
+  }
+}
+
+/* ---- DB STATUS BANNER ---- */
+function showDBStatus(status) {
+  let banner = document.getElementById('db-banner');
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.id = 'db-banner';
+    banner.style.cssText = 'position:fixed;bottom:0;left:0;right:0;padding:10px 1.5rem;font-size:0.82rem;text-align:center;z-index:4000;transition:all 0.3s;font-family:DM Sans,sans-serif;display:flex;align-items:center;justify-content:center;gap:10px;';
+    document.body.appendChild(banner);
+  }
+
+  if (status === 'loading') {
+    banner.style.background = '#1C3A2A';
+    banner.style.color = '#C8DEC8';
+    banner.innerHTML = '⏳ Connecting to database...';
+  } else if (status === 'connected') {
+    banner.style.background = '#2D5C3F';
+    banner.style.color = '#C8DEC8';
+    banner.innerHTML = '✓ Connected to live database — listings save permanently';
+    setTimeout(() => { banner.style.opacity = '0'; setTimeout(()=>banner.remove(),400); }, 3000);
+  } else if (status === 'needs_setup') {
+    banner.style.background = '#D4843A';
+    banner.style.color = '#FFF';
+    banner.innerHTML = '⚠️ Database table not set up yet — <strong style="cursor:pointer;text-decoration:underline" onclick="showSetupInstructions()">click here to fix this</strong>';
+  } else if (status === 'error') {
+    banner.style.background = '#8B4A2A';
+    banner.style.color = '#FFF';
+    banner.innerHTML = '⚠️ Could not connect to database — running with demo data';
+    setTimeout(() => { banner.style.opacity='0'; setTimeout(()=>banner.remove(),400); }, 4000);
+  }
+}
+
+/* ---- SETUP INSTRUCTIONS ---- */
+function showSetupInstructions() {
+  const msg = `To set up your database:\n\n1. Go to supabase.com → your LocalRoots project\n2. Click "SQL Editor" in the left sidebar\n3. Paste and run this SQL:\n\nCREATE TABLE listings (\n  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,\n  created_at timestamptz DEFAULT now(),\n  title text NOT NULL,\n  description text,\n  category text NOT NULL,\n  emoji text,\n  trade_for text,\n  neighborhood text,\n  user_name text\n);\n\nThen refresh this page!`;
+  alert(msg);
+}
+
+/* ---- OVERRIDE submitListing to also save to DB ---- */
+const _originalSubmit = submitListing;
+window.submitListing = async function() {
+  const title = document.getElementById('post-title').value.trim();
+  const desc = document.getElementById('post-desc').value.trim();
+  const trade = document.getElementById('post-trade').value.trim();
+  const hood = document.getElementById('post-hood').value;
+  if (!title) { showToast('Please add a title for your listing'); return; }
+
+  const emojiMap = { food:'🌱', skill:'⭐', goods:'📦' };
+  const bgMap = { food:'#E8F5E8', skill:'#FEF3E2', goods:'#FDF0EC' };
+
+  const newListing = {
+    id: Date.now(),
+    cat: selectedType,
+    emoji: emojiMap[selectedType],
+    bg: bgMap[selectedType],
+    title,
+    desc: desc || 'No description yet.',
+    trade: trade || 'Open to offers',
+    hood,
+    user: 'You',
+    initials: 'ME',
+    av: 'av-dark',
+    dist: hood,
+    badge: 'New'
+  };
+
+  listings.unshift(newListing);
+  closePostModal();
+  document.getElementById('post-title').value = '';
+  document.getElementById('post-desc').value = '';
+  document.getElementById('post-trade').value = '';
+  document.getElementById('stat-listings').textContent = listings.length + 232;
+  renderHome();
+  renderBrowse();
+  showToast('🎉 Posting your listing...');
+
+  const saved = await saveListingToDB(newListing);
+  if (saved) {
+    showToast('🎉 Listing posted and saved to database!');
+  }
+};
+
+/* ---- CONNECT on page load ---- */
+loadListingsFromDB();
+
+</script>
 </body>
 </html>
