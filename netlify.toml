@@ -1,0 +1,10 @@
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "index, follow"
+
+[build]
+  publish = "."
+
+[template.environment]
+  EMAIL_OBFUSCATION = "off"
