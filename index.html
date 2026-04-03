@@ -2437,10 +2437,10 @@ footer {
   </div>
   <div class="footer-bottom">
     <p>© 2026 LocalRoots · Built for communities everywhere 🌍</p>
-    <p>Free forever · No ads · Open to everyone</p>
+    <p>Free forever · Open to everyone</p>
   </div>
   <div style="max-width:920px;margin:1rem auto 0;padding:0 1.5rem;text-align:center;border-top:1px solid rgba(200,222,200,0.08);padding-top:1rem">
-    <p style="color:rgba(200,222,200,0.4);font-size:0.72rem;line-height:1.8">LocalRoots is an independent community platform. We are not affiliated with any government, corporation, or institution.<br>We exist solely to help neighbors trade with neighbors. That's it. That's everything.</p>
+    <p style="color:rgba(200,222,200,0.4);font-size:0.72rem;line-height:1.8">LocalRoots is an independent community platform.<br>We exist solely to help neighbors trade with neighbors. That's it. That's everything.</p>
   </div>
 </footer>
 
@@ -3025,7 +3025,7 @@ function renderHome() {
   const count = listings.length;
   document.getElementById('stat-listings').textContent = count;
   const sub = document.getElementById('home-listing-sub');
-  if (sub) sub.textContent = count === 0 ? 'Worldwide · Be the first to post!' : `Worldwide · ${count} listing${count !== 1 ? 's' : ''} available`;
+  if (sub) sub.textContent = count === 0 ? 'Be the first to post!' : `Worldwide · ${count} listing${count !== 1 ? 's' : ''} available`;
   if (count === 0) {
     document.getElementById('home-grid').innerHTML = `
       <div style="grid-column:1/-1;text-align:center;padding:3rem 1rem">
