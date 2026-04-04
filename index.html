@@ -4004,6 +4004,11 @@ window.submitListing = async function() {
   };
 
   listings.unshift(newListing);
+
+  // Grab photo BEFORE resetting the form
+  const photoInput = document.getElementById('post-photo');
+  const photoFile = photoInput && photoInput.files[0] ? photoInput.files[0] : null;
+
   closePostModal();
   document.getElementById('post-title').value = '';
   document.getElementById('post-desc').value = '';
@@ -4020,13 +4025,24 @@ window.submitListing = async function() {
   if (saved) {
     newListing.id = saved.id;
     newListing.user_id = saved.user_id;
-    const photoUrl = await uploadListingPhoto(saved.id);
-    if (photoUrl) {
-      newListing.photo_url = photoUrl;
-      await db.from('listings').update({ photo_url: photoUrl }).eq('id', saved.id);
-      renderHome();
-      renderBrowse();
+
+    if (photoFile) {
+      try {
+        const ext = photoFile.name.split('.').pop();
+        const path = `listings/${saved.id}.${ext}`;
+        const { error } = await db.storage.from('listing-photos').upload(path, photoFile, { upsert: true });
+        if (!error) {
+          const { data } = db.storage.from('listing-photos').getPublicUrl(path);
+          if (data.publicUrl) {
+            newListing.photo_url = data.publicUrl;
+            await db.from('listings').update({ photo_url: data.publicUrl }).eq('id', saved.id);
+            renderHome();
+            renderBrowse();
+          }
+        } else { console.error('Photo upload error:', error); }
+      } catch(e) { console.error('Photo upload failed:', e); }
     }
+
     showToast('🎉 Listing posted and saved!');
     loadProfileListings();
   }
