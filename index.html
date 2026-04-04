@@ -1646,9 +1646,11 @@ footer {
 @media (max-width: 720px) {
   .nav-links { display: none; }
   .nav-hamburger { display: flex; }
-  .hero { padding: 3.5rem 1rem 0; }
+  .hero { padding: 3.5rem 1rem 6rem; }
   .hero h1 { font-size: 2rem; }
   .hero-stats { gap: 1.5rem; }
+  .hero-actions { flex-direction: column; align-items: center; gap: 0.75rem; }
+  .hero-actions .btn { width: 85%; max-width: 300px; justify-content: center; text-align: center; }
   .features-strip { grid-template-columns: 1fr 1fr; }
   .listing-card { min-width: 0; }
   .msg-layout { grid-template-columns: 1fr; }
@@ -2841,6 +2843,7 @@ function showPage(name) {
   const active = document.querySelector(`.nav-links [data-page="${name}"]`);
   if (active) active.classList.add('active');
   closeNotif();
+  closeMobileNav();
   window.scrollTo(0,0);
   document.title = pageTitles[name] || 'LocalRoots';
   if (name === 'browse') renderBrowse();
