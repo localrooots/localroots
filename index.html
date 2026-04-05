@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="LocalRoots is a free community barter and trade platform where neighbors swap food, garden goods, skills, crafts, and more. No money needed. Join your local community in Salt Lake City and beyond.">
+<meta name="description" content="LocalRoots is a free community barter and trade platform where neighbors swap food, garden goods, skills, crafts, and more. Join your local community.">
 <meta name="keywords" content="barter platform, trade with neighbors, community trading, free barter, swap food, trade skills, Salt Lake City barter, local trade, neighborhood exchange, free community platform, trade garden goods, skill swap, barter app, community exchange">
 <meta name="author" content="LocalRoots">
 <meta name="robots" content="index, follow">
@@ -3854,6 +3854,16 @@ async function saveSettings() {
 
   if (error) { showToast('Could not save please try again'); return; }
 
+  // Also save to profiles table for persistence on refresh
+  await db.from('profiles').upsert({
+    id: currentUser.id,
+    full_name: name || currentUser.user_metadata?.full_name,
+    location: location || currentUser.user_metadata?.location,
+    bio,
+    avatar_url: avatarUrl,
+    avatar_color: avatarColor
+  });
+
   // Use the returned user data so we have the latest metadata
   const updatedUser = data?.user || currentUser;
   updatedUser.user_metadata = {
@@ -4219,7 +4229,18 @@ function onUserLoggedIn(user) {
   document.getElementById('settings-bio').value = bio;
 
   setupInviteSection(user);
-  applyAvatar(user);
+
+  // Load avatar from profiles table to ensure persistence across sessions
+  db.from('profiles').select('avatar_url, avatar_color').eq('id', user.id).single().then(({ data: profile }) => {
+    if (profile) {
+      if (profile.avatar_url) user.user_metadata.avatar_url = profile.avatar_url;
+      if (profile.avatar_color) user.user_metadata.avatar_color = profile.avatar_color;
+      const urlInput = document.getElementById('settings-avatar-url');
+      if (urlInput && profile.avatar_url) urlInput.value = profile.avatar_url;
+    }
+    applyAvatar(user);
+  });
+
   startNotifPolling();
   checkNewMessages();
 }
