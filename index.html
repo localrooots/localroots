@@ -2179,6 +2179,50 @@ footer {
 </div><!-- /page-profile -->
 
 <!-- ============================================================
+     PAGE: PUBLIC PROFILE
+     ============================================================ -->
+<div id="page-public-profile" class="page">
+  <div class="profile-hero">
+    <div class="profile-hero-inner">
+      <div class="profile-avatar-wrap">
+        <div class="profile-avatar" id="pub-avatar" style="width:80px;height:80px;font-size:1.8rem">?</div>
+      </div>
+      <div class="profile-info">
+        <h1 class="profile-name" id="pub-name">Loading...</h1>
+        <div class="profile-location" id="pub-location"></div>
+        <div class="profile-bio" id="pub-bio" style="margin-top:0.5rem;font-size:0.88rem;color:var(--green-pale);max-width:480px;line-height:1.7"></div>
+      </div>
+      <div style="display:flex;gap:0.75rem;margin-left:auto">
+        <button class="btn btn-outline" id="pub-msg-btn" onclick="openPublicProfileMessage()" style="display:none">✉ Message</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:var(--white);border-bottom:1px solid var(--border)">
+    <div class="inner" style="display:flex;gap:3rem;padding-top:0;padding-bottom:0">
+      <div style="text-align:center;padding:1.2rem 0">
+        <div style="font-size:1.4rem;font-weight:700;color:var(--green-dark)" id="pub-listings-count">0</div>
+        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-light)">Listings</div>
+      </div>
+      <div style="text-align:center;padding:1.2rem 0">
+        <div style="font-size:1rem;font-weight:500;color:var(--text-light)" id="pub-member-since"></div>
+        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-light)">Member since</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="inner">
+    <div class="section-heading" style="margin-bottom:1rem;margin-top:1.5rem" id="pub-listings-heading">Listings</div>
+    <div class="mini-listings-grid" id="pub-listings-grid">
+      <div style="grid-column:1/-1;text-align:center;padding:3rem 1rem;color:var(--text-light)">Loading...</div>
+    </div>
+    <div style="margin-top:1.5rem">
+      <button class="btn btn-outline-dark btn-sm" onclick="showPage('browse')">← Back to listings</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
      PAGE: MESSAGES
      ============================================================ -->
 <div id="page-messages" class="page">
@@ -3083,7 +3127,7 @@ function cardHTML(l) {
       <div class="card-footer-row" style="margin-top:10px">
         <div class="avatar-row">
           <div class="avatar ${l.av}">${l.initials}</div>
-          <span class="card-user-name">${l.user}</span>
+          <span class="card-user-name" onclick="event.stopPropagation();${l.user_id ? `viewPublicProfile('${l.user_id}','${l.user}')` : ''}" style="${l.user_id ? 'cursor:pointer;text-decoration:underline;text-underline-offset:2px' : ''}">${l.user}</span>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
           ${l.dist && l.dist !== 'Community' ? `<div class="card-dist">📍 ${l.dist}</div>` : ''}
@@ -3136,7 +3180,18 @@ function openListingDetail(l) {
   document.getElementById('detail-desc').textContent = l.desc;
   document.getElementById('detail-trade').textContent = l.trade || 'Open to offers';
   document.getElementById('detail-avatar').textContent = l.initials || '?';
-  document.getElementById('detail-user').textContent = l.user || 'Neighbor';
+  const detailUser = document.getElementById('detail-user');
+  detailUser.textContent = l.user || 'Neighbor';
+  if (l.user_id && l.user_id !== (currentUser?.id)) {
+    detailUser.style.cursor = 'pointer';
+    detailUser.style.textDecoration = 'underline';
+    detailUser.style.textUnderlineOffset = '2px';
+    detailUser.onclick = () => { closeListingDetail(); viewPublicProfile(l.user_id, l.user); };
+  } else {
+    detailUser.style.cursor = '';
+    detailUser.style.textDecoration = '';
+    detailUser.onclick = null;
+  }
   document.getElementById('detail-location').textContent = '📍 ' + (l.dist || 'Community');
 
   const actions = document.getElementById('detail-actions');
@@ -3314,7 +3369,7 @@ const pageTitles = {
   'our-mission': 'Our mission · LocalRoots',
   privacy: 'Privacy policy · LocalRoots',
   terms: 'Terms of service · LocalRoots',
-  'trust-safety': 'Trust & Safety · LocalRoots',
+  'public-profile': 'Member · LocalRoots',
   events: 'Local Events · LocalRoots',
   contact: 'Contact us · LocalRoots'
 };
@@ -4151,6 +4206,91 @@ function openPostModalWithItem(name, emoji) {
       if (el.textContent === emoji) el.click();
     });
   }, 100);
+}
+
+/* ---- PUBLIC PROFILE ---- */
+let publicProfileUserId = null;
+let publicProfileUserName = null;
+
+async function viewPublicProfile(userId, userName) {
+  publicProfileUserId = userId;
+  publicProfileUserName = userName;
+  showPage('public-profile');
+
+  // Reset
+  document.getElementById('pub-name').textContent = userName || 'Neighbor';
+  document.getElementById('pub-location').textContent = '';
+  document.getElementById('pub-bio').textContent = '';
+  document.getElementById('pub-avatar').textContent = (userName || 'N').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  document.getElementById('pub-listings-count').textContent = '0';
+  document.getElementById('pub-member-since').textContent = '';
+  document.getElementById('pub-listings-heading').textContent = userName ? userName + "'s listings" : 'Listings';
+  document.getElementById('pub-listings-grid').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-light)">Loading...</div>';
+
+  // Show message button if logged in and not own profile
+  const msgBtn = document.getElementById('pub-msg-btn');
+  if (msgBtn) msgBtn.style.display = currentUser && currentUser.id !== userId ? 'flex' : 'none';
+
+  // Load profile data
+  const { data: profile } = await db.from('profiles').select('*').eq('id', userId).single();
+  if (profile) {
+    if (profile.location) document.getElementById('pub-location').textContent = '📍 ' + profile.location;
+    if (profile.bio) document.getElementById('pub-bio').textContent = profile.bio;
+    if (profile.avatar_color) document.getElementById('pub-avatar').style.background = profile.avatar_color;
+    if (profile.avatar_url) {
+      const av = document.getElementById('pub-avatar');
+      av.style.backgroundImage = `url(${profile.avatar_url})`;
+      av.style.backgroundSize = 'cover';
+      av.style.backgroundPosition = 'center';
+      av.textContent = '';
+    }
+    if (profile.created_at) {
+      document.getElementById('pub-member-since').textContent = new Date(profile.created_at).toLocaleDateString('en-US',{month:'short',year:'numeric'});
+    }
+  }
+
+  // Load their listings
+  const { data: listings } = await db.from('listings').select('*').eq('user_id', userId).order('created_at', { ascending: false });
+  const grid = document.getElementById('pub-listings-grid');
+  const count = listings?.length || 0;
+  document.getElementById('pub-listings-count').textContent = count;
+
+  if (!count) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem 1rem"><div style="font-size:2rem;margin-bottom:0.75rem">🌱</div><div style="color:var(--text-light);font-size:0.9rem">No listings yet</div></div>';
+    return;
+  }
+
+  const bgMap = { food:'#E8F5E8', skill:'#FEF3E2', goods:'#FDF0EC' };
+  grid.innerHTML = listings.map(l => {
+    const cat = l.category === 'food' ? 'Food & Garden' : l.category === 'skill' ? 'Skill' : 'Goods';
+    const catClass = 'cat-' + l.category;
+    const listing = {
+      id: l.id, cat: l.category, emoji: l.emoji || '📦',
+      bg: bgMap[l.category] || '#F5F5F5', title: l.title,
+      desc: l.description || 'No description.', trade: l.trade_for || 'Open to offers',
+      user: userName || 'Neighbor',
+      initials: (userName || 'N').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2),
+      av: 'av-green', dist: l.neighborhood || 'Community',
+      user_id: l.user_id, created_at: l.created_at, photo_url: l.photo_url || null
+    };
+    const listingJson = JSON.stringify(listing).replace(/"/g, '&quot;');
+    const imgContent = l.photo_url
+      ? `<img src="${l.photo_url}" style="width:100%;height:100%;object-fit:cover;border-radius:10px 10px 0 0" alt="${l.title}">`
+      : (l.emoji || '📦');
+    return `<div class="mini-listing" onclick="openListingDetail(${listingJson})">
+      <div class="mini-img" style="background:${listing.bg};overflow:hidden">${imgContent}</div>
+      <div class="mini-body">
+        <div class="mini-cat ${catClass}">${cat}</div>
+        <div class="mini-title">${l.title}</div>
+        <div class="mini-trade-pill">↔ ${listing.trade}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openPublicProfileMessage() {
+  if (!currentUser) { openAuthModal(); return; }
+  if (publicProfileUserId) openMessageModal(publicProfileUserId, publicProfileUserName, null, null);
 }
 
 /* ---- PROFILE ---- */
