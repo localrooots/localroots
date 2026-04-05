@@ -3146,11 +3146,14 @@ function getInviteLink(user) {
 function setupInviteSection(user) {
   const link = getInviteLink(user);
   const name = user.user_metadata?.full_name?.split(' ')[0] || 'you';
-
-  document.getElementById('invite-card-logged-out').style.display = 'none';
-  document.getElementById('invite-card-logged-in').style.display = 'block';
-  document.getElementById('invite-link').value = link;
-  document.getElementById('invite-card-label').textContent = `${name}'s personal invite link`;
+  const loggedOut = document.getElementById('invite-card-logged-out');
+  const loggedIn = document.getElementById('invite-card-logged-in');
+  const inviteLink = document.getElementById('invite-link');
+  const inviteLabel = document.getElementById('invite-card-label');
+  if (loggedOut) loggedOut.style.display = 'none';
+  if (loggedIn) loggedIn.style.display = 'block';
+  if (inviteLink) inviteLink.value = link;
+  if (inviteLabel) inviteLabel.textContent = `${name}'s personal invite link`;
 }
 
 function copyInviteLink() {
