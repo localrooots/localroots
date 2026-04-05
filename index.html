@@ -3842,7 +3842,7 @@ async function saveSettings() {
   const avatarUrl = document.getElementById('settings-avatar-url')?.value.trim() || '';
   const avatarColor = selectedAvatarColor || currentUser.user_metadata?.avatar_color || '';
 
-  const { error } = await db.auth.updateUser({
+  const { data, error } = await db.auth.updateUser({
     data: {
       full_name: name || currentUser.user_metadata?.full_name,
       location: location || currentUser.user_metadata?.location,
@@ -3854,7 +3854,9 @@ async function saveSettings() {
 
   if (error) { showToast('Could not save please try again'); return; }
 
-  currentUser.user_metadata = {
+  // Use the returned user data so we have the latest metadata
+  const updatedUser = data?.user || currentUser;
+  updatedUser.user_metadata = {
     ...currentUser.user_metadata,
     full_name: name || currentUser.user_metadata?.full_name,
     location: location || currentUser.user_metadata?.location,
@@ -3862,7 +3864,9 @@ async function saveSettings() {
     avatar_url: avatarUrl,
     avatar_color: avatarColor
   };
+  currentUser = updatedUser;
 
+  // Apply avatar first
   applyAvatar(currentUser);
 
   const updatedName = name || currentUser.user_metadata?.full_name || '';
@@ -3870,21 +3874,14 @@ async function saveSettings() {
   const updatedBio = bio || '';
 
   if (updatedName) {
-    const initials = updatedName.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-    document.getElementById('profile-avatar').textContent = initials;
     document.getElementById('profile-name').textContent = updatedName;
-    document.getElementById('nav-user-av').textContent = initials;
     document.getElementById('nav-user-name').textContent = updatedName.split(' ')[0];
   }
   if (updatedLocation) {
     const memberSince = new Date(currentUser.created_at).toLocaleDateString('en-US',{month:'short',year:'numeric'});
     document.getElementById('profile-location').textContent = '📍 ' + updatedLocation + ' · Member since ' + memberSince;
   }
-  if (updatedBio) {
-    document.getElementById('profile-bio').textContent = updatedBio;
-  } else {
-    document.getElementById('profile-bio').textContent = 'Click to add a bio...';
-  }
+  document.getElementById('profile-bio').textContent = updatedBio || 'Click to add a bio...';
 
   showToast('Profile updated! 🌱');
 }
