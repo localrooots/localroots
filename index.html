@@ -3728,28 +3728,51 @@ function selectAvatarColor(color) {
 
 function applyAvatar(user) {
   const avatarUrl = user.user_metadata?.avatar_url || '';
-  const avatarColor = user.user_metadata?.avatar_color || '';
-  const name = user.user_metadata?.full_name || user.email.split('@')[0];
-  const initials = name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-  const profileAv = document.getElementById('profile-avatar');
-  const navAv = document.getElementById('nav-user-av');
+  const avatarColor = user.user_metadata?.avatar_color || '#2D5C3F';
+  const name = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
+  const initials = name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2) || '?';
+
+  const els = {
+    profileAv: document.getElementById('profile-avatar'),
+    navAv: document.getElementById('nav-user-av'),
+    settingsPreview: document.getElementById('settings-avatar-preview'),
+    settingsImg: document.getElementById('settings-avatar-img'),
+    settingsInitials: document.getElementById('settings-avatar-initials'),
+    settingsUrl: document.getElementById('settings-avatar-url')
+  };
+
   if (avatarUrl) {
-    if (profileAv) { profileAv.style.backgroundImage = `url(${avatarUrl})`; profileAv.style.backgroundSize = 'cover'; profileAv.style.backgroundPosition = 'center'; profileAv.textContent = ''; }
-    if (navAv) { navAv.style.backgroundImage = `url(${avatarUrl})`; navAv.style.backgroundSize = 'cover'; navAv.style.backgroundPosition = 'center'; navAv.textContent = ''; }
+    // Photo mode
+    [els.profileAv, els.navAv].forEach(el => {
+      if (!el) return;
+      el.textContent = '';
+      el.style.backgroundImage = `url(${avatarUrl})`;
+      el.style.backgroundSize = 'cover';
+      el.style.backgroundPosition = 'center';
+      el.style.background = '';
+    });
+    if (els.settingsImg) { els.settingsImg.src = avatarUrl; els.settingsImg.style.display = 'block'; }
+    if (els.settingsInitials) els.settingsInitials.style.display = 'none';
   } else {
-    if (avatarColor) { if (profileAv) profileAv.style.background = avatarColor; if (navAv) navAv.style.background = avatarColor; }
-    if (profileAv) profileAv.textContent = initials;
-    if (navAv) navAv.textContent = initials;
+    // Initials + color mode
+    [els.profileAv, els.navAv].forEach(el => {
+      if (!el) return;
+      el.style.backgroundImage = '';
+      el.style.background = avatarColor;
+      el.textContent = initials;
+    });
+    if (els.settingsImg) els.settingsImg.style.display = 'none';
+    if (els.settingsInitials) { els.settingsInitials.style.display = 'block'; els.settingsInitials.textContent = initials; }
+    if (els.settingsPreview) els.settingsPreview.style.background = avatarColor;
   }
-  const settingsPreview = document.getElementById('settings-avatar-preview');
-  const settingsImg = document.getElementById('settings-avatar-img');
-  const settingsInitials = document.getElementById('settings-avatar-initials');
-  if (settingsPreview && settingsImg && settingsInitials) {
-    if (avatarUrl) { settingsImg.src = avatarUrl; settingsImg.style.display = 'block'; settingsInitials.style.display = 'none'; }
-    else { settingsInitials.textContent = initials; settingsInitials.style.display = 'block'; settingsImg.style.display = 'none'; if (avatarColor) settingsPreview.style.background = avatarColor; }
-    const urlInput = document.getElementById('settings-avatar-url');
-    if (urlInput) urlInput.value = avatarUrl || '';
-  }
+
+  if (els.settingsUrl) els.settingsUrl.value = avatarUrl;
+
+  // Highlight selected color swatch
+  document.querySelectorAll('.av-color-opt').forEach(el => {
+    el.style.outline = el.style.background === avatarColor ? '3px solid white' : 'none';
+    el.style.outlineOffset = '2px';
+  });
 }
 
 /* ---- PROFILE ---- */
@@ -3840,58 +3863,44 @@ async function saveSettings() {
   const location = document.getElementById('settings-location').value.trim();
   const bio = document.getElementById('settings-bio').value.trim();
   const avatarUrl = document.getElementById('settings-avatar-url')?.value.trim() || '';
-  const avatarColor = selectedAvatarColor || currentUser.user_metadata?.avatar_color || '';
+  const avatarColor = selectedAvatarColor || currentUser.user_metadata?.avatar_color || '#2D5C3F';
 
-  const { data, error } = await db.auth.updateUser({
-    data: {
-      full_name: name || currentUser.user_metadata?.full_name,
-      location: location || currentUser.user_metadata?.location,
-      bio,
-      avatar_url: avatarUrl,
-      avatar_color: avatarColor
-    }
+  // Save to Supabase Auth
+  const { error } = await db.auth.updateUser({
+    data: { full_name: name, location, bio, avatar_url: avatarUrl, avatar_color: avatarColor }
   });
 
-  if (error) { showToast('Could not save please try again'); return; }
+  if (error) { showToast('Could not save — please try again'); return; }
 
-  // Also save to profiles table for persistence on refresh
+  // Save to profiles table as persistent backup
   await db.from('profiles').upsert({
     id: currentUser.id,
-    full_name: name || currentUser.user_metadata?.full_name,
-    location: location || currentUser.user_metadata?.location,
+    full_name: name,
+    location,
     bio,
     avatar_url: avatarUrl,
     avatar_color: avatarColor
   });
 
-  // Use the returned user data so we have the latest metadata
-  const updatedUser = data?.user || currentUser;
-  updatedUser.user_metadata = {
+  // Update local user object
+  currentUser.user_metadata = {
     ...currentUser.user_metadata,
-    full_name: name || currentUser.user_metadata?.full_name,
-    location: location || currentUser.user_metadata?.location,
+    full_name: name,
+    location,
     bio,
     avatar_url: avatarUrl,
     avatar_color: avatarColor
   };
-  currentUser = updatedUser;
 
-  // Apply avatar first
+  // Apply everything
   applyAvatar(currentUser);
 
-  const updatedName = name || currentUser.user_metadata?.full_name || '';
-  const updatedLocation = location || currentUser.user_metadata?.location || '';
-  const updatedBio = bio || '';
-
-  if (updatedName) {
-    document.getElementById('profile-name').textContent = updatedName;
-    document.getElementById('nav-user-name').textContent = updatedName.split(' ')[0];
-  }
-  if (updatedLocation) {
-    const memberSince = new Date(currentUser.created_at).toLocaleDateString('en-US',{month:'short',year:'numeric'});
-    document.getElementById('profile-location').textContent = '📍 ' + updatedLocation + ' · Member since ' + memberSince;
-  }
-  document.getElementById('profile-bio').textContent = updatedBio || 'Click to add a bio...';
+  // Update visible text
+  document.getElementById('profile-name').textContent = name;
+  document.getElementById('nav-user-name').textContent = name.split(' ')[0];
+  const memberSince = new Date(currentUser.created_at).toLocaleDateString('en-US',{month:'short',year:'numeric'});
+  document.getElementById('profile-location').textContent = '📍 ' + (location || 'Community') + ' · Member since ' + memberSince;
+  document.getElementById('profile-bio').textContent = bio || 'Click to add a bio...';
 
   showToast('Profile updated! 🌱');
 }
@@ -4199,7 +4208,6 @@ async function initAuth() {
 
 function onUserLoggedIn(user) {
   const name = user.user_metadata?.full_name || user.email.split('@')[0];
-  const initials = name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
   const location = user.user_metadata?.location || '';
   const bio = user.user_metadata?.bio || '';
   const memberSince = new Date(user.created_at).toLocaleDateString('en-US',{month:'short',year:'numeric'});
@@ -4228,21 +4236,22 @@ function onUserLoggedIn(user) {
 
   setupInviteSection(user);
 
-  // Load avatar from profiles table — single source of truth
-  db.from('profiles').select('avatar_url, avatar_color, full_name, location, bio').eq('id', user.id).single().then(({ data: profile }) => {
-    if (profile) {
-      if (profile.avatar_url) user.user_metadata.avatar_url = profile.avatar_url;
-      if (profile.avatar_color) user.user_metadata.avatar_color = profile.avatar_color;
-      const urlInput = document.getElementById('settings-avatar-url');
-      if (urlInput) urlInput.value = profile.avatar_url || '';
-    }
-    // Set initials as default — applyAvatar will override with color/photo
-    const navAv = document.getElementById('nav-user-av');
-    const profileAv = document.getElementById('profile-avatar');
-    if (navAv) navAv.textContent = initials;
-    if (profileAv) profileAv.textContent = initials;
-    applyAvatar(user);
-  });
+  // Load avatar_color and avatar_url from profiles table (most reliable source)
+  db.from('profiles')
+    .select('avatar_url, avatar_color')
+    .eq('id', user.id)
+    .single()
+    .then(({ data: profile }) => {
+      if (profile?.avatar_color) user.user_metadata.avatar_color = profile.avatar_color;
+      if (profile?.avatar_url) user.user_metadata.avatar_url = profile.avatar_url;
+      currentUser = user;
+      applyAvatar(user);
+    })
+    .catch(() => {
+      // Fallback to auth metadata if profiles query fails
+      currentUser = user;
+      applyAvatar(user);
+    });
 
   startNotifPolling();
   checkNewMessages();
