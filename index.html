@@ -1891,18 +1891,18 @@ footer {
      ============================================================ -->
 <div id="page-home" class="page active">
 
-  <!-- Hero clean and simple -->
+  <!-- Hero -->
   <section class="hero">
     <div class="hero-tag">Your neighborhood · Your community</div>
     <h1>Trade what you have<br>for what you <em>need</em></h1>
-    <p class="hero-sub">Everything your community grows, makes, knows, and does all in one place. Trade freely with the Neighbors around you.</p>
+    <p class="hero-sub">Everything your community grows, makes, knows, and does — all in one place. Trade freely with the neighbors around you.</p>
     <div class="hero-actions">
       <button class="btn btn-primary" onclick="showPage('browse')">Browse listings</button>
       <button class="btn btn-outline" onclick="openPostModal()">+ Post something</button>
     </div>
   </section>
 
-  <!-- Listings the star of the page -->
+  <!-- Recent listings -->
   <div class="inner">
     <div style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.25rem">
       <div>
@@ -1914,118 +1914,74 @@ footer {
     <div class="listings-grid" id="home-grid"></div>
   </div>
 
-  <!-- What you can trade compact version -->
-  <div id="seasonal-section" style="padding:2rem 1.5rem 0.5rem">
-    <div style="max-width:1000px;margin:0 auto">
-      <div style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;margin-bottom:1.2rem">
-        <div>
-          <div class="section-heading" id="seasonal-heading">What's growing in Bountiful</div>
-          
-        </div>
-      </div>
-      <div id="seasonal-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.85rem"></div>
-    </div>
-  </div>
-
-  <!-- What you can trade compact version -->
-  <div style="background:var(--white);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:2.5rem 1.5rem;margin-top:1rem">
-    <div style="max-width:1000px;margin:0 auto">
-      <div style="text-align:center;margin-bottom:2rem">
-        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.5rem,3vw,2rem);color:var(--green-dark);font-weight:700;margin-bottom:0.5rem">Whatever you grow, make, or know <br><em style="color:var(--amber);font-style:italic">someone nearby wants it</em></h2>
-        <p style="font-size:0.88rem;color:var(--text-light);max-width:460px;margin:0 auto">Your garden surplus, your craft, your niche skill it all has value here.</p>
-      </div>
-      <div class="features-strip">
-        <div class="feature-pill" style="flex-direction:column;gap:0.75rem">
-          <div style="display:flex;align-items:center;gap:10px">
-            <div class="feature-icon green">🌱</div>
-            <div>
-              <div class="feature-title">Food & Garden</div>
-              <div style="font-size:0.75rem;color:var(--text-light)">Grow it · Preserve it · Share it</div>
-            </div>
-          </div>
-          <div class="feature-desc">Vegetables, eggs, honey, jam, sourdough, seeds, herbs, ferments, cuttings if it came from your hands or garden, post it.</div>
-          <div style="display:flex;flex-wrap:wrap;gap:5px">
-            <span style="background:rgba(74,139,92,0.07);color:var(--green-mid);font-size:0.72rem;padding:3px 10px;border-radius:var(--radius-pill);border:1px solid rgba(74,139,92,0.15)">🍅 Produce</span>
-            <span style="background:rgba(74,139,92,0.07);color:var(--green-mid);font-size:0.72rem;padding:3px 10px;border-radius:var(--radius-pill);border:1px solid rgba(74,139,92,0.15)">🥚 Eggs</span>
-            <span style="background:rgba(74,139,92,0.07);color:var(--green-mid);font-size:0.72rem;padding:3px 10px;border-radius:var(--radius-pill);border:1px solid rgba(74,139,92,0.15)">🍯 Preserves</span>
-            <span style="background:rgba(74,139,92,0.07);color:var(--green-mid);font-size:0.72rem;padding:3px 10px;border-radius:var(--radius-pill);border:1px solid rgba(74,139,92,0.15)">🌱 Seeds</span>
-            <span style="background:rgba(74,139,92,0.07);color:var(--green-mid);font-size:0.72rem;padding:3px 10px;border-radius:var(--radius-pill);border:1px solid rgba(74,139,92,0.15)">🍞 Baked goods</span>
-          </div>
-        </div>
-        <div class="feature-pill" style="flex-direction:column;gap:0.75rem">
-          <div style="display:flex;align-items:center;gap:10px">
-            <div class="feature-icon amber">✨</div>
-            <div>
-              <div class="feature-title">Skills, Crafts & Niches</div>
-              <div style="font-size:0.75rem;color:var(--text-light)">Teach it · Make it · Do it</div>
-            </div>
-          </div>
-          <div class="feature-desc">Carpentry, music, sewing, coding, photography, yoga, tutoring, baking, art your niche is your trade.</div>
-          <div style="display:flex;flex-wrap:wrap;gap:5px">
-            <span style="background:rgba(212,132,58,0.07);color:var(--amber);font-size:0.72rem;padding:3px 10px;border-radius:var(--radius-pill);border:1px solid rgba(212,132,58,0.15)">🔨 Trades</span>
-            <span style="background:rgba(212,132,58,0.07);color:var(--amber);font-size:0.72rem;padding:3px 10px;border-radius:var(--radius-pill);border:1px solid rgba(212,132,58,0.15)">🎨 Crafts</span>
-            <span style="background:rgba(212,132,58,0.07);color:var(--amber);font-size:0.72rem;padding:3px 10px;border-radius:var(--radius-pill);border:1px solid rgba(212,132,58,0.15)">📚 Teaching</span>
-            <span style="background:rgba(212,132,58,0.07);color:var(--amber);font-size:0.72rem;padding:3px 10px;border-radius:var(--radius-pill);border:1px solid rgba(212,132,58,0.15)">💻 Tech</span>
-            <span style="background:rgba(212,132,58,0.07);color:var(--amber);font-size:0.72rem;padding:3px 10px;border-radius:var(--radius-pill);border:1px solid rgba(212,132,58,0.15)">🎵 Music</span>
-          </div>
-        </div>
-        <div class="feature-pill" style="flex-direction:column;gap:0.75rem">
-          <div style="display:flex;align-items:center;gap:10px">
-            <div class="feature-icon terra">📦</div>
-            <div>
-              <div class="feature-title">Goods & Supplies</div>
-              <div style="font-size:0.75rem;color:var(--text-light)">Pass it on · Clear it out</div>
-            </div>
-          </div>
-          <div class="feature-desc">Books, tools, clothing, furniture, bikes, garden gear, kitchen equipment if it's sitting unused, trade it.</div>
-          <div style="display:flex;flex-wrap:wrap;gap:5px">
-            <span style="background:rgba(139,74,42,0.07);color:var(--terra);font-size:0.72rem;padding:3px 10px;border-radius:var(--radius-pill);border:1px solid rgba(139,74,42,0.15)">📚 Books</span>
-            <span style="background:rgba(139,74,42,0.07);color:var(--terra);font-size:0.72rem;padding:3px 10px;border-radius:var(--radius-pill);border:1px solid rgba(139,74,42,0.15)">🧰 Tools</span>
-            <span style="background:rgba(139,74,42,0.07);color:var(--terra);font-size:0.72rem;padding:3px 10px;border-radius:var(--radius-pill);border:1px solid rgba(139,74,42,0.15)">👕 Clothing</span>
-            <span style="background:rgba(139,74,42,0.07);color:var(--terra);font-size:0.72rem;padding:3px 10px;border-radius:var(--radius-pill);border:1px solid rgba(139,74,42,0.15)">🚲 Bikes</span>
-            <span style="background:rgba(139,74,42,0.07);color:var(--terra);font-size:0.72rem;padding:3px 10px;border-radius:var(--radius-pill);border:1px solid rgba(139,74,42,0.15)">🛏️ Furniture</span>
-          </div>
-        </div>
-      </div>
-      <div style="text-align:center;margin-top:1.5rem;padding:1.2rem;background:rgba(44,92,63,0.05);border-radius:var(--radius);border:1px solid var(--border)">
-        <p style="font-size:0.9rem;color:var(--green-dark);font-weight:500;margin-bottom:0.25rem">Got a skill or niche nobody else has? That's exactly what makes LocalRoots work.</p>
-        <p style="font-size:0.8rem;color:var(--text-light)">Beekeeping, pottery, sourdough starters, furniture restoration, candle making, gardening, ETC. If you do it, grow it, or make it, someone nearby wants it. Post it.</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- How it works 3 steps, short -->
+  <!-- How it works -->
   <div class="how-section">
     <div class="how-inner">
       <div class="how-title">How it works</div>
       <div class="how-sub">Three simple steps to your first trade</div>
       <div class="steps-grid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem;align-items:stretch">
-
         <div class="step-card">
           <div class="step-num-badge">1</div>
           <h4>Post what you have</h4>
           <p>Food from your garden, a skill you can teach, or something you no longer need. Add a photo, set what you want in return, and you're live in under a minute.</p>
-          <div class="step-hint">🌱 Food &nbsp;·&nbsp; 🔨 Skills &nbsp;·&nbsp; 📦 Goods</div>
         </div>
-
         <div class="step-card">
           <div class="step-num-badge">2</div>
           <h4>Find &amp; message a neighbor</h4>
-          <p>Browse what your community is offering. When something catches your eye, message them directly. No fees, no platform in the middle just a real conversation.</p>
-          <div class="step-hint">💬 Built-in messaging</div>
+          <p>Browse what your community is offering. When something catches your eye, message them directly. No fees, no platform in the middle — just a real conversation.</p>
         </div>
-
         <div class="step-card">
           <div class="step-num-badge">3</div>
           <h4>Meet up &amp; make the trade</h4>
-          <p>Agree on a swap that works for both of you. Meet somewhere local, make the exchange, and walk away with something you actually needed and a neighbor you actually know.</p>
-          <div class="step-hint">🤝 Always free &nbsp;·&nbsp; Always local</div>
+          <p>Agree on a swap that works for both of you. Meet somewhere local, make the exchange, and walk away with something you needed and a neighbor you actually know.</p>
         </div>
-
       </div>
       <div style="text-align:center;margin-top:2.5rem">
-        <button class="btn btn-primary" onclick="openPostModal()">+ Post listing </button>
+        <button class="btn btn-primary" onclick="openPostModal()">Post your first listing →</button>
       </div>
+    </div>
+  </div>
+
+  <!-- What you can trade - simplified -->
+  <div style="padding:2.5rem 1.5rem;background:var(--cream);border-top:1px solid var(--border)">
+    <div style="max-width:1000px;margin:0 auto">
+      <div style="text-align:center;margin-bottom:1.8rem">
+        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.4rem,2.5vw,1.9rem);color:var(--green-dark);font-weight:700;margin-bottom:0.4rem">Whatever you grow, make, or know</h2>
+        <em style="color:var(--amber);font-style:italic;font-family:'Playfair Display',serif;font-size:clamp(1.1rem,2vw,1.4rem)">someone nearby wants it</em>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem">
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;display:flex;align-items:flex-start;gap:12px">
+          <div class="feature-icon green" style="flex-shrink:0">🌱</div>
+          <div>
+            <div class="feature-title">Food & Garden</div>
+            <div style="font-size:0.82rem;color:var(--text-light);margin-top:4px;line-height:1.6">Vegetables, eggs, honey, jam, sourdough, seeds, herbs, ferments — if it came from your garden, post it.</div>
+          </div>
+        </div>
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;display:flex;align-items:flex-start;gap:12px">
+          <div class="feature-icon amber" style="flex-shrink:0">✨</div>
+          <div>
+            <div class="feature-title">Skills, Crafts & Niches</div>
+            <div style="font-size:0.82rem;color:var(--text-light);margin-top:4px;line-height:1.6">Carpentry, music, sewing, photography, tutoring, baking — your skill is your trade.</div>
+          </div>
+        </div>
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;display:flex;align-items:flex-start;gap:12px">
+          <div class="feature-icon terra" style="flex-shrink:0">📦</div>
+          <div>
+            <div class="feature-title">Goods & Supplies</div>
+            <div style="font-size:0.82rem;color:var(--text-light);margin-top:4px;line-height:1.6">Books, tools, clothing, bikes, furniture, kitchen gear — if it's sitting unused, trade it.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- What's growing in Bountiful -->
+  <div id="seasonal-section" style="padding:2rem 1.5rem 0.5rem;background:var(--cream)">
+    <div style="max-width:1000px;margin:0 auto">
+      <div style="margin-bottom:1.2rem">
+        <div class="section-heading" id="seasonal-heading">What's growing in Bountiful</div>
+      </div>
+      <div id="seasonal-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.85rem"></div>
     </div>
   </div>
 
