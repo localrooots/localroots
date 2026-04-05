@@ -3831,8 +3831,8 @@ const seasonalData = {
   2:  [ // March
     { name: 'Spinach', emoji: '🥬', tip: 'First spring green' },
     { name: 'Radishes', emoji: '🌶️', tip: 'Ready in 25 days' },
-    { name: 'Peas', emoji: '🫛', tip: 'Plant now, harvest May' },
-    { name: 'Lettuce', emoji: '🥗', tip: 'Cold tolerant starts' },
+    { name: 'Peas', emoji: '🌿', tip: 'Plant now, harvest May' },
+    { name: 'Lettuce', emoji: '🥬', tip: 'Cold tolerant starts' },
     { name: 'Chives', emoji: '🌿', tip: 'First herb of spring' },
   ],
   3:  [ // April
@@ -3840,13 +3840,13 @@ const seasonalData = {
     { name: 'Radishes', emoji: '🌶️', tip: 'Quick and easy' },
     { name: 'Spinach', emoji: '🥬', tip: 'Peak spring green' },
     { name: 'Rhubarb', emoji: '🌿', tip: 'First stalks emerging' },
-    { name: 'Lettuce', emoji: '🥗', tip: 'Cool season peak' },
-    { name: 'Peas', emoji: '🫛', tip: 'Sugar snaps coming' },
+    { name: 'Lettuce', emoji: '🥬', tip: 'Cool season peak' },
+    { name: 'Peas', emoji: '🌿', tip: 'Sugar snaps coming' },
   ],
   4:  [ // May
     { name: 'Strawberries', emoji: '🍓', tip: 'Early Utah berries' },
-    { name: 'Peas', emoji: '🫛', tip: 'Sugar snaps ready' },
-    { name: 'Lettuce', emoji: '🥗', tip: 'Best before heat' },
+    { name: 'Peas', emoji: '🌿', tip: 'Sugar snaps ready' },
+    { name: 'Lettuce', emoji: '🥬', tip: 'Best before heat' },
     { name: 'Rhubarb', emoji: '🌿', tip: 'Peak harvest time' },
     { name: 'Radishes', emoji: '🌶️', tip: 'Last of spring crop' },
     { name: 'Herbs', emoji: '🌿', tip: 'Basil, cilantro, dill' },
@@ -3856,7 +3856,7 @@ const seasonalData = {
     { name: 'Cherries', emoji: '🍒', tip: 'Utah cherry season' },
     { name: 'Zucchini', emoji: '🥒', tip: 'The season begins' },
     { name: 'Herbs', emoji: '🌿', tip: 'Basil at its best' },
-    { name: 'Peas', emoji: '🫛', tip: 'Last of the season' },
+    { name: 'Peas', emoji: '🌿', tip: 'Last of the season' },
     { name: 'Garlic scapes', emoji: '🧄', tip: 'Before bulb harvest' },
   ],
   6:  [ // July
@@ -3920,10 +3920,19 @@ function renderSeasonal() {
       onmouseout="this.style.transform='';this.style.boxShadow='var(--shadow)'">
       <div style="font-size:2rem;margin-bottom:0.5rem">${item.emoji}</div>
       <div style="font-size:0.88rem;font-weight:500;color:var(--green-dark);margin-bottom:0.25rem">${item.name}</div>
-      <div style="font-size:0.72rem;color:var(--text-light);margin-bottom:0.75rem">${item.tip}</div>
-      <div style="font-size:0.72rem;background:rgba(44,92,63,0.08);color:var(--green-mid);padding:3px 8px;border-radius:20px;display:inline-block;border:1px solid rgba(44,92,63,0.15)">Post yours →</div>
+      <div style="font-size:0.72rem;color:var(--text-light)">${item.tip}</div>
     </div>
   `).join('');
+
+  // Single post button below the grid
+  let btn = document.getElementById('seasonal-post-btn');
+  if (!btn) {
+    btn = document.createElement('div');
+    btn.id = 'seasonal-post-btn';
+    btn.style.cssText = 'margin-top:1rem;text-align:center';
+    grid.parentNode.appendChild(btn);
+  }
+  btn.innerHTML = `<button class="btn btn-outline-dark btn-sm" onclick="openPostModal()">Got something growing? Post it →</button>`;
 }
 
 function openPostModalWithItem(name, emoji) {
