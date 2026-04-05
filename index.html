@@ -1919,7 +1919,7 @@ footer {
       <div style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;margin-bottom:1.2rem">
         <div>
           <div class="section-heading" id="seasonal-heading">What's growing in Bountiful</div>
-          <div class="section-sub-text" id="seasonal-sub">In season right now</div>
+          
         </div>
       </div>
       <div id="seasonal-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:0.85rem"></div>
@@ -3843,13 +3843,11 @@ const seasonalData = {
   3: [ // April
     { name: 'Asparagus', emoji: '🥦', tip: 'Utah spring classic' },
     { name: 'Rhubarb', emoji: '🍓', tip: 'First stalks of the year' },
-    { name: 'Radishes', emoji: '🌶️', tip: 'French breakfast variety' },
+    { name: 'Radishes', emoji: '🌶️', tip: 'Ready in 25 days' },
     { name: 'Mint', emoji: '🌿', tip: 'Spearmint, peppermint, mojito' },
-    { name: 'Chives', emoji: '🌿', tip: 'Purple blooms are edible too' },
-    { name: 'Dill', emoji: '🌿', tip: 'Great with eggs and salmon' },
-    { name: 'Aloe vera', emoji: '🌵', tip: 'Cuttings and pups to share' },
+    { name: 'Aloe vera', emoji: '🌵', tip: 'Pups and cuttings to share' },
     { name: 'Honey', emoji: '🍯', tip: 'Spring wildflower harvest' },
-    { name: 'Eggs', emoji: '🥚', tip: 'Hens ramping up laying' },
+    { name: 'Eggs', emoji: '🥚', tip: 'Hens laying at peak' },
     { name: 'Seedlings', emoji: '🌱', tip: 'Tomato, pepper, squash starts' },
   ],
   4: [ // May
@@ -3938,7 +3936,7 @@ function renderSeasonal() {
   if (!grid) return;
   const month = new Date().getMonth();
   const items = seasonalData[month] || [];
-  if (sub) sub.textContent = `In season this ${monthNames[month]} in Utah`;
+  if (sub) sub.style.display = 'none';
   grid.innerHTML = items.map(item => `
     <div onclick="openPostModalWithItem('${item.name}','${item.emoji}')"
       style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;text-align:center;cursor:pointer;transition:all 0.2s;box-shadow:var(--shadow)"
