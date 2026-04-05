@@ -3811,11 +3811,15 @@ async function loadProfileListings() {
       av: 'av-green',
       dist: l.neighborhood || 'Community',
       user_id: l.user_id || null,
-      created_at: l.created_at || null
+      created_at: l.created_at || null,
+      photo_url: l.photo_url || null
     };
     const listingJson = JSON.stringify(listing).replace(/"/g, '&quot;');
+    const imgContent = listing.photo_url
+      ? `<img src="${listing.photo_url}" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:10px 10px 0 0" alt="${l.title}">`
+      : listing.emoji;
     return `<div class="mini-listing" onclick="openListingDetail(${listingJson})">
-      <div class="mini-img" style="background:${listing.bg}">${listing.emoji}</div>
+      <div class="mini-img" style="background:${listing.bg};overflow:hidden">${imgContent}</div>
       <div class="mini-body">
         <div class="mini-cat ${catClass}">${cat}</div>
         <div class="mini-title">${l.title}</div>
