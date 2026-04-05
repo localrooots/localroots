@@ -275,7 +275,7 @@ nav {
 /* HERO */
 .hero {
   background: var(--green-dark);
-  padding: 5rem 1.5rem 4rem;
+  padding: 6rem 1.5rem 5rem;
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -1779,7 +1779,7 @@ footer {
 @media (max-width: 720px) {
   .nav-links { display: none; }
   .nav-hamburger { display: flex; }
-  .hero { padding: 3rem 1rem 4.5rem; }
+  .hero { padding: 3.5rem 1rem 6rem; }
   .hero h1 { font-size: 2rem; }
   .hero-stats { gap: 1.5rem; }
   .hero-actions { flex-direction: column; align-items: center; gap: 0.75rem; }
@@ -1894,7 +1894,7 @@ footer {
   <section class="hero">
     <div class="hero-tag">Your neighborhood · Your community</div>
     <h1>Trade what you have<br>for what you <em>need</em></h1>
-    <p class="hero-sub">Everything your community grows, makes, knows, and does all in one place. Trade freely with the neighbors around you.</p>
+    <p class="hero-sub">Everything your community grows, makes, knows, and does all in one place. Trade freely with the Neighbors around you.</p>
     <div class="hero-actions">
       <button class="btn btn-primary" onclick="showPage('browse')">Browse listings</button>
       <button class="btn btn-outline" onclick="openPostModal()">+ Post something</button>
@@ -1911,6 +1911,19 @@ footer {
       <button class="btn btn-outline-dark btn-sm" onclick="showPage('browse')">See all →</button>
     </div>
     <div class="listings-grid" id="home-grid"></div>
+  </div>
+
+  <!-- What you can trade compact version -->
+  <div id="seasonal-section" style="padding:2rem 1.5rem 0.5rem">
+    <div style="max-width:1000px;margin:0 auto">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;margin-bottom:1.2rem">
+        <div>
+          <div class="section-heading" id="seasonal-heading">What's growing in Salt Lake City</div>
+          <div class="section-sub-text" id="seasonal-sub">In season right now</div>
+        </div>
+      </div>
+      <div id="seasonal-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:0.85rem"></div>
+    </div>
   </div>
 
   <!-- What you can trade compact version -->
@@ -1973,6 +1986,10 @@ footer {
           </div>
         </div>
       </div>
+      <div style="text-align:center;margin-top:1.5rem;padding:1.2rem;background:rgba(44,92,63,0.05);border-radius:var(--radius);border:1px solid var(--border)">
+        <p style="font-size:0.9rem;color:var(--green-dark);font-weight:500;margin-bottom:0.25rem">Got a skill or niche nobody else has? That's exactly what makes LocalRoots work.</p>
+        <p style="font-size:0.8rem;color:var(--text-light)">Beekeeping, pottery, sourdough starters, furniture restoration, candle making, gardening, ETC. If you do it, grow it, or make it, someone nearby wants it. Post it.</p>
+      </div>
     </div>
   </div>
 
@@ -1987,18 +2004,21 @@ footer {
           <div class="step-num-badge">1</div>
           <h4>Post what you have</h4>
           <p>Food from your garden, a skill you can teach, or something you no longer need. Add a photo, set what you want in return, and you're live in under a minute.</p>
+          <div class="step-hint">🌱 Food &nbsp;·&nbsp; 🔨 Skills &nbsp;·&nbsp; 📦 Goods</div>
         </div>
 
         <div class="step-card">
           <div class="step-num-badge">2</div>
           <h4>Find &amp; message a neighbor</h4>
           <p>Browse what your community is offering. When something catches your eye, message them directly. No fees, no platform in the middle just a real conversation.</p>
+          <div class="step-hint">💬 Built-in messaging</div>
         </div>
 
         <div class="step-card">
           <div class="step-num-badge">3</div>
           <h4>Meet up &amp; make the trade</h4>
           <p>Agree on a swap that works for both of you. Meet somewhere local, make the exchange, and walk away with something you actually needed and a neighbor you actually know.</p>
+          <div class="step-hint">🤝 Always free &nbsp;·&nbsp; Always local</div>
         </div>
 
       </div>
@@ -2980,7 +3000,7 @@ function showPage(name) {
   window.scrollTo(0,0);
   document.title = pageTitles[name] || 'LocalRoots';
   if (name === 'browse') renderBrowse();
-  if (name === 'home') renderHome();
+  if (name === 'home') { renderHome(); renderSeasonal(); }
   if (name === 'messages') loadConversations();
   if (name === 'profile') showProfilePage();
 }
@@ -3007,10 +3027,10 @@ async function submitContact() {
       document.getElementById('contact-msg').value = '';
       showToast('Message sent! We will reply within 24 hours. 🌱');
     } else {
-      showToast('Could not send please try again');
+      showToast('Could not send — please try again');
     }
   } catch(e) {
-    showToast('Could not send please check your connection');
+    showToast('Could not send — please check your connection');
   } finally {
     if (btn) { btn.textContent = 'Send message →'; btn.disabled = false; }
   }
@@ -3794,6 +3814,135 @@ function applyAvatar(user) {
   });
 }
 
+/* ---- SEASONAL SECTION ---- */
+const seasonalData = {
+  0:  [ // January
+    { name: 'Stored apples', emoji: '🍎', tip: 'Root cellar favorites' },
+    { name: 'Kale', emoji: '🥬', tip: 'Cold hardy, still growing' },
+    { name: 'Stored squash', emoji: '🎃', tip: 'From fall harvest' },
+    { name: 'Sprouts', emoji: '🌱', tip: 'Easy to grow indoors' },
+  ],
+  1:  [ // February
+    { name: 'Microgreens', emoji: '🌿', tip: 'Perfect indoor grow' },
+    { name: 'Stored root veg', emoji: '🥕', tip: 'Carrots, beets, turnips' },
+    { name: 'Kale', emoji: '🥬', tip: 'Overwintered varieties' },
+    { name: 'Sprouts', emoji: '🌱', tip: 'Grow any time of year' },
+  ],
+  2:  [ // March
+    { name: 'Spinach', emoji: '🥬', tip: 'First spring green' },
+    { name: 'Radishes', emoji: '🌶️', tip: 'Ready in 25 days' },
+    { name: 'Peas', emoji: '🫛', tip: 'Plant now, harvest May' },
+    { name: 'Lettuce', emoji: '🥗', tip: 'Cold tolerant starts' },
+    { name: 'Chives', emoji: '🌿', tip: 'First herb of spring' },
+  ],
+  3:  [ // April
+    { name: 'Asparagus', emoji: '🥦', tip: 'Utah spring classic' },
+    { name: 'Radishes', emoji: '🌶️', tip: 'Quick and easy' },
+    { name: 'Spinach', emoji: '🥬', tip: 'Peak spring green' },
+    { name: 'Rhubarb', emoji: '🌿', tip: 'First stalks emerging' },
+    { name: 'Lettuce', emoji: '🥗', tip: 'Cool season peak' },
+    { name: 'Peas', emoji: '🫛', tip: 'Sugar snaps coming' },
+  ],
+  4:  [ // May
+    { name: 'Strawberries', emoji: '🍓', tip: 'Early Utah berries' },
+    { name: 'Peas', emoji: '🫛', tip: 'Sugar snaps ready' },
+    { name: 'Lettuce', emoji: '🥗', tip: 'Best before heat' },
+    { name: 'Rhubarb', emoji: '🌿', tip: 'Peak harvest time' },
+    { name: 'Radishes', emoji: '🌶️', tip: 'Last of spring crop' },
+    { name: 'Herbs', emoji: '🌿', tip: 'Basil, cilantro, dill' },
+  ],
+  5:  [ // June
+    { name: 'Strawberries', emoji: '🍓', tip: 'Peak season' },
+    { name: 'Cherries', emoji: '🍒', tip: 'Utah cherry season' },
+    { name: 'Zucchini', emoji: '🥒', tip: 'The season begins' },
+    { name: 'Herbs', emoji: '🌿', tip: 'Basil at its best' },
+    { name: 'Peas', emoji: '🫛', tip: 'Last of the season' },
+    { name: 'Garlic scapes', emoji: '🧄', tip: 'Before bulb harvest' },
+  ],
+  6:  [ // July
+    { name: 'Tomatoes', emoji: '🍅', tip: 'Utah peak season' },
+    { name: 'Zucchini', emoji: '🥒', tip: 'More than you need!' },
+    { name: 'Cucumbers', emoji: '🥒', tip: 'Great for pickling' },
+    { name: 'Peaches', emoji: '🍑', tip: 'Utah peaches are famous' },
+    { name: 'Corn', emoji: '🌽', tip: 'Sweet corn season' },
+    { name: 'Beans', emoji: '🫘', tip: 'Green beans galore' },
+  ],
+  7:  [ // August
+    { name: 'Tomatoes', emoji: '🍅', tip: 'Best of the year' },
+    { name: 'Peaches', emoji: '🍑', tip: 'Palisade peaches peak' },
+    { name: 'Sweet corn', emoji: '🌽', tip: 'Peak sweetness' },
+    { name: 'Peppers', emoji: '🌶️', tip: 'Hot and sweet' },
+    { name: 'Melons', emoji: '🍈', tip: 'Cantaloupe and more' },
+    { name: 'Cucumbers', emoji: '🥒', tip: 'Keep them coming' },
+  ],
+  8:  [ // September
+    { name: 'Apples', emoji: '🍎', tip: 'Utah apple harvest' },
+    { name: 'Winter squash', emoji: '🎃', tip: 'Butternut, acorn' },
+    { name: 'Pears', emoji: '🍐', tip: 'Short sweet season' },
+    { name: 'Tomatoes', emoji: '🍅', tip: 'Last of summer' },
+    { name: 'Peppers', emoji: '🌶️', tip: 'Roast and freeze' },
+    { name: 'Grapes', emoji: '🍇', tip: 'Wine grapes ready' },
+  ],
+  9:  [ // October
+    { name: 'Apples', emoji: '🍎', tip: 'Peak apple season' },
+    { name: 'Pumpkins', emoji: '🎃', tip: 'Ornamental and edible' },
+    { name: 'Winter squash', emoji: '🥦', tip: 'Great for storing' },
+    { name: 'Root vegetables', emoji: '🥕', tip: 'Beets, carrots, parsnips' },
+    { name: 'Kale', emoji: '🥬', tip: 'Frost makes it sweeter' },
+  ],
+  10: [ // November
+    { name: 'Stored apples', emoji: '🍎', tip: 'Cellar keeping varieties' },
+    { name: 'Winter squash', emoji: '🎃', tip: 'Lasts months stored' },
+    { name: 'Kale', emoji: '🥬', tip: 'Hardy through frost' },
+    { name: 'Root vegetables', emoji: '🥕', tip: 'Last of garden harvest' },
+  ],
+  11: [ // December
+    { name: 'Stored squash', emoji: '🎃', tip: 'From fall harvest' },
+    { name: 'Stored apples', emoji: '🍎', tip: 'Root cellar staple' },
+    { name: 'Microgreens', emoji: '🌿', tip: 'Great indoor project' },
+    { name: 'Sprouts', emoji: '🌱', tip: 'Year round growing' },
+  ]
+};
+
+const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+function renderSeasonal() {
+  const grid = document.getElementById('seasonal-grid');
+  const sub = document.getElementById('seasonal-sub');
+  if (!grid) return;
+  const month = new Date().getMonth();
+  const items = seasonalData[month] || [];
+  if (sub) sub.textContent = `In season this ${monthNames[month]} in Utah`;
+  grid.innerHTML = items.map(item => `
+    <div onclick="openPostModalWithItem('${item.name}','${item.emoji}')"
+      style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;text-align:center;cursor:pointer;transition:all 0.2s;box-shadow:var(--shadow)"
+      onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='var(--shadow-lg)'"
+      onmouseout="this.style.transform='';this.style.boxShadow='var(--shadow)'">
+      <div style="font-size:2rem;margin-bottom:0.5rem">${item.emoji}</div>
+      <div style="font-size:0.88rem;font-weight:500;color:var(--green-dark);margin-bottom:0.25rem">${item.name}</div>
+      <div style="font-size:0.72rem;color:var(--text-light);margin-bottom:0.75rem">${item.tip}</div>
+      <div style="font-size:0.72rem;background:rgba(44,92,63,0.08);color:var(--green-mid);padding:3px 8px;border-radius:20px;display:inline-block;border:1px solid rgba(44,92,63,0.15)">Post yours →</div>
+    </div>
+  `).join('');
+}
+
+function openPostModalWithItem(name, emoji) {
+  if (!currentUser) { openAuthModal(); return; }
+  openPostModal();
+  setTimeout(() => {
+    const titleEl = document.getElementById('post-title');
+    if (titleEl) {
+      titleEl.value = name;
+      const counter = document.getElementById('title-counter');
+      if (counter) counter.textContent = name.length + '/60';
+    }
+    // Find and select the matching emoji
+    document.querySelectorAll('#emoji-picker-food .emoji-opt').forEach(el => {
+      if (el.textContent === emoji) el.click();
+    });
+  }, 100);
+}
+
 /* ---- PROFILE ---- */
 function switchPTab(el, name) {
   document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
@@ -3889,7 +4038,7 @@ async function saveSettings() {
     data: { full_name: name, location, bio, avatar_url: avatarUrl, avatar_color: avatarColor }
   });
 
-  if (error) { showToast('Could not save please try again'); return; }
+  if (error) { showToast('Could not save — please try again'); return; }
 
   // Save to profiles table as persistent backup
   await db.from('profiles').upsert({
@@ -4192,6 +4341,7 @@ window.submitListing = async function() {
 loadListingsFromDB();
 loadMemberCount();
 checkInviteParam();
+renderSeasonal();
 
 /* ============================================================
    AUTH Sign up, Login, Logout
