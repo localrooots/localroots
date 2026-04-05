@@ -2182,17 +2182,17 @@ footer {
      PAGE: PUBLIC PROFILE
      ============================================================ -->
 <div id="page-public-profile" class="page">
-  <div class="profile-hero">
+  <div class="profile-hero-band">
     <div class="profile-hero-inner">
       <div class="profile-avatar-wrap">
-        <div class="profile-avatar" id="pub-avatar" style="width:80px;height:80px;font-size:1.8rem">?</div>
+        <div class="profile-avatar" id="pub-avatar" style="background:var(--green-mid)">?</div>
       </div>
-      <div class="profile-info">
+      <div class="profile-meta">
         <h1 class="profile-name" id="pub-name">Loading...</h1>
         <div class="profile-location" id="pub-location"></div>
-        <div class="profile-bio" id="pub-bio" style="margin-top:0.5rem;font-size:0.88rem;color:var(--green-pale);max-width:480px;line-height:1.7"></div>
+        <div class="profile-bio" id="pub-bio"></div>
       </div>
-      <div style="display:flex;gap:0.75rem;margin-left:auto">
+      <div class="profile-cta-row">
         <button class="btn btn-outline" id="pub-msg-btn" onclick="openPublicProfileMessage()" style="display:none">✉ Message</button>
       </div>
     </div>
@@ -2205,7 +2205,7 @@ footer {
         <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-light)">Listings</div>
       </div>
       <div style="text-align:center;padding:1.2rem 0">
-        <div style="font-size:1rem;font-weight:500;color:var(--text-light)" id="pub-member-since"></div>
+        <div style="font-size:1rem;font-weight:500;color:var(--green-dark)" id="pub-member-since"></div>
         <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-light)">Member since</div>
       </div>
     </div>
@@ -4221,7 +4221,11 @@ async function viewPublicProfile(userId, userName) {
   document.getElementById('pub-name').textContent = userName || 'Neighbor';
   document.getElementById('pub-location').textContent = '';
   document.getElementById('pub-bio').textContent = '';
-  document.getElementById('pub-avatar').textContent = (userName || 'N').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  // Reset avatar cleanly
+  const av = document.getElementById('pub-avatar');
+  av.style.backgroundImage = '';
+  av.style.background = 'var(--green-mid)';
+  av.textContent = (userName || 'N').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
   document.getElementById('pub-listings-count').textContent = '0';
   document.getElementById('pub-member-since').textContent = '';
   document.getElementById('pub-listings-heading').textContent = userName ? userName + "'s listings" : 'Listings';
