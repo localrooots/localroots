@@ -2992,15 +2992,35 @@ function showPage(name) {
   if (name === 'profile') showProfilePage();
 }
 
-function submitContact() {
+async function submitContact() {
   const name = document.getElementById('contact-name').value.trim();
   const email = document.getElementById('contact-email').value.trim();
   const msg = document.getElementById('contact-msg').value.trim();
   if (!name || !email || !msg) { showToast('Please fill in all fields'); return; }
-  document.getElementById('contact-name').value = '';
-  document.getElementById('contact-email').value = '';
-  document.getElementById('contact-msg').value = '';
-  showToast('Message sent! We\'ll reply within 24 hours. 🌱');
+
+  const btn = document.querySelector('[onclick="submitContact()"]');
+  if (btn) { btn.textContent = 'Sending...'; btn.disabled = true; }
+
+  try {
+    const res = await fetch('https://formspree.io/f/meepplyo', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ name, email, message: msg })
+    });
+
+    if (res.ok) {
+      document.getElementById('contact-name').value = '';
+      document.getElementById('contact-email').value = '';
+      document.getElementById('contact-msg').value = '';
+      showToast('Message sent! We will reply within 24 hours. 🌱');
+    } else {
+      showToast('Could not send — please try again');
+    }
+  } catch(e) {
+    showToast('Could not send — please check your connection');
+  } finally {
+    if (btn) { btn.textContent = 'Send message →'; btn.disabled = false; }
+  }
 }
 
 function toggleMobileNav() {
