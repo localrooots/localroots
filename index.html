@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="LocalRoots is a free community barter and trade platform where neighbors swap food, garden goods, skills, crafts, and more. Join your local Community.">
-<meta name="keywords" content="barter platform, trade with neighbors, community trading, free barter, swap food, trade skills, Salt Lake City barter, local trade, neighborhood exchange, free community platform, trade garden goods, skill swap, barter app, community exchange">
+<meta name="keywords" content="barter platform, trade with neighbors, community trading, free barter, swap food, trade skills, Bountiful City barter, local trade, neighborhood exchange, free community platform, trade garden goods, skill swap, barter app, community exchange">
 <meta name="author" content="LocalRoots">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#1C3A2A">
@@ -49,7 +49,7 @@
   "description": "A free community platform connecting neighbors to trade food, skills, crafts, and goods.",
   "foundingLocation": {
     "@type": "Place",
-    "name": "Salt Lake City, Utah"
+    "name": "Utah"
   }
 }
 </script>
@@ -1918,7 +1918,7 @@ footer {
     <div style="max-width:1000px;margin:0 auto">
       <div style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;margin-bottom:1.2rem">
         <div>
-          <div class="section-heading" id="seasonal-heading">What's growing in Salt Lake City</div>
+          <div class="section-heading" id="seasonal-heading">What's growing in Bountiful</div>
           <div class="section-sub-text" id="seasonal-sub">In season right now</div>
         </div>
       </div>
@@ -2192,7 +2192,7 @@ footer {
         </div>
         <div class="form-group">
           <label class="form-label">Your city / town</label>
-          <input class="form-input" type="text" id="settings-location" placeholder="e.g. Salt Lake City, UT">
+          <input class="form-input" type="text" id="settings-location" placeholder="e.g. UT">
         </div>
         <div class="form-group">
           <label class="form-label">Bio</label>
@@ -2304,7 +2304,7 @@ footer {
       </div>
       <div class="form-group">
         <label class="form-label">Your city / town</label>
-        <input class="form-input" type="text" id="signup-location" placeholder="e.g. Salt Lake City, UT or London, UK">
+        <input class="form-input" type="text" id="signup-location" placeholder="e.g. UT or London, UK">
       </div>
       <button class="btn btn-dark btn-full" onclick="signUp()">Create account →</button>
       <p style="text-align:center;font-size:0.78rem;color:var(--text-light);margin-top:1rem">By creating an account you agree to our <span style="color:var(--green-mid);cursor:pointer;text-decoration:underline" onclick="closeAuthModal();showPage('terms')">Terms of service</span> and <span style="color:var(--green-mid);cursor:pointer;text-decoration:underline" onclick="closeAuthModal();showPage('privacy')">Privacy policy</span>.</p>
@@ -2428,7 +2428,7 @@ footer {
     </div>
     <div class="form-group">
       <label class="form-label" for="post-hood">Your city / town</label>
-      <input class="form-input" type="text" id="post-hood" placeholder="e.g. Salt Lake City, UT or London, UK">
+      <input class="form-input" type="text" id="post-hood" placeholder="e.g. UT or London, UK">
     </div>
     <button class="btn btn-dark btn-full" onclick="submitListing()">Post listing →</button>
   </div>
@@ -2565,7 +2565,7 @@ footer {
     </div>
     <div class="form-group">
       <label class="form-label">Your city / town</label>
-      <input class="form-input" type="text" id="edit-hood" placeholder="e.g. Salt Lake City, UT">
+      <input class="form-input" type="text" id="edit-hood" placeholder="e.g. UT">
     </div>
     <button class="btn btn-dark btn-full" onclick="saveEditListing()">Save changes →</button>
   </div>
@@ -3816,91 +3816,117 @@ function applyAvatar(user) {
 
 /* ---- SEASONAL SECTION ---- */
 const seasonalData = {
-  0:  [ // January
-    { name: 'Stored apples', emoji: '🍎', tip: 'Root cellar favorites' },
-    { name: 'Kale', emoji: '🥬', tip: 'Cold hardy, still growing' },
-    { name: 'Stored squash', emoji: '🎃', tip: 'From fall harvest' },
-    { name: 'Sprouts', emoji: '🌱', tip: 'Easy to grow indoors' },
+  0: [ // January
+    { name: 'Stored apples', emoji: '🍎', tip: 'Honeycrisp, Fuji, Gala' },
+    { name: 'Kale', emoji: '🥬', tip: 'Cold makes it sweeter' },
+    { name: 'Butternut squash', emoji: '🎃', tip: 'Stores for months' },
+    { name: 'Dried herbs', emoji: '🌿', tip: 'Rosemary, thyme, oregano' },
+    { name: 'Microgreens', emoji: '🌱', tip: 'Easy indoor grow' },
+    { name: 'Onions', emoji: '🧅', tip: 'From fall harvest' },
   ],
-  1:  [ // February
-    { name: 'Microgreens', emoji: '🌿', tip: 'Perfect indoor grow' },
-    { name: 'Stored root veg', emoji: '🥕', tip: 'Carrots, beets, turnips' },
+  1: [ // February
+    { name: 'Microgreens', emoji: '🌱', tip: 'Sunflower, radish, pea' },
+    { name: 'Stored carrots', emoji: '🥕', tip: 'Root cellar keepers' },
     { name: 'Kale', emoji: '🥬', tip: 'Overwintered varieties' },
-    { name: 'Sprouts', emoji: '🌱', tip: 'Grow any time of year' },
+    { name: 'Garlic', emoji: '🧄', tip: 'From fall planting' },
+    { name: 'Dried lavender', emoji: '💜', tip: 'Bundles and sachets' },
+    { name: 'Sourdough starter', emoji: '🍞', tip: 'Share the culture' },
   ],
-  2:  [ // March
-    { name: 'Spinach', emoji: '🥬', tip: 'First spring green' },
-    { name: 'Radishes', emoji: '🌶️', tip: 'Ready in 25 days' },
-    { name: 'Peas', emoji: '🌿', tip: 'Plant now, harvest May' },
-    { name: 'Lettuce', emoji: '🥬', tip: 'Cold tolerant starts' },
+  2: [ // March
+    { name: 'Spinach', emoji: '🥬', tip: 'First of the year' },
+    { name: 'Radishes', emoji: '🌶️', tip: 'Ready in just 25 days' },
     { name: 'Chives', emoji: '🌿', tip: 'First herb of spring' },
+    { name: 'Cilantro', emoji: '🌿', tip: 'Plant before heat' },
+    { name: 'Parsley', emoji: '🌿', tip: 'Overwintered beautifully' },
+    { name: 'Seedlings', emoji: '🌱', tip: 'Tomato and pepper starts' },
   ],
-  3:  [ // April
+  3: [ // April
     { name: 'Asparagus', emoji: '🥦', tip: 'Utah spring classic' },
-    { name: 'Radishes', emoji: '🌶️', tip: 'Quick and easy' },
-    { name: 'Spinach', emoji: '🥬', tip: 'Peak spring green' },
-    { name: 'Rhubarb', emoji: '🌿', tip: 'First stalks emerging' },
-    { name: 'Lettuce', emoji: '🥬', tip: 'Cool season peak' },
-    { name: 'Peas', emoji: '🌿', tip: 'Sugar snaps coming' },
+    { name: 'Rhubarb', emoji: '🍓', tip: 'First stalks of the year' },
+    { name: 'Radishes', emoji: '🌶️', tip: 'French breakfast variety' },
+    { name: 'Mint', emoji: '🌿', tip: 'Spearmint, peppermint, mojito' },
+    { name: 'Chives', emoji: '🌿', tip: 'Purple blooms are edible too' },
+    { name: 'Dill', emoji: '🌿', tip: 'Great with eggs and salmon' },
+    { name: 'Aloe vera', emoji: '🌵', tip: 'Cuttings and pups to share' },
+    { name: 'Honey', emoji: '🍯', tip: 'Spring wildflower harvest' },
+    { name: 'Eggs', emoji: '🥚', tip: 'Hens ramping up laying' },
+    { name: 'Seedlings', emoji: '🌱', tip: 'Tomato, pepper, squash starts' },
   ],
-  4:  [ // May
-    { name: 'Strawberries', emoji: '🍓', tip: 'Early Utah berries' },
-    { name: 'Peas', emoji: '🌿', tip: 'Sugar snaps ready' },
-    { name: 'Lettuce', emoji: '🥬', tip: 'Best before heat' },
-    { name: 'Rhubarb', emoji: '🌿', tip: 'Peak harvest time' },
-    { name: 'Radishes', emoji: '🌶️', tip: 'Last of spring crop' },
-    { name: 'Herbs', emoji: '🌿', tip: 'Basil, cilantro, dill' },
+  4: [ // May
+    { name: 'Strawberries', emoji: '🍓', tip: 'First Utah berries' },
+    { name: 'Rhubarb', emoji: '🍓', tip: 'Peak harvest time' },
+    { name: 'Lettuce', emoji: '🥬', tip: 'Best before summer heat' },
+    { name: 'Basil', emoji: '🌿', tip: 'Italian and Thai varieties' },
+    { name: 'Cilantro', emoji: '🌿', tip: 'Last chance before bolting' },
+    { name: 'Snap peas', emoji: '🫛', tip: 'Sweet straight off vine' },
+    { name: 'Oregano', emoji: '🌿', tip: 'Great for drying' },
+    { name: 'Eggs', emoji: '🥚', tip: 'Spring peak production' },
   ],
-  5:  [ // June
-    { name: 'Strawberries', emoji: '🍓', tip: 'Peak season' },
+  5: [ // June
+    { name: 'Strawberries', emoji: '🍓', tip: 'Peak season — freeze some' },
     { name: 'Cherries', emoji: '🍒', tip: 'Utah cherry season' },
-    { name: 'Zucchini', emoji: '🥒', tip: 'The season begins' },
-    { name: 'Herbs', emoji: '🌿', tip: 'Basil at its best' },
-    { name: 'Peas', emoji: '🌿', tip: 'Last of the season' },
-    { name: 'Garlic scapes', emoji: '🧄', tip: 'Before bulb harvest' },
+    { name: 'Zucchini', emoji: '🥒', tip: 'It begins...' },
+    { name: 'Garlic scapes', emoji: '🧄', tip: 'Curl before the bulb' },
+    { name: 'Basil', emoji: '🌿', tip: 'Genovese at its best' },
+    { name: 'Sage', emoji: '🌿', tip: 'Purple and garden varieties' },
+    { name: 'Raspberries', emoji: '🍇', tip: 'First summer flush' },
+    { name: 'Honey', emoji: '🍯', tip: 'Spring wildflower harvest' },
   ],
-  6:  [ // July
-    { name: 'Tomatoes', emoji: '🍅', tip: 'Utah peak season' },
-    { name: 'Zucchini', emoji: '🥒', tip: 'More than you need!' },
-    { name: 'Cucumbers', emoji: '🥒', tip: 'Great for pickling' },
-    { name: 'Peaches', emoji: '🍑', tip: 'Utah peaches are famous' },
-    { name: 'Corn', emoji: '🌽', tip: 'Sweet corn season' },
-    { name: 'Beans', emoji: '🫘', tip: 'Green beans galore' },
+  6: [ // July
+    { name: 'Tomatoes', emoji: '🍅', tip: 'Heirloom and cherry' },
+    { name: 'Peaches', emoji: '🍑', tip: 'Utah peaches are legendary' },
+    { name: 'Zucchini', emoji: '🥒', tip: 'Leave one on a doorstep' },
+    { name: 'Cucumbers', emoji: '🥒', tip: 'Pickling varieties' },
+    { name: 'Sweet corn', emoji: '🌽', tip: 'Days matter — eat fresh' },
+    { name: 'Basil', emoji: '🌿', tip: 'Make pesto now' },
+    { name: 'Jalapeños', emoji: '🌶️', tip: 'Ferment or pickle' },
+    { name: 'Blueberries', emoji: '🫐', tip: 'Short Utah season' },
   ],
-  7:  [ // August
-    { name: 'Tomatoes', emoji: '🍅', tip: 'Best of the year' },
-    { name: 'Peaches', emoji: '🍑', tip: 'Palisade peaches peak' },
-    { name: 'Sweet corn', emoji: '🌽', tip: 'Peak sweetness' },
-    { name: 'Peppers', emoji: '🌶️', tip: 'Hot and sweet' },
-    { name: 'Melons', emoji: '🍈', tip: 'Cantaloupe and more' },
-    { name: 'Cucumbers', emoji: '🥒', tip: 'Keep them coming' },
+  7: [ // August
+    { name: 'Tomatoes', emoji: '🍅', tip: 'Best of the entire year' },
+    { name: 'Peaches', emoji: '🍑', tip: 'Palisade peach peak' },
+    { name: 'Peppers', emoji: '🌶️', tip: 'Sweet and hot varieties' },
+    { name: 'Melons', emoji: '🍈', tip: 'Cantaloupe and honeydew' },
+    { name: 'Eggplant', emoji: '🍆', tip: 'Gorgeous at peak heat' },
+    { name: 'Blackberries', emoji: '🍇', tip: 'Wild and cultivated' },
+    { name: 'Sunflowers', emoji: '🌻', tip: 'Seeds and cut flowers' },
+    { name: 'Honey', emoji: '🍯', tip: 'Summer wildflower blend' },
   ],
-  8:  [ // September
-    { name: 'Apples', emoji: '🍎', tip: 'Utah apple harvest' },
-    { name: 'Winter squash', emoji: '🎃', tip: 'Butternut, acorn' },
-    { name: 'Pears', emoji: '🍐', tip: 'Short sweet season' },
-    { name: 'Tomatoes', emoji: '🍅', tip: 'Last of summer' },
-    { name: 'Peppers', emoji: '🌶️', tip: 'Roast and freeze' },
-    { name: 'Grapes', emoji: '🍇', tip: 'Wine grapes ready' },
+  8: [ // September
+    { name: 'Apples', emoji: '🍎', tip: 'Honeycrisp, Fuji, Braeburn' },
+    { name: 'Pears', emoji: '🍐', tip: 'Bartlett and Bosc' },
+    { name: 'Grapes', emoji: '🍇', tip: 'Concord and wine varieties' },
+    { name: 'Winter squash', emoji: '🎃', tip: 'Butternut, delicata' },
+    { name: 'Tomatoes', emoji: '🍅', tip: 'Can and preserve now' },
+    { name: 'Hot peppers', emoji: '🌶️', tip: 'Roast and freeze' },
+    { name: 'Dry beans', emoji: '🫘', tip: 'Heirloom varieties' },
+    { name: 'Rosemary', emoji: '🌿', tip: 'Harvest before frost' },
   ],
-  9:  [ // October
-    { name: 'Apples', emoji: '🍎', tip: 'Peak apple season' },
-    { name: 'Pumpkins', emoji: '🎃', tip: 'Ornamental and edible' },
-    { name: 'Winter squash', emoji: '🥦', tip: 'Great for storing' },
-    { name: 'Root vegetables', emoji: '🥕', tip: 'Beets, carrots, parsnips' },
-    { name: 'Kale', emoji: '🥬', tip: 'Frost makes it sweeter' },
+  9: [ // October
+    { name: 'Apples', emoji: '🍎', tip: 'Peak Utah apple season' },
+    { name: 'Pumpkins', emoji: '🎃', tip: 'Sugar pies and carving' },
+    { name: 'Beets', emoji: '🩷', tip: 'Roast or pickle' },
+    { name: 'Carrots', emoji: '🥕', tip: 'Frost sweetens them' },
+    { name: 'Kale', emoji: '🥬', tip: 'Cold makes it better' },
+    { name: 'Garlic', emoji: '🧄', tip: 'Plant now for next year' },
+    { name: 'Walnuts', emoji: '🌰', tip: 'Wild harvest time' },
+    { name: 'Dried herbs', emoji: '🌿', tip: 'Bundle before first frost' },
   ],
   10: [ // November
-    { name: 'Stored apples', emoji: '🍎', tip: 'Cellar keeping varieties' },
-    { name: 'Winter squash', emoji: '🎃', tip: 'Lasts months stored' },
-    { name: 'Kale', emoji: '🥬', tip: 'Hardy through frost' },
-    { name: 'Root vegetables', emoji: '🥕', tip: 'Last of garden harvest' },
+    { name: 'Stored apples', emoji: '🍎', tip: 'Cellar keepers last months' },
+    { name: 'Winter squash', emoji: '🎃', tip: 'Acorn, hubbard, kabocha' },
+    { name: 'Kale', emoji: '🥬', tip: 'Hardy through hard frost' },
+    { name: 'Carrots', emoji: '🥕', tip: 'Still in the ground' },
+    { name: 'Onions', emoji: '🧅', tip: 'Cured and ready to share' },
+    { name: 'Dried flowers', emoji: '🌸', tip: 'Wreaths and arrangements' },
   ],
   11: [ // December
-    { name: 'Stored squash', emoji: '🎃', tip: 'From fall harvest' },
-    { name: 'Stored apples', emoji: '🍎', tip: 'Root cellar staple' },
-    { name: 'Microgreens', emoji: '🌿', tip: 'Great indoor project' },
-    { name: 'Sprouts', emoji: '🌱', tip: 'Year round growing' },
+    { name: 'Stored squash', emoji: '🎃', tip: 'Keeps through winter' },
+    { name: 'Stored apples', emoji: '🍎', tip: 'Root cellar staples' },
+    { name: 'Dried herbs', emoji: '🌿', tip: 'Rosemary, thyme, sage' },
+    { name: 'Microgreens', emoji: '🌱', tip: 'Great gift idea' },
+    { name: 'Preserved goods', emoji: '🍯', tip: 'Jams, pickles, sauces' },
+    { name: 'Garlic braids', emoji: '🧄', tip: 'Beautiful and useful' },
   ]
 };
 
