@@ -621,6 +621,61 @@ nav {
 
 .step { text-align: center; padding: 1.5rem 1rem; }
 
+.step-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(200,222,200,0.15);
+  border-radius: 24px;
+  padding: 2rem 1.8rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: background 0.2s;
+}
+.step-card:hover {
+  background: rgba(255,255,255,0.1);
+}
+.step-oval {
+  background: rgba(212,132,58,0.15);
+  border: 1px solid rgba(212,132,58,0.3);
+  border-radius: 50px;
+  padding: 0.6rem 1.8rem;
+  margin-bottom: 1.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.step-card h4 {
+  font-family: 'Playfair Display', serif;
+  color: var(--cream);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+.step-card p {
+  color: var(--green-pale);
+  font-size: 0.88rem;
+  line-height: 1.75;
+  font-weight: 300;
+  margin-bottom: 1.2rem;
+  flex: 1;
+}
+.step-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  margin-top: auto;
+}
+.step-tags span {
+  background: rgba(74,139,92,0.2);
+  border: 1px solid rgba(74,139,92,0.3);
+  color: var(--green-pale);
+  font-size: 0.75rem;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
 .step-num {
   width: 52px;
   height: 52px;
@@ -1929,26 +1984,49 @@ footer {
   <div class="how-section">
     <div class="how-inner">
       <div class="how-title">How it works</div>
-      <div class="how-sub">Three steps to your first trade</div>
-      <div class="steps-grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
-        <div class="step">
-          <div class="step-num">1</div>
+      <div class="how-sub">Three simple steps to your first trade</div>
+      <div class="steps-grid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr));align-items:stretch">
+
+        <div class="step-card">
+          <div class="step-oval">
+            <div class="step-num">1</div>
+          </div>
           <h4>Post what you have</h4>
-          <p>Food, a skill, or something you no longer need. Takes 30 seconds.</p>
+          <p>Got surplus tomatoes, a skill to teach, or something sitting unused? Post a listing in 30 seconds. Describe it, pick an emoji or add a photo, and tell neighbors what you'd like in return.</p>
+          <div class="step-tags">
+            <span>🌱 Food</span>
+            <span>🔨 Skills</span>
+            <span>📦 Goods</span>
+          </div>
         </div>
-        <div class="step">
-          <div class="step-num">2</div>
-          <h4>Message a neighbor</h4>
-          <p>Find something you want and reach out directly. No middlemen, no fees.</p>
+
+        <div class="step-card">
+          <div class="step-oval">
+            <div class="step-num">2</div>
+          </div>
+          <h4>Find & message a neighbor</h4>
+          <p>Browse listings from people in your community. See something you want? Message them directly — no middlemen, no platform fees, just a real conversation between real neighbors.</p>
+          <div class="step-tags">
+            <span>💬 Direct message</span>
+            <span>🔍 Browse local</span>
+          </div>
         </div>
-        <div class="step">
-          <div class="step-num">3</div>
-          <h4>Make the trade</h4>
-          <p>Meet up, swap, and build a real connection with someone in your community.</p>
+
+        <div class="step-card">
+          <div class="step-oval">
+            <div class="step-num">3</div>
+          </div>
+          <h4>Meet up & make the trade</h4>
+          <p>Agree on a swap that works for both of you — no money involved, ever. Meet somewhere local, exchange what you have, and build a real connection with someone in your neighborhood.</p>
+          <div class="step-tags">
+            <span>🤝 Fair trade</span>
+            <span>🏡 Local meetup</span>
+          </div>
         </div>
+
       </div>
-      <div style="text-align:center;margin-top:2rem">
-        <button class="btn btn-primary" onclick="openPostModal()">Post Listing</button>
+      <div style="text-align:center;margin-top:2.5rem">
+        <button class="btn btn-primary" onclick="openPostModal()">Post your first listing →</button>
       </div>
     </div>
   </div>
