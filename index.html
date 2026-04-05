@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="LocalRoots is a free community barter and trade platform where neighbors swap food, garden goods, skills, crafts, and more. Join your local community.">
+<meta name="description" content="LocalRoots is a free community barter and trade platform where neighbors swap food, garden goods, skills, crafts, and more. Join your local Community.">
 <meta name="keywords" content="barter platform, trade with neighbors, community trading, free barter, swap food, trade skills, Salt Lake City barter, local trade, neighborhood exchange, free community platform, trade garden goods, skill swap, barter app, community exchange">
 <meta name="author" content="LocalRoots">
 <meta name="robots" content="index, follow">
@@ -4207,7 +4207,6 @@ function onUserLoggedIn(user) {
   document.getElementById('nav-login-btn').style.display = 'none';
   document.getElementById('nav-user-menu').style.display = 'flex';
   document.getElementById('nav-post-btn').style.display = 'flex';
-  document.getElementById('nav-user-av').textContent = initials;
   document.getElementById('nav-user-name').textContent = name.split(' ')[0];
 
   document.getElementById('mobile-login-link').style.display = 'none';
@@ -4215,7 +4214,6 @@ function onUserLoggedIn(user) {
   document.getElementById('mobile-profile-link').style.display = 'block';
   document.getElementById('mobile-post-link').style.display = 'block';
 
-  document.getElementById('profile-avatar').textContent = initials;
   document.getElementById('profile-name').textContent = name;
   document.getElementById('profile-location').textContent = '📍 ' + (location || 'Community') + ' · Member since ' + memberSince;
   document.getElementById('profile-bio').textContent = bio || 'Click to add a bio...';
@@ -4230,14 +4228,19 @@ function onUserLoggedIn(user) {
 
   setupInviteSection(user);
 
-  // Load avatar from profiles table to ensure persistence across sessions
-  db.from('profiles').select('avatar_url, avatar_color').eq('id', user.id).single().then(({ data: profile }) => {
+  // Load avatar from profiles table — single source of truth
+  db.from('profiles').select('avatar_url, avatar_color, full_name, location, bio').eq('id', user.id).single().then(({ data: profile }) => {
     if (profile) {
       if (profile.avatar_url) user.user_metadata.avatar_url = profile.avatar_url;
       if (profile.avatar_color) user.user_metadata.avatar_color = profile.avatar_color;
       const urlInput = document.getElementById('settings-avatar-url');
-      if (urlInput && profile.avatar_url) urlInput.value = profile.avatar_url;
+      if (urlInput) urlInput.value = profile.avatar_url || '';
     }
+    // Set initials as default — applyAvatar will override with color/photo
+    const navAv = document.getElementById('nav-user-av');
+    const profileAv = document.getElementById('profile-avatar');
+    if (navAv) navAv.textContent = initials;
+    if (profileAv) profileAv.textContent = initials;
     applyAvatar(user);
   });
 
