@@ -2205,7 +2205,7 @@ footer {
         <button class="ptab active" onclick="switchPTab(this,'listings')">My listings</button>
         <button class="ptab" onclick="switchPTab(this,'reviews')">Reviews</button>
         <button class="ptab" onclick="switchPTab(this,'settings')">Settings</button>
-        <button class="ptab" id="admin-tab" onclick="switchPTab(this,'admin')" style="display:none;color:var(--amber)">⚙ Admin</button>
+        <button class="ptab" id="admin-tab" onclick="switchPTab(this,'admin')" style="display:none;color:var(--amber)">⚙ Admin <span id="admin-pending-badge" style="display:none;background:var(--amber);color:white;font-size:0.62rem;padding:1px 6px;border-radius:10px;margin-left:3px;font-weight:600">0</span></button>
       </div>
     </div>
 
@@ -4249,6 +4249,7 @@ async function submitEvent() {
 
   try {
     // Save to Supabase events table
+    const meta = detectEventMeta(name, desc);
     const { error } = await db.from('community_events').insert([{
       name,
       date_str: date,
@@ -4256,8 +4257,8 @@ async function submitEvent() {
       description: desc,
       submitter_email: email || null,
       status: 'pending',
-      emoji: '📌',
-      tag: 'Community',
+      emoji: meta.emoji,
+      tag: meta.tag,
       url: null
     }]);
 
@@ -4830,7 +4831,10 @@ function onUserLoggedIn(user) {
   // Show admin tab for owner only
   const ADMIN_ID = '2d140daa-5a70-4bcf-94f2-78e3b7f2b8f3';
   const adminTab = document.getElementById('admin-tab');
-  if (adminTab) adminTab.style.display = user.id === ADMIN_ID ? 'inline-flex' : 'none';
+  if (adminTab) {
+    adminTab.style.display = user.id === ADMIN_ID ? 'inline-flex' : 'none';
+    if (user.id === ADMIN_ID) loadAdminPendingCount();
+  }
 
   document.getElementById('nav-login-btn').style.display = 'none';
   document.getElementById('nav-user-menu').style.display = 'flex';
@@ -5141,11 +5145,75 @@ async function loadAdminEvents() {
   }
 }
 
+async function loadAdminPendingCount() {
+  try {
+    const { count } = await db.from('community_events')
+      .select('*', { count: 'exact', head: true })
+      .eq('status', 'pending');
+    const badge = document.getElementById('admin-pending-badge');
+    if (badge) {
+      if (count > 0) {
+        badge.textContent = count;
+        badge.style.display = 'inline';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+  } catch(e) {}
+}
+
+/* ---- Smart emoji + tag detection for approved events ---- */
+function detectEventMeta(name, desc) {
+  const text = (name + ' ' + (desc || '')).toLowerCase();
+  const checks = [
+    { keys: ['farmers market','farm market','produce market'], emoji: '🌽', tag: 'Farmers Market' },
+    { keys: ['swap meet','swap'], emoji: '🔄', tag: 'Swap Meet' },
+    { keys: ['concert','music','band','live music','performance'], emoji: '🎵', tag: 'Live Music' },
+    { keys: ['garden','gardening','seed swap','seed'], emoji: '🌱', tag: 'Gardening' },
+    { keys: ['craft','artisan','maker','art fair','art show'], emoji: '🎨', tag: 'Arts & Crafts' },
+    { keys: ['food','eat','restaurant','taste','cuisine','festival'], emoji: '🍽️', tag: 'Food Event' },
+    { keys: ['cleanup','clean up','volunteer','community service'], emoji: '🤝', tag: 'Volunteer' },
+    { keys: ['library','book','reading','story'], emoji: '📚', tag: 'Library' },
+    { keys: ['park','outdoor','picnic','nature'], emoji: '🌳', tag: 'Outdoors' },
+    { keys: ['kids','children','family','youth'], emoji: '👨‍👩‍👧', tag: 'Family' },
+    { keys: ['class','workshop','learn','course','skill'], emoji: '✏️', tag: 'Workshop' },
+    { keys: ['sale','flea market','yard sale','rummage'], emoji: '🏷️', tag: 'Sale' },
+  ];
+  for (const c of checks) {
+    if (c.keys.some(k => text.includes(k))) return { emoji: c.emoji, tag: c.tag };
+  }
+  return { emoji: '📌', tag: 'Community' };
+}
+
 async function approveEvent(id) {
-  const { error } = await db.from('community_events').update({ status: 'approved' }).eq('id', id);
-  if (error) { showToast('Could not approve — try again'); return; }
-  showToast('✅ Event approved and live on the board!');
+  // Find the event data from the current list for smart meta
+  const btn = event?.target;
+  if (btn) { btn.textContent = '✓ Approving...'; btn.disabled = true; }
+
+  // Fetch the event to get name/desc for smart emoji
+  const { data: evData } = await db.from('community_events').select('name,description').eq('id', id).single();
+  const meta = evData ? detectEventMeta(evData.name, evData.description) : { emoji: '📌', tag: 'Community' };
+
+  const { error } = await db.from('community_events')
+    .update({ status: 'approved', emoji: meta.emoji, tag: meta.tag })
+    .eq('id', id);
+
+  if (error) {
+    showToast('Could not approve — try again');
+    if (btn) { btn.textContent = '✓ Approve'; btn.disabled = false; }
+    return;
+  }
+
+  showToast(`✅ "${evData?.name || 'Event'}" is now live on the board!`);
+
+  // Reload admin pending list and badge
   loadAdminEvents();
+  loadAdminPendingCount();
+
+  // If events page is active, refresh it immediately
+  if (document.getElementById('page-events')?.classList.contains('active')) {
+    renderEvents();
+  }
 }
 
 async function rejectEvent(id) {
@@ -5154,6 +5222,7 @@ async function rejectEvent(id) {
   if (error) { showToast('Could not reject — try again'); return; }
   showToast('Submission rejected and removed.');
   loadAdminEvents();
+  loadAdminPendingCount();
 }
 
 
