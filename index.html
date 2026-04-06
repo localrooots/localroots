@@ -349,17 +349,43 @@ nav {
 }
 
 .hero-tag {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   background: rgba(74,139,92,0.25);
   color: var(--green-pale);
   font-size: 0.78rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  padding: 6px 16px;
+  padding: 6px 18px;
   border-radius: var(--radius-pill);
   margin-bottom: 1.5rem;
   border: 1px solid rgba(200,222,200,0.15);
   font-weight: 500;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-tag-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--green-light);
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: pulse-live 2s infinite;
+}
+
+.hero-tag-text {
+  position: relative;
+  min-width: 160px;
+  text-align: center;
+}
+
+.hero-tag-word {
+  display: inline-block;
+  white-space: nowrap;
+  text-align: center;
+  min-width: 140px;
 }
 
 .hero h1 {
@@ -1994,7 +2020,12 @@ footer {
 
   <!-- Hero -->
   <section class="hero">
-    <div class="hero-tag">Neighbors trading with Neighbors · Free to join</div>
+    <div class="hero-tag" id="hero-tag">
+      <span class="hero-tag-dot"></span>
+      <span class="hero-tag-text" id="hero-tag-text">
+        <span class="hero-tag-word active" id="hero-tag-word">Bountiful</span>
+      </span>
+    </div>
     <h1>Trade what you have<br>for what you <em>need</em></h1>
     <p class="hero-sub">Everything your neighbors grow, make, and know in one place.</p>
     <div class="hero-actions">
@@ -4628,7 +4659,38 @@ document.addEventListener('click', function(e) {
 renderHome();
 showHomeLoading();
 
-/* SUPABASE loaded via module below */
+/* ---- CYCLING TOWNS PILL ---- */
+(function() {
+  const towns = ['Bountiful', 'Centerville', 'North Salt Lake', 'Woods Cross'];
+  let idx = 0;
+  const wordEl = document.getElementById('hero-tag-word');
+  if (!wordEl) return;
+
+  setInterval(() => {
+    // Fade out
+    wordEl.style.opacity = '0';
+    wordEl.style.transform = 'translateY(-6px)';
+    wordEl.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+
+    setTimeout(() => {
+      idx = (idx + 1) % towns.length;
+      wordEl.textContent = towns[idx];
+      wordEl.style.transform = 'translateY(6px)';
+      wordEl.style.opacity = '0';
+      wordEl.style.transition = 'none';
+
+      // Force reflow
+      void wordEl.offsetWidth;
+
+      // Fade in
+      wordEl.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+      wordEl.style.opacity = '1';
+      wordEl.style.transform = 'translateY(0)';
+    }, 420);
+  }, 2200);
+})();
+
+
 
 /* ============================================================
    SUPABASE Live database connection
