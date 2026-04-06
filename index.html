@@ -2205,6 +2205,7 @@ footer {
         <button class="ptab active" onclick="switchPTab(this,'listings')">My listings</button>
         <button class="ptab" onclick="switchPTab(this,'reviews')">Reviews</button>
         <button class="ptab" onclick="switchPTab(this,'settings')">Settings</button>
+        <button class="ptab" id="admin-tab" onclick="switchPTab(this,'admin')" style="display:none;color:var(--amber)">⚙ Admin</button>
       </div>
     </div>
 
@@ -2287,6 +2288,17 @@ footer {
         <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border)">
           <div style="font-size:0.82rem;font-weight:500;color:var(--terra);margin-bottom:0.75rem"></div>
           <button class="btn btn-outline-dark btn-sm" onclick="signOut()" style="color:var(--terra);border-color:rgba(139,74,42,0.3)">Sign out</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: ADMIN (owner only) -->
+    <div class="inner" id="ptab-admin" style="display:none">
+      <div style="max-width:680px">
+        <div style="font-size:1rem;font-weight:500;color:var(--green-dark);margin-bottom:0.5rem">⚙ Admin panel</div>
+        <div style="font-size:0.82rem;color:var(--text-light);margin-bottom:1.5rem">Review and approve community event submissions.</div>
+        <div id="admin-events-list">
+          <div style="text-align:center;padding:2rem;color:var(--text-light);font-size:0.88rem">Loading submissions...</div>
         </div>
       </div>
     </div>
@@ -4143,6 +4155,28 @@ const localEvents = [
   }
 ];
 
+async function loadApprovedEvents() {
+  try {
+    const { data, error } = await db.from('community_events')
+      .select('*')
+      .eq('status', 'approved')
+      .order('created_at', { ascending: false });
+    if (error || !data) return [];
+    return data.map(e => ({
+      name: e.name,
+      emoji: e.emoji || '📌',
+      date: e.date_str || '',
+      time: e.time_str || '',
+      location: e.location || '',
+      desc: e.description || '',
+      url: e.url || '',
+      tag: e.tag || 'Community',
+      fromDB: true,
+      id: e.id
+    }));
+  } catch(e) { return []; }
+}
+
 function renderEventsPreview() {
   const grid = document.getElementById('events-preview');
   if (!grid) return;
@@ -4165,10 +4199,15 @@ function renderEventsPreview() {
   `).join('');
 }
 
-function renderEvents() {
+async function renderEvents() {
   const grid = document.getElementById('events-grid');
   if (!grid) return;
-  grid.innerHTML = localEvents.map(e => `
+
+  // Load approved DB events and merge with hardcoded
+  const dbEvents = await loadApprovedEvents();
+  const allEvents = [...dbEvents, ...localEvents];
+
+  grid.innerHTML = allEvents.map(e => `
     <div onclick="${e.isSubmit ? 'openSubmitEvent()' : (e.url ? `window.open('${e.url}','_blank')` : '')}"
       style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.3rem;${e.url || e.isSubmit ? 'cursor:pointer;' : ''}transition:all 0.2s;box-shadow:var(--shadow)"
       onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='var(--shadow-lg)'"
@@ -4209,24 +4248,38 @@ async function submitEvent() {
   if (btn) { btn.textContent = 'Sending...'; btn.disabled = true; }
 
   try {
-    const res = await fetch('https://formspree.io/f/meepplyo', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({ name: 'Event submission', email: email || 'not provided', message: `Event: ${name}\nDate: ${date}\nLocation: ${location}\nDescription: ${desc}` })
-    });
-    if (res.ok) {
-      closeSubmitEvent();
-      showToast('Event submitted! We will review and add it soon. 🌱');
-      document.getElementById('event-name').value = '';
-      document.getElementById('event-date').value = '';
-      document.getElementById('event-location').value = '';
-      document.getElementById('event-desc').value = '';
-      document.getElementById('event-email').value = '';
-    } else {
-      showToast('Could not submit please try again');
+    // Save to Supabase events table
+    const { error } = await db.from('community_events').insert([{
+      name,
+      date_str: date,
+      location,
+      description: desc,
+      submitter_email: email || null,
+      status: 'pending',
+      emoji: '📌',
+      tag: 'Community',
+      url: null
+    }]);
+
+    if (error) {
+      // Fallback to Formspree if table doesn't exist yet
+      const res = await fetch('https://formspree.io/f/meepplyo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ name: 'Event submission', email: email || 'not provided', message: `Event: ${name}\nDate: ${date}\nLocation: ${location}\nDescription: ${desc}` })
+      });
+      if (!res.ok) throw new Error('Both save methods failed');
     }
+
+    closeSubmitEvent();
+    showToast('Event submitted! We\'ll review and add it soon. 🌱');
+    document.getElementById('event-name').value = '';
+    document.getElementById('event-date').value = '';
+    document.getElementById('event-location').value = '';
+    document.getElementById('event-desc').value = '';
+    document.getElementById('event-email').value = '';
   } catch(e) {
-    showToast('Could not submit please check your connection');
+    showToast('Could not submit — please check your connection');
   } finally {
     if (btn) { btn.textContent = 'Submit event →'; btn.disabled = false; }
   }
@@ -4326,10 +4379,11 @@ function openPublicProfileMessage() {
 function switchPTab(el, name) {
   document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
-  ['listings','reviews','settings'].forEach(t => {
-    const el = document.getElementById('ptab-' + t);
-    if (el) el.style.display = t === name ? 'block' : 'none';
+  ['listings','reviews','settings','admin'].forEach(t => {
+    const panel = document.getElementById('ptab-' + t);
+    if (panel) panel.style.display = t === name ? 'block' : 'none';
   });
+  if (name === 'admin') loadAdminEvents();
 }
 
 function showProfilePage() {
@@ -4773,6 +4827,11 @@ function onUserLoggedIn(user) {
   const bio = user.user_metadata?.bio || '';
   const memberSince = new Date(user.created_at).toLocaleDateString('en-US',{month:'short',year:'numeric'});
 
+  // Show admin tab for owner only
+  const ADMIN_ID = '2d140daa-5a70-4bcf-94f2-78e3b7f2b8f3';
+  const adminTab = document.getElementById('admin-tab');
+  if (adminTab) adminTab.style.display = user.id === ADMIN_ID ? 'inline-flex' : 'none';
+
   document.getElementById('nav-login-btn').style.display = 'none';
   document.getElementById('nav-user-menu').style.display = 'flex';
   document.getElementById('nav-post-btn').style.display = 'flex';
@@ -5029,6 +5088,73 @@ async function checkNewMessages() {
   // Hide when user logs in
   document.addEventListener('supabase-logged-in', () => bar.classList.remove('visible'));
 })();
+
+
+/* ============================================================
+   ADMIN PANEL — events moderation (owner only)
+   ============================================================ */
+const ADMIN_USER_ID = '2d140daa-5a70-4bcf-94f2-78e3b7f2b8f3';
+
+async function loadAdminEvents() {
+  if (!currentUser || currentUser.id !== ADMIN_USER_ID) return;
+  const list = document.getElementById('admin-events-list');
+  if (!list) return;
+  list.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-light);font-size:0.88rem">Loading...</div>';
+
+  try {
+    const { data, error } = await db.from('community_events')
+      .select('*')
+      .eq('status', 'pending')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      list.innerHTML = `<div style="color:var(--terra);font-size:0.85rem;padding:1rem">Could not load submissions. Make sure the <strong>community_events</strong> table exists in Supabase.</div>
+      <div style="font-size:0.78rem;color:var(--text-light);margin-top:0.5rem;padding:0 1rem">Run this in your Supabase SQL editor:<br><code style="background:var(--cream);padding:2px 6px;border-radius:4px;font-size:0.72rem">CREATE TABLE community_events (id uuid DEFAULT gen_random_uuid() PRIMARY KEY, created_at timestamptz DEFAULT now(), name text, date_str text, time_str text, location text, description text, submitter_email text, status text DEFAULT 'pending', emoji text DEFAULT '📌', tag text DEFAULT 'Community', url text);</code></div>`;
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      list.innerHTML = '<div style="text-align:center;padding:3rem 1rem;color:var(--text-light);font-size:0.88rem">✅ No pending submissions right now.</div>';
+      return;
+    }
+
+    list.innerHTML = data.map(e => `
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.3rem;margin-bottom:1rem">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap">
+          <div style="flex:1">
+            <div style="font-weight:600;color:var(--green-dark);font-size:0.95rem;margin-bottom:4px">${e.name}</div>
+            <div style="font-size:0.78rem;color:var(--amber);margin-bottom:2px">📅 ${e.date_str || '—'}</div>
+            <div style="font-size:0.78rem;color:var(--text-light);margin-bottom:4px">📍 ${e.location || '—'}</div>
+            ${e.description ? `<div style="font-size:0.78rem;color:var(--text-mid);margin-bottom:4px">${e.description}</div>` : ''}
+            ${e.submitter_email ? `<div style="font-size:0.72rem;color:var(--text-light)">📧 ${e.submitter_email}</div>` : ''}
+            <div style="font-size:0.7rem;color:var(--text-light);margin-top:4px">Submitted ${timeSince(e.created_at)}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;flex-shrink:0">
+            <button class="btn btn-dark btn-sm" style="background:var(--green-light);font-size:0.78rem" onclick="approveEvent('${e.id}')">✓ Approve</button>
+            <button class="btn btn-outline-dark btn-sm" style="color:var(--terra);border-color:rgba(139,74,42,0.3);font-size:0.78rem" onclick="rejectEvent('${e.id}')">✕ Reject</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  } catch(err) {
+    list.innerHTML = '<div style="color:var(--terra);font-size:0.85rem;padding:1rem">Error loading submissions.</div>';
+  }
+}
+
+async function approveEvent(id) {
+  const { error } = await db.from('community_events').update({ status: 'approved' }).eq('id', id);
+  if (error) { showToast('Could not approve — try again'); return; }
+  showToast('✅ Event approved and live on the board!');
+  loadAdminEvents();
+}
+
+async function rejectEvent(id) {
+  if (!confirm('Reject and delete this submission?')) return;
+  const { error } = await db.from('community_events').delete().eq('id', id);
+  if (error) { showToast('Could not reject — try again'); return; }
+  showToast('Submission rejected and removed.');
+  loadAdminEvents();
+}
 
 
 </script>
