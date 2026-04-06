@@ -563,6 +563,10 @@ nav {
 }
 .card-new-dot { animation: pulse-dot 2s infinite; }
 
+/* Stale listing (30+ days old) */
+.listing-stale { opacity: 0.72; }
+.listing-stale:hover { opacity: 1; }
+
 .card-img {
   height: 200px;
   width: 100%;
@@ -2000,6 +2004,16 @@ footer {
     <div id="hero-live-count" style="display:none;margin-top:0.5rem;position:relative;z-index:1">
       <span class="hero-live-pill"><span class="hero-live-dot"></span><span id="hero-count-num">0</span> listings available right now</span>
     </div>
+    <div class="hero-stats" id="hero-stats-bar" style="display:none">
+      <div class="hero-stat">
+        <div class="hero-stat-num" id="stat-members">—</div>
+        <div class="hero-stat-lbl">Neighbors</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" id="stat-listings">—</div>
+        <div class="hero-stat-lbl">Listings</div>
+      </div>
+    </div>
   </section>
 
   <!-- What you can trade - simplified -->
@@ -3200,14 +3214,17 @@ function closeMobileNav() {
 function cardHTML(l) {
   const cat = l.cat === 'food' ? 'Food & Garden' : l.cat === 'skill' ? 'Skill' : 'Goods';
   const timeStr = l.created_at ? timeSince(l.created_at) : '';
-  const isNew = l.created_at && (new Date() - new Date(l.created_at)) < 86400000;
+  const ageMs = l.created_at ? (new Date() - new Date(l.created_at)) : 0;
+  const isNew = ageMs > 0 && ageMs < 86400000;
+  const isStale = ageMs > 2592000000; // 30 days
   const imgContent = l.photo_url
     ? `<img src="${l.photo_url}" loading="lazy" style="width:100%;height:100%;object-fit:cover" alt="${l.title}">`
     : l.emoji;
   const newDot = isNew ? `<div class="card-new-dot" title="Posted today"></div>` : '';
-  return `<div class="listing-card cat-border-${l.cat}" onclick="openListingDetail(${JSON.stringify(l).replace(/"/g,'&quot;')})">
+  const staleBadge = isStale ? `<div style="position:absolute;top:10px;left:10px;background:rgba(122,122,122,0.85);color:#fff;font-size:0.65rem;padding:2px 8px;border-radius:20px;font-weight:500;letter-spacing:0.04em;z-index:2">May be filled</div>` : '';
+  return `<div class="listing-card cat-border-${l.cat}${isStale ? ' listing-stale' : ''}" onclick="openListingDetail(${JSON.stringify(l).replace(/"/g,'&quot;')})">
     ${newDot}
-    <div class="card-img" style="background:${l.bg};overflow:hidden">${imgContent}${!l.photo_url && l.badge ? `<div class="card-badge">${l.badge}</div>` : ''}</div>
+    <div class="card-img" style="background:${l.bg};overflow:hidden;position:relative">${imgContent}${staleBadge}${!l.photo_url && l.badge ? `<div class="card-badge">${l.badge}</div>` : ''}</div>
     <div class="card-body">
       <div class="card-cat cat-${l.cat}">${cat}</div>
       <div class="card-title">${l.title}</div>
@@ -3215,7 +3232,7 @@ function cardHTML(l) {
       <div class="trade-pill"${l.trade === 'Open to offers' ? ' style="font-style:italic;color:var(--text-light)"' : ''}>↔ ${l.trade}</div>
       <div class="card-footer-row" style="margin-top:10px">
         <div class="avatar-row">
-          <div class="avatar ${l.av}">${l.initials}</div>
+          <div class="avatar ${l.av}" style="${l.avColor ? `background:${l.avColor};` : ''}">${l.initials}</div>
           <span class="card-user-name" onclick="event.stopPropagation();${l.user_id ? `viewPublicProfile('${l.user_id}','${l.user}')` : ''}" style="${l.user_id ? 'cursor:pointer;text-decoration:underline;text-underline-offset:2px' : ''}">${l.user}</span>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
@@ -3290,6 +3307,7 @@ function openListingDetail(l) {
   if (isOwn) {
     actions.innerHTML = `
       <button class="btn btn-dark btn-sm" onclick="closeListingDetail();openEditModal(${JSON.stringify(l).replace(/"/g,'&quot;')})">✏️ Edit</button>
+      <button class="btn btn-outline-dark btn-sm" style="color:var(--green-light);border-color:rgba(74,139,92,0.35)" onclick="markAsTraded('${l.id}')">🤝 Mark as traded</button>
       <button class="btn btn-outline-dark btn-sm" onclick="deleteListingFromDetail('${l.id}')">🗑 Delete</button>
       <button class="btn btn-outline-dark btn-sm" onclick="closeListingDetail()">Close</button>`;
   } else if (canMsg) {
@@ -3327,6 +3345,31 @@ async function deleteListingFromDetail(id) {
   renderBrowse();
   loadProfileListings();
   showToast('Listing deleted.');
+}
+
+async function markAsTraded(id) {
+  if (!currentUser) return;
+  if (!confirm('Mark this listing as traded? It will be removed from the board.')) return;
+
+  const { error } = await db.from('listings')
+    .update({ traded: true })
+    .eq('id', id)
+    .eq('user_id', currentUser.id);
+
+  if (error) {
+    // Column may not exist yet — just delete it locally and from DB
+    await db.from('listings').delete().eq('id', id).eq('user_id', currentUser.id);
+  }
+
+  const idx = listings.findIndex(l => l.id == id);
+  if (idx > -1) listings.splice(idx, 1);
+
+  closeListingDetail();
+  renderHome();
+  renderBrowse();
+  loadProfileListings();
+  showToast('🤝 Nice one! Listing marked as traded.');
+  setTimeout(() => openRateModal(), 800);
 }
 
 /* ---- PERSONAL INVITE SYSTEM ---- */
@@ -3489,7 +3532,10 @@ async function loadMemberCount() {
   try {
     const { count } = await db.from('profiles').select('*', { count: 'exact', head: true });
     if (count !== null) {
-      const smEl = document.getElementById('stat-members'); if (smEl) smEl.textContent = count > 0 ? count.toLocaleString() : '1';
+      const smEl = document.getElementById('stat-members');
+      if (smEl) smEl.textContent = count > 0 ? count.toLocaleString() : '1';
+      const bar = document.getElementById('hero-stats-bar');
+      if (bar && count > 0) bar.style.display = 'flex';
     }
   } catch(e) {}
 }
@@ -4500,14 +4546,17 @@ async function loadListingsFromDB() {
         trade: row.trade_for || 'Open to offers',
         user: row.user_name || 'Neighbor',
         initials: (row.user_name || 'N').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2),
-        av: 'av-green',
+        av: row.avatar_color ? '' : 'av-green',
+        avColor: row.avatar_color || null,
         dist: row.neighborhood || 'Community',
         badge: '',
         user_id: row.user_id || null,
         created_at: row.created_at || null,
         photo_url: row.photo_url || null
       }));
-      listings.unshift(...dbListings);
+      // Replace entire listings array to prevent duplicates on refresh
+      listings.length = 0;
+      listings.push(...dbListings);
     }
     showDBStatus('connected');
     renderHome();
@@ -4522,6 +4571,7 @@ async function loadListingsFromDB() {
 async function saveListingToDB(listing) {
   try {
     const userName = currentUser ? (currentUser.user_metadata?.full_name || currentUser.email.split('@')[0]) : 'Neighbor';
+    const avatarColor = currentUser?.user_metadata?.avatar_color || null;
     const { data, error } = await db
       .from('listings')
       .insert([{
@@ -4533,7 +4583,8 @@ async function saveListingToDB(listing) {
         neighborhood: listing.hood,
         user_name: userName,
         user_id: currentUser ? currentUser.id : null,
-        user_email: currentUser ? currentUser.email : null
+        user_email: currentUser ? currentUser.email : null,
+        avatar_color: avatarColor
       }])
       .select()
       .single();
@@ -4618,6 +4669,7 @@ window.submitListing = async function() {
     user: userName,
     initials: userInitials,
     av: 'av-green',
+    avColor: currentUser?.user_metadata?.avatar_color || null,
     dist: hood || 'Community',
     badge: '',
     user_id: currentUser ? currentUser.id : null,
@@ -4706,7 +4758,10 @@ async function initAuth() {
 
   const { count } = await db.from('listings').select('*', { count: 'exact', head: true });
   if (count !== null) {
-    const slEl = document.getElementById('stat-listings'); if(slEl) slEl.textContent = count;
+    const slEl = document.getElementById('stat-listings');
+    if (slEl) slEl.textContent = count;
+    const bar = document.getElementById('hero-stats-bar');
+    if (bar && count > 0) bar.style.display = 'flex';
   }
 }
 
