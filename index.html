@@ -1780,7 +1780,6 @@ footer {
   .nav-links { display: none; }
   .nav-hamburger { display: flex; }
   .hero { padding: 3.5rem 1rem 6rem; }
-  #seasonal-grid { grid-template-columns: repeat(2, 1fr) !important; }
   .hero h1 { font-size: 2rem; }
   .hero-stats { gap: 1.5rem; }
   .hero-actions { flex-direction: column; align-items: center; gap: 0.75rem; }
@@ -1975,15 +1974,6 @@ footer {
     </div>
   </div>
 
-  <!-- What's growing in Bountiful -->
-  <div id="seasonal-section" style="padding:2rem 1.5rem 0.5rem;background:var(--cream)">
-    <div style="max-width:1000px;margin:0 auto">
-      <div style="margin-bottom:1.2rem">
-        <div class="section-heading" id="seasonal-heading">What's growing in Bountiful</div>
-      </div>
-      <div id="seasonal-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.85rem"></div>
-    </div>
-  </div>
 
   <!-- Local Events Preview -->
   <div style="padding:2rem 1.5rem 2.5rem;background:var(--white);border-top:1px solid var(--border)">
@@ -3065,7 +3055,7 @@ function showPage(name) {
   window.scrollTo(0,0);
   document.title = pageTitles[name] || 'LocalRoots';
   if (name === 'browse') renderBrowse();
-  if (name === 'home') { renderHome(); renderSeasonal(); renderEventsPreview(); }
+  if (name === 'home') { renderHome(); renderEventsPreview(); }
   if (name === 'events') renderEvents();
   if (name === 'messages') loadConversations();
   if (name === 'profile') showProfilePage();
@@ -4046,167 +4036,6 @@ async function submitEvent() {
   }
 }
 
-/* ---- SEASONAL SECTION ---- */
-const seasonalData = {
-  0: [ // January
-    { name: 'Stored apples', emoji: '🍎', tip: 'Honeycrisp, Fuji, Gala' },
-    { name: 'Kale', emoji: '🥬', tip: 'Cold makes it sweeter' },
-    { name: 'Butternut squash', emoji: '🎃', tip: 'Stores for months' },
-    { name: 'Dried herbs', emoji: '🌿', tip: 'Rosemary, thyme, oregano' },
-    { name: 'Microgreens', emoji: '🌱', tip: 'Easy indoor grow' },
-    { name: 'Onions', emoji: '🧅', tip: 'From fall harvest' },
-  ],
-  1: [ // February
-    { name: 'Microgreens', emoji: '🌱', tip: 'Sunflower, radish, pea' },
-    { name: 'Stored carrots', emoji: '🥕', tip: 'Root cellar keepers' },
-    { name: 'Kale', emoji: '🥬', tip: 'Overwintered varieties' },
-    { name: 'Garlic', emoji: '🧄', tip: 'From fall planting' },
-    { name: 'Dried lavender', emoji: '💜', tip: 'Bundles and sachets' },
-    { name: 'Sourdough starter', emoji: '🍞', tip: 'Share the culture' },
-  ],
-  2: [ // March
-    { name: 'Spinach', emoji: '🥬', tip: 'First of the year' },
-    { name: 'Radishes', emoji: '🌶️', tip: 'Ready in just 25 days' },
-    { name: 'Chives', emoji: '🌿', tip: 'First herb of spring' },
-    { name: 'Cilantro', emoji: '🌿', tip: 'Plant before heat' },
-    { name: 'Parsley', emoji: '🌿', tip: 'Overwintered beautifully' },
-    { name: 'Seedlings', emoji: '🌱', tip: 'Tomato and pepper starts' },
-  ],
-  3: [ // April
-    { name: 'Asparagus', emoji: '🥦', tip: 'Utah spring classic' },
-    { name: 'Rhubarb', emoji: '🍓', tip: 'First stalks of the year' },
-    { name: 'Radishes', emoji: '🌶️', tip: 'Ready in 25 days' },
-    { name: 'Mint', emoji: '🌿', tip: 'Spearmint, peppermint, mojito' },
-    { name: 'Aloe vera', emoji: '🌵', tip: 'Pups and cuttings to share' },
-    { name: 'Honey', emoji: '🍯', tip: 'Spring wildflower harvest' },
-    { name: 'Eggs', emoji: '🥚', tip: 'Hens laying at peak' },
-    { name: 'Seedlings', emoji: '🌱', tip: 'Tomato, pepper, squash starts' },
-  ],
-  4: [ // May
-    { name: 'Strawberries', emoji: '🍓', tip: 'First Utah berries' },
-    { name: 'Rhubarb', emoji: '🍓', tip: 'Peak harvest time' },
-    { name: 'Lettuce', emoji: '🥬', tip: 'Best before summer heat' },
-    { name: 'Basil', emoji: '🌿', tip: 'Italian and Thai varieties' },
-    { name: 'Cilantro', emoji: '🌿', tip: 'Last chance before bolting' },
-    { name: 'Snap peas', emoji: '🫛', tip: 'Sweet straight off vine' },
-    { name: 'Oregano', emoji: '🌿', tip: 'Great for drying' },
-    { name: 'Eggs', emoji: '🥚', tip: 'Spring peak production' },
-  ],
-  5: [ // June
-    { name: 'Strawberries', emoji: '🍓', tip: 'Peak season freeze some' },
-    { name: 'Cherries', emoji: '🍒', tip: 'Utah cherry season' },
-    { name: 'Zucchini', emoji: '🥒', tip: 'It begins...' },
-    { name: 'Garlic scapes', emoji: '🧄', tip: 'Curl before the bulb' },
-    { name: 'Basil', emoji: '🌿', tip: 'Genovese at its best' },
-    { name: 'Sage', emoji: '🌿', tip: 'Purple and garden varieties' },
-    { name: 'Raspberries', emoji: '🍇', tip: 'First summer flush' },
-    { name: 'Honey', emoji: '🍯', tip: 'Spring wildflower harvest' },
-  ],
-  6: [ // July
-    { name: 'Tomatoes', emoji: '🍅', tip: 'Heirloom and cherry' },
-    { name: 'Peaches', emoji: '🍑', tip: 'Utah peaches are legendary' },
-    { name: 'Zucchini', emoji: '🥒', tip: 'Leave one on a doorstep' },
-    { name: 'Cucumbers', emoji: '🥒', tip: 'Pickling varieties' },
-    { name: 'Sweet corn', emoji: '🌽', tip: 'Days matter eat fresh' },
-    { name: 'Basil', emoji: '🌿', tip: 'Make pesto now' },
-    { name: 'Jalapeños', emoji: '🌶️', tip: 'Ferment or pickle' },
-    { name: 'Blueberries', emoji: '🫐', tip: 'Short Utah season' },
-  ],
-  7: [ // August
-    { name: 'Tomatoes', emoji: '🍅', tip: 'Best of the entire year' },
-    { name: 'Peaches', emoji: '🍑', tip: 'Palisade peach peak' },
-    { name: 'Peppers', emoji: '🌶️', tip: 'Sweet and hot varieties' },
-    { name: 'Melons', emoji: '🍈', tip: 'Cantaloupe and honeydew' },
-    { name: 'Eggplant', emoji: '🍆', tip: 'Gorgeous at peak heat' },
-    { name: 'Blackberries', emoji: '🍇', tip: 'Wild and cultivated' },
-    { name: 'Sunflowers', emoji: '🌻', tip: 'Seeds and cut flowers' },
-    { name: 'Honey', emoji: '🍯', tip: 'Summer wildflower blend' },
-  ],
-  8: [ // September
-    { name: 'Apples', emoji: '🍎', tip: 'Honeycrisp, Fuji, Braeburn' },
-    { name: 'Pears', emoji: '🍐', tip: 'Bartlett and Bosc' },
-    { name: 'Grapes', emoji: '🍇', tip: 'Concord and wine varieties' },
-    { name: 'Winter squash', emoji: '🎃', tip: 'Butternut, delicata' },
-    { name: 'Tomatoes', emoji: '🍅', tip: 'Can and preserve now' },
-    { name: 'Hot peppers', emoji: '🌶️', tip: 'Roast and freeze' },
-    { name: 'Dry beans', emoji: '🫘', tip: 'Heirloom varieties' },
-    { name: 'Rosemary', emoji: '🌿', tip: 'Harvest before frost' },
-  ],
-  9: [ // October
-    { name: 'Apples', emoji: '🍎', tip: 'Peak Utah apple season' },
-    { name: 'Pumpkins', emoji: '🎃', tip: 'Sugar pies and carving' },
-    { name: 'Beets', emoji: '🩷', tip: 'Roast or pickle' },
-    { name: 'Carrots', emoji: '🥕', tip: 'Frost sweetens them' },
-    { name: 'Kale', emoji: '🥬', tip: 'Cold makes it better' },
-    { name: 'Garlic', emoji: '🧄', tip: 'Plant now for next year' },
-    { name: 'Walnuts', emoji: '🌰', tip: 'Wild harvest time' },
-    { name: 'Dried herbs', emoji: '🌿', tip: 'Bundle before first frost' },
-  ],
-  10: [ // November
-    { name: 'Stored apples', emoji: '🍎', tip: 'Cellar keepers last months' },
-    { name: 'Winter squash', emoji: '🎃', tip: 'Acorn, hubbard, kabocha' },
-    { name: 'Kale', emoji: '🥬', tip: 'Hardy through hard frost' },
-    { name: 'Carrots', emoji: '🥕', tip: 'Still in the ground' },
-    { name: 'Onions', emoji: '🧅', tip: 'Cured and ready to share' },
-    { name: 'Dried flowers', emoji: '🌸', tip: 'Wreaths and arrangements' },
-  ],
-  11: [ // December
-    { name: 'Stored squash', emoji: '🎃', tip: 'Keeps through winter' },
-    { name: 'Stored apples', emoji: '🍎', tip: 'Root cellar staples' },
-    { name: 'Dried herbs', emoji: '🌿', tip: 'Rosemary, thyme, sage' },
-    { name: 'Microgreens', emoji: '🌱', tip: 'Great gift idea' },
-    { name: 'Preserved goods', emoji: '🍯', tip: 'Jams, pickles, sauces' },
-    { name: 'Garlic braids', emoji: '🧄', tip: 'Beautiful and useful' },
-  ]
-};
-
-const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-
-function renderSeasonal() {
-  const grid = document.getElementById('seasonal-grid');
-  const sub = document.getElementById('seasonal-sub');
-  if (!grid) return;
-  const month = new Date().getMonth();
-  const items = seasonalData[month] || [];
-  if (sub) sub.style.display = 'none';
-  grid.innerHTML = items.map(item => `
-    <div onclick="openPostModalWithItem('${item.name}','${item.emoji}')"
-      style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;text-align:center;cursor:pointer;transition:all 0.2s;box-shadow:var(--shadow)"
-      onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='var(--shadow-lg)'"
-      onmouseout="this.style.transform='';this.style.boxShadow='var(--shadow)'">
-      <div style="font-size:2rem;margin-bottom:0.5rem">${item.emoji}</div>
-      <div style="font-size:0.88rem;font-weight:500;color:var(--green-dark);margin-bottom:0.25rem">${item.name}</div>
-      <div style="font-size:0.72rem;color:var(--text-light)">${item.tip}</div>
-    </div>
-  `).join('');
-
-  // Single post button below the grid
-  let btn = document.getElementById('seasonal-post-btn');
-  if (!btn) {
-    btn = document.createElement('div');
-    btn.id = 'seasonal-post-btn';
-    btn.style.cssText = 'margin-top:1rem;text-align:center';
-    grid.parentNode.appendChild(btn);
-  }
-  btn.innerHTML = `<button class="btn btn-outline-dark btn-sm" onclick="openPostModal()">Got something growing? Post it →</button>`;
-}
-
-function openPostModalWithItem(name, emoji) {
-  if (!currentUser) { openAuthModal(); return; }
-  openPostModal();
-  setTimeout(() => {
-    const titleEl = document.getElementById('post-title');
-    if (titleEl) {
-      titleEl.value = name;
-      const counter = document.getElementById('title-counter');
-      if (counter) counter.textContent = name.length + '/60';
-    }
-    // Find and select the matching emoji
-    document.querySelectorAll('#emoji-picker-food .emoji-opt').forEach(el => {
-      if (el.textContent === emoji) el.click();
-    });
-  }, 100);
-}
 
 /* ---- PUBLIC PROFILE ---- */
 let publicProfileUserId = null;
@@ -4695,7 +4524,6 @@ window.submitListing = async function() {
 loadListingsFromDB();
 loadMemberCount();
 checkInviteParam();
-renderSeasonal();
 renderEvents();
 renderEventsPreview();
 
