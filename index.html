@@ -19,7 +19,7 @@
 <meta name="twitter:title" content="LocalRoots Trade with Your Neighbors">
 <meta name="twitter:description" content="A free community platform to trade food, skills, crafts, and goods with your neighbors. Join LocalRoots and start trading today.">
 <meta name="twitter:image" content="https://localroots.live/og-image.png">
-<title>LocalRoots Free Community Barter & Trade Platform</title>
+<title>LocalRoots — Free Barter & Trade Platform | Bountiful, Utah</title>
 <link rel="canonical" href="https://localroots.live">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect width='100' height='100' rx='22' fill='%231C3A2A'/><line x1='50' y1='75' x2='50' y2='30' stroke='%23C8DEC8' stroke-width='4' stroke-linecap='round'/><path d='M50 55 Q34 45 28 28 Q42 32 50 48 Z' fill='%232D5C3F'/><path d='M50 42 Q66 32 72 16 Q58 20 50 36 Z' fill='%234A8B5C'/><line x1='50' y1='75' x2='38' y2='87' stroke='%234A8B5C' stroke-width='3.5' stroke-linecap='round'/><line x1='50' y1='75' x2='62' y2='87' stroke='%234A8B5C' stroke-width='3.5' stroke-linecap='round'/><circle cx='28' cy='28' r='5' fill='%23D4843A'/><circle cx='72' cy='16' r='4' fill='%23F2C27A'/></svg>">
 <link rel="alternate icon" type="image/png" href="/favicon.png">
@@ -54,8 +54,9 @@
 }
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap&font-display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" async></script>
 <style>
 /* ============================================================
    LOCALROOTS Complete Single-File Website
@@ -104,6 +105,48 @@ body {
 .page.active { display: block; }
 .inner { max-width: 1000px; margin: 0 auto; padding: 2.5rem 1.5rem; }
 .inner-wide { max-width: 1200px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+
+/* ============================================================
+   STICKY NUDGE BAR (logged-out)
+   ============================================================ */
+.nudge-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--green-dark);
+  border-top: 2px solid var(--amber);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  z-index: 999;
+  transform: translateY(100%);
+  transition: transform 0.35s ease;
+  flex-wrap: wrap;
+}
+.nudge-bar.visible { transform: translateY(0); }
+.nudge-bar-text {
+  color: var(--green-pale);
+  font-size: 0.88rem;
+  text-align: center;
+}
+.nudge-bar-text strong { color: var(--cream); }
+.nudge-bar-close {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--green-pale);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  opacity: 0.6;
+}
+.nudge-bar-close:hover { opacity: 1; }
 
 /* ============================================================
    NAVIGATION
@@ -2016,7 +2059,7 @@ footer {
   <div class="inner">
     <div class="browse-meta">
       <div class="browse-count" id="browse-count">Loading listings...</div>
-      <select class="sort-select" onchange="renderBrowse()">
+      <select class="sort-select" id="sort-select" onchange="handleSortChange(this)">
         <option value="recent">Most recent</option>
         <option value="nearest">Nearest first</option>
         <option value="rating">Highest rated</option>
@@ -2158,7 +2201,18 @@ footer {
           <textarea class="form-textarea" id="settings-bio" placeholder="Tell your neighbors a bit about yourself..."></textarea>
         </div>
         <button class="btn btn-dark" onclick="saveSettings()">Save changes</button>
-        <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border)">
+
+        <!-- Invite link -->
+        <div style="margin-top:1.75rem;padding:1.25rem;background:var(--cream);border:1px solid var(--border);border-radius:var(--radius)">
+          <div style="font-size:0.82rem;font-weight:600;color:var(--green-dark);margin-bottom:0.3rem">🌱 Invite a neighbor</div>
+          <div style="font-size:0.78rem;color:var(--text-light);margin-bottom:0.75rem">Share your personal link — help grow the community.</div>
+          <div style="display:flex;gap:8px">
+            <input class="form-input" id="profile-invite-link" readonly style="font-size:0.78rem;background:var(--white);cursor:pointer" value="Loading...">
+            <button class="btn btn-outline-dark btn-sm" style="flex-shrink:0;white-space:nowrap" onclick="copyProfileInviteLink()">Copy</button>
+          </div>
+        </div>
+
+        <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border)">
           <div style="font-size:0.82rem;font-weight:500;color:var(--terra);margin-bottom:0.75rem"></div>
           <button class="btn btn-outline-dark btn-sm" onclick="signOut()" style="color:var(--terra);border-color:rgba(139,74,42,0.3)">Sign out</button>
         </div>
@@ -2422,8 +2476,8 @@ footer {
       <div id="photo-upload-status" style="font-size:0.78rem;margin-top:4px;color:var(--text-light)"></div>
     </div>
     <div class="form-group">
-      <label class="form-label" for="post-desc">Description <span style="color:var(--text-light);font-weight:400;font-size:0.75rem">(optional)</span></label>
-      <textarea class="form-textarea" id="post-desc" placeholder="Tell your neighbors what you have and what you're looking for in return..."></textarea>
+      <label class="form-label" for="post-desc">Description <span style="color:var(--text-light);font-weight:400;font-size:0.75rem">(optional)</span> <span style="color:var(--text-light);font-weight:400;font-size:0.75rem" id="desc-counter">0/300</span></label>
+      <textarea class="form-textarea" id="post-desc" placeholder="Tell your neighbors what you have and what you're looking for in return..." maxlength="300" oninput="document.getElementById('desc-counter').textContent=this.value.length+'/300'"></textarea>
     </div>
     <div class="form-group">
       <label class="form-label" for="post-trade">Looking to trade for</label>
@@ -3105,7 +3159,7 @@ function cardHTML(l) {
   const cat = l.cat === 'food' ? 'Food & Garden' : l.cat === 'skill' ? 'Skill' : 'Goods';
   const timeStr = l.created_at ? timeSince(l.created_at) : '';
   const imgContent = l.photo_url
-    ? `<img src="${l.photo_url}" style="width:100%;height:100%;object-fit:cover" alt="${l.title}">`
+    ? `<img src="${l.photo_url}" loading="lazy" style="width:100%;height:100%;object-fit:cover" alt="${l.title}">`
     : l.emoji;
   return `<div class="listing-card" onclick="openListingDetail(${JSON.stringify(l).replace(/"/g,'&quot;')})">
     <div class="card-img" style="background:${l.bg};overflow:hidden">${imgContent}${!l.photo_url && l.badge ? `<div class="card-badge">${l.badge}</div>` : ''}</div>
@@ -3257,6 +3311,21 @@ function setupInviteSection(user) {
   if (loggedIn) loggedIn.style.display = 'block';
   if (inviteLink) inviteLink.value = link;
   if (inviteLabel) inviteLabel.textContent = `${name}'s personal invite link`;
+  // Also populate the settings tab invite field
+  const profileInviteLink = document.getElementById('profile-invite-link');
+  if (profileInviteLink) profileInviteLink.value = link;
+}
+
+function copyProfileInviteLink() {
+  const link = document.getElementById('profile-invite-link')?.value;
+  if (!link) return;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(link).then(() => showToast('Invite link copied! Share it with your neighbors 🌱'));
+  } else {
+    document.getElementById('profile-invite-link').select();
+    document.execCommand('copy');
+    showToast('Invite link copied! 🌱');
+  }
 }
 
 function copyInviteLink() {
@@ -3415,6 +3484,29 @@ function showHomeLoading() {
   }
 }
 
+/* ---- SORT HANDLER ---- */
+function handleSortChange(el) {
+  if (el.value === 'nearest') {
+    if (!navigator.geolocation) {
+      showToast('Location not available on this device — showing most recent instead.');
+      el.value = 'recent';
+      renderBrowse();
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      () => { renderBrowse(); },
+      () => {
+        showToast('Enable location access to sort by nearest — showing most recent instead.');
+        el.value = 'recent';
+        renderBrowse();
+      },
+      { timeout: 5000 }
+    );
+  } else {
+    renderBrowse();
+  }
+}
+
 /* ---- BROWSE ---- */
 function renderBrowse() {
   const q = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
@@ -3553,6 +3645,8 @@ function submitListing() {
   document.getElementById('post-desc').value = '';
   document.getElementById('post-trade').value = '';
   const slEl2 = document.getElementById('stat-listings'); if(slEl2) slEl2.textContent = listings.length;
+  const descCtr2 = document.getElementById('desc-counter'); if(descCtr2) descCtr2.textContent = '0/300';
+  const titleCtr2 = document.getElementById('title-counter'); if(titleCtr2) titleCtr2.textContent = '0/60';
   renderHome();
   renderBrowse();
   showToast('🎉 Listing posted! Your neighbors can now see it.');
@@ -4487,6 +4581,7 @@ window.submitListing = async function() {
   document.getElementById('post-trade').value = '';
   document.getElementById('post-hood').value = '';
   document.getElementById('title-counter').textContent = '0/60';
+  document.getElementById('desc-counter').textContent = '0/300';
   selectedEmoji = '🍅';
   resetPhotoUpload();
   renderHome();
@@ -4560,6 +4655,8 @@ async function initAuth() {
 }
 
 function onUserLoggedIn(user) {
+  const nudgeBar = document.getElementById('nudge-bar');
+  if (nudgeBar) nudgeBar.classList.remove('visible');
   const name = user.user_metadata?.full_name || user.email.split('@')[0];
   const location = user.user_metadata?.location || '';
   const bio = user.user_metadata?.bio || '';
@@ -4785,6 +4882,43 @@ async function checkNewMessages() {
     }
   } catch(e) {}
 }
+
+/* ---- STICKY NUDGE BAR ---- */
+(function() {
+  const bar = document.createElement('div');
+  bar.className = 'nudge-bar';
+  bar.id = 'nudge-bar';
+  bar.innerHTML = `
+    <span class="nudge-bar-text">🌱 <strong>Join LocalRoots free</strong> — trade food, skills & goods with your Bountiful neighbors. Takes 30 seconds.</span>
+    <button class="btn btn-primary" style="font-size:0.82rem;padding:7px 16px;flex-shrink:0" onclick="openAuthModal();dismissNudge()">Create free account</button>
+    <button class="nudge-bar-close" onclick="dismissNudge()" aria-label="Dismiss">✕</button>
+  `;
+  document.body.appendChild(bar);
+
+  function dismissNudge() {
+    bar.classList.remove('visible');
+    try { sessionStorage.setItem('nudge-dismissed', '1'); } catch(e) {}
+  }
+  window.dismissNudge = dismissNudge;
+
+  let shown = false;
+  function maybeShowNudge() {
+    if (shown) return;
+    try { if (sessionStorage.getItem('nudge-dismissed')) return; } catch(e) {}
+    if (window.currentUser) return;
+    const scrolled = window.scrollY > 300;
+    if (scrolled) {
+      bar.classList.add('visible');
+      shown = true;
+    }
+  }
+
+  window.addEventListener('scroll', maybeShowNudge, { passive: true });
+
+  // Hide when user logs in
+  document.addEventListener('supabase-logged-in', () => bar.classList.remove('visible'));
+})();
+
 
 </script>
 </body>
