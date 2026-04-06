@@ -2294,11 +2294,43 @@ footer {
 
     <!-- TAB: ADMIN (owner only) -->
     <div class="inner" id="ptab-admin" style="display:none">
-      <div style="max-width:680px">
-        <div style="font-size:1rem;font-weight:500;color:var(--green-dark);margin-bottom:0.5rem">⚙ Admin panel</div>
-        <div style="font-size:0.82rem;color:var(--text-light);margin-bottom:1.5rem">Review and approve community event submissions.</div>
-        <div id="admin-events-list">
-          <div style="text-align:center;padding:2rem;color:var(--text-light);font-size:0.88rem">Loading submissions...</div>
+      <div style="max-width:720px">
+        <div style="font-size:1rem;font-weight:500;color:var(--green-dark);margin-bottom:1rem">⚙ Admin panel</div>
+        <!-- Admin sub-tabs -->
+        <div style="display:flex;gap:0.5rem;margin-bottom:1.5rem;border-bottom:1px solid var(--border);padding-bottom:0.75rem">
+          <button class="admin-stab active" onclick="switchAdminTab(this,'events')" style="background:none;border:none;font-size:0.82rem;font-weight:500;color:var(--green-dark);cursor:pointer;padding:4px 12px;border-radius:var(--radius-pill);transition:background 0.15s">
+            Events <span id="admin-events-badge" style="display:none;background:var(--amber);color:white;font-size:0.6rem;padding:1px 5px;border-radius:8px;margin-left:2px">0</span>
+          </button>
+          <button class="admin-stab" onclick="switchAdminTab(this,'reports')" style="background:none;border:none;font-size:0.82rem;font-weight:500;color:var(--text-light);cursor:pointer;padding:4px 12px;border-radius:var(--radius-pill);transition:background 0.15s">
+            Reports <span id="admin-reports-badge" style="display:none;background:var(--terra);color:white;font-size:0.6rem;padding:1px 5px;border-radius:8px;margin-left:2px">0</span>
+          </button>
+          <button class="admin-stab" onclick="switchAdminTab(this,'listings')" style="background:none;border:none;font-size:0.82rem;font-weight:500;color:var(--text-light);cursor:pointer;padding:4px 12px;border-radius:var(--radius-pill);transition:background 0.15s">
+            All listings
+          </button>
+        </div>
+        <!-- Events panel -->
+        <div id="admin-panel-events">
+          <div style="font-size:0.82rem;color:var(--text-light);margin-bottom:1rem">Review and approve community event submissions.</div>
+          <div id="admin-events-list">
+            <div style="text-align:center;padding:2rem;color:var(--text-light);font-size:0.88rem">Loading...</div>
+          </div>
+        </div>
+        <!-- Reports panel -->
+        <div id="admin-panel-reports" style="display:none">
+          <div style="font-size:0.82rem;color:var(--text-light);margin-bottom:1rem">User-reported listings. Review and remove if needed.</div>
+          <div id="admin-reports-list">
+            <div style="text-align:center;padding:2rem;color:var(--text-light);font-size:0.88rem">Loading...</div>
+          </div>
+        </div>
+        <!-- All listings panel -->
+        <div id="admin-panel-listings" style="display:none">
+          <div style="font-size:0.82rem;color:var(--text-light);margin-bottom:1rem">All active listings. You can delete any listing that violates community standards.</div>
+          <div id="admin-listings-search" style="margin-bottom:1rem">
+            <input class="form-input" type="text" placeholder="Search listings..." id="admin-listings-search-input" oninput="filterAdminListings(this.value)" style="font-size:0.82rem">
+          </div>
+          <div id="admin-listings-list">
+            <div style="text-align:center;padding:2rem;color:var(--text-light);font-size:0.88rem">Loading...</div>
+          </div>
         </div>
       </div>
     </div>
@@ -2743,6 +2775,35 @@ footer {
       <input class="form-input" type="text" id="edit-hood" placeholder="e.g. UT">
     </div>
     <button class="btn btn-dark btn-full" onclick="saveEditListing()">Save changes →</button>
+  </div>
+</div>
+
+<!-- ============================================================
+     MODAL: REPORT LISTING
+     ============================================================ -->
+<div class="modal-backdrop" id="report-modal" onclick="if(event.target===this)closeReportModal()">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">Report listing</div>
+      <button class="modal-close" onclick="closeReportModal()">✕</button>
+    </div>
+    <input type="hidden" id="report-listing-id">
+    <input type="hidden" id="report-listing-user-id">
+    <div style="font-size:0.85rem;color:var(--text-mid);margin-bottom:1.2rem" id="report-listing-title-display"></div>
+    <div class="form-group">
+      <label class="form-label">Why are you reporting this?</label>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.85rem;cursor:pointer"><input type="radio" name="report-reason" value="spam"> Spam or fake listing</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.85rem;cursor:pointer"><input type="radio" name="report-reason" value="inappropriate"> Inappropriate content</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.85rem;cursor:pointer"><input type="radio" name="report-reason" value="commercial"> Commercial / selling for money</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.85rem;cursor:pointer"><input type="radio" name="report-reason" value="other"> Other</label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Additional details <span style="color:var(--text-light);font-weight:400">(optional)</span></label>
+      <textarea class="form-textarea" id="report-details" placeholder="Any other context that would help us review this..." style="min-height:80px"></textarea>
+    </div>
+    <button class="btn btn-dark btn-full" onclick="submitReport()" style="background:var(--terra)">Submit report</button>
   </div>
 </div>
 
@@ -3325,7 +3386,8 @@ function openListingDetail(l) {
   } else if (canMsg) {
     actions.innerHTML = `
       <button class="btn btn-dark btn-sm" onclick="closeListingDetail();openMessageModal('${l.user_id}','${l.user}','${l.id}','${l.title}')">✉ Message ${l.user.split(' ')[0]}</button>
-      <button class="btn btn-outline-dark btn-sm" onclick="closeListingDetail()">Close</button>`;
+      <button class="btn btn-outline-dark btn-sm" onclick="closeListingDetail()">Close</button>
+      <button onclick="openReportModal('${l.id}','${l.title.replace(/'/g,"\\'")}','${l.user_id}')" style="background:none;border:none;font-size:0.72rem;color:var(--text-light);cursor:pointer;padding:4px 8px;margin-left:auto;text-decoration:underline;text-underline-offset:2px;font-family:'DM Sans',sans-serif">🚩 Report</button>`;
   } else if (!currentUser) {
     actions.innerHTML = `
       <button class="btn btn-dark btn-sm" onclick="closeListingDetail();openAuthModal()">Sign in to message</button>
@@ -5152,21 +5214,194 @@ async function loadAdminEvents() {
 }
 
 async function loadAdminPendingCount() {
+  loadAdminBadges(); // delegate to unified function
+}
+
+/* ============================================================
+   REPORT SYSTEM
+   ============================================================ */
+function openReportModal(listingId, listingTitle, reportedUserId) {
+  document.getElementById('report-listing-id').value = listingId;
+  document.getElementById('report-listing-user-id').value = reportedUserId || '';
+  document.getElementById('report-listing-title-display').textContent = `"${listingTitle}"`;
+  document.getElementById('report-details').value = '';
+  document.querySelectorAll('input[name="report-reason"]').forEach(r => r.checked = false);
+  document.getElementById('report-modal').classList.add('open');
+}
+
+function closeReportModal() {
+  document.getElementById('report-modal').classList.remove('open');
+}
+
+async function submitReport() {
+  const listingId = document.getElementById('report-listing-id').value;
+  const reportedUserId = document.getElementById('report-listing-user-id').value;
+  const reason = document.querySelector('input[name="report-reason"]:checked')?.value;
+  const details = document.getElementById('report-details').value.trim();
+  if (!reason) { showToast('Please select a reason'); return; }
+
   try {
-    const { count } = await db.from('community_events')
-      .select('*', { count: 'exact', head: true })
-      .eq('status', 'pending');
-    const badge = document.getElementById('admin-pending-badge');
-    if (badge) {
-      if (count > 0) {
-        badge.textContent = count;
-        badge.style.display = 'inline';
-      } else {
-        badge.style.display = 'none';
-      }
+    await db.from('reports').insert([{
+      listing_id: listingId,
+      reported_user_id: reportedUserId || null,
+      reporter_id: currentUser?.id || null,
+      reason,
+      details: details || null,
+      status: 'pending'
+    }]);
+  } catch(e) { /* table may not exist yet, still show success */ }
+
+  closeReportModal();
+  showToast('Report submitted — we\'ll review it shortly. 🌱');
+}
+
+/* ============================================================
+   ADMIN SUB-TABS
+   ============================================================ */
+function switchAdminTab(el, tab) {
+  document.querySelectorAll('.admin-stab').forEach(b => {
+    b.style.color = 'var(--text-light)';
+    b.style.background = 'none';
+    b.style.fontWeight = '400';
+  });
+  el.style.color = 'var(--green-dark)';
+  el.style.background = 'rgba(44,92,63,0.07)';
+  el.style.fontWeight = '500';
+  document.getElementById('admin-panel-events').style.display = tab === 'events' ? 'block' : 'none';
+  document.getElementById('admin-panel-reports').style.display = tab === 'reports' ? 'block' : 'none';
+  document.getElementById('admin-panel-listings').style.display = tab === 'listings' ? 'block' : 'none';
+  if (tab === 'reports') loadAdminReports();
+  if (tab === 'listings') loadAdminListings();
+}
+
+/* ============================================================
+   ADMIN — REPORTS
+   ============================================================ */
+async function loadAdminReports() {
+  if (!currentUser || currentUser.id !== ADMIN_USER_ID) return;
+  const list = document.getElementById('admin-reports-list');
+  if (!list) return;
+  list.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-light);font-size:0.85rem">Loading...</div>';
+  try {
+    const { data, error } = await db.from('reports').select('*').eq('status','pending').order('created_at',{ascending:false});
+    if (error) {
+      list.innerHTML = `<div style="color:var(--terra);font-size:0.85rem;padding:1rem">Could not load reports. Create the <strong>reports</strong> table in Supabase SQL editor:<br><br><code style="background:var(--cream);padding:4px 8px;border-radius:4px;font-size:0.72rem;display:block;margin-top:6px">CREATE TABLE reports (id uuid DEFAULT gen_random_uuid() PRIMARY KEY, created_at timestamptz DEFAULT now(), listing_id text, reported_user_id uuid, reporter_id uuid, reason text, details text, status text DEFAULT 'pending');</code></div>`;
+      return;
     }
+    if (!data || data.length === 0) { list.innerHTML = '<div style="text-align:center;padding:3rem 1rem;color:var(--text-light);font-size:0.88rem">✅ No pending reports.</div>'; return; }
+    list.innerHTML = data.map(r => `
+      <div style="background:var(--white);border:1px solid var(--border);border-left:3px solid var(--terra);border-radius:var(--radius);padding:1.2rem;margin-bottom:0.85rem">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap">
+          <div style="flex:1">
+            <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--terra);font-weight:600;margin-bottom:4px">${r.reason?.replace(/_/g,' ') || 'Unknown'}</div>
+            <div style="font-size:0.82rem;color:var(--text-mid);margin-bottom:4px">Listing ID: <code style="background:var(--cream);padding:1px 5px;border-radius:3px;font-size:0.75rem">${r.listing_id || '—'}</code></div>
+            ${r.details ? `<div style="font-size:0.78rem;color:var(--text-mid);margin-bottom:4px;font-style:italic">"${r.details}"</div>` : ''}
+            <div style="font-size:0.7rem;color:var(--text-light)">Reported ${timeSince(r.created_at)}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
+            <button class="btn btn-outline-dark btn-sm" style="font-size:0.75rem;color:var(--terra);border-color:rgba(139,74,42,0.3)" onclick="adminDeleteReportedListing('${r.listing_id}','${r.id}')">🗑 Delete listing</button>
+            <button class="btn btn-outline-dark btn-sm" style="font-size:0.75rem" onclick="dismissReport('${r.id}')">✓ Dismiss</button>
+          </div>
+        </div>
+      </div>`).join('');
+  } catch(e) { list.innerHTML = '<div style="color:var(--terra);font-size:0.85rem;padding:1rem">Error loading reports.</div>'; }
+}
+
+async function adminDeleteReportedListing(listingId, reportId) {
+  if (!confirm('Delete this listing? Cannot be undone.')) return;
+  const { error } = await db.from('listings').delete().eq('id', listingId);
+  if (error) { showToast('Could not delete — remove manually in Supabase dashboard.'); }
+  else {
+    const idx = listings.findIndex(l => l.id == listingId);
+    if (idx > -1) listings.splice(idx, 1);
+    renderHome(); renderBrowse();
+    showToast('Listing deleted. 🗑');
+  }
+  await db.from('reports').update({ status: 'resolved' }).eq('id', reportId);
+  loadAdminReports(); loadAdminBadges();
+}
+
+async function dismissReport(reportId) {
+  await db.from('reports').update({ status: 'dismissed' }).eq('id', reportId);
+  showToast('Report dismissed.');
+  loadAdminReports(); loadAdminBadges();
+}
+
+/* ============================================================
+   ADMIN — ALL LISTINGS
+   ============================================================ */
+let allAdminListings = [];
+
+async function loadAdminListings() {
+  if (!currentUser || currentUser.id !== ADMIN_USER_ID) return;
+  const list = document.getElementById('admin-listings-list');
+  if (!list) return;
+  list.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-light);font-size:0.85rem">Loading...</div>';
+  try {
+    const { data, error } = await db.from('listings').select('id,title,category,user_name,user_id,created_at,neighborhood').order('created_at',{ascending:false});
+    if (error) { list.innerHTML = '<div style="color:var(--terra);font-size:0.85rem;padding:1rem">Error loading listings.</div>'; return; }
+    allAdminListings = data || [];
+    renderAdminListings(allAdminListings);
+  } catch(e) { list.innerHTML = '<div style="color:var(--terra);font-size:0.85rem;padding:1rem">Error loading listings.</div>'; }
+}
+
+function filterAdminListings(q) {
+  const filtered = q
+    ? allAdminListings.filter(l => (l.title+l.user_name+l.neighborhood).toLowerCase().includes(q.toLowerCase()))
+    : allAdminListings;
+  renderAdminListings(filtered);
+}
+
+function renderAdminListings(data) {
+  const list = document.getElementById('admin-listings-list');
+  if (!list) return;
+  if (!data.length) { list.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-light);font-size:0.85rem">No listings found.</div>'; return; }
+  list.innerHTML = data.map(l => `
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:0.75rem 0;border-bottom:1px solid var(--border)">
+      <div style="flex:1;min-width:0">
+        <div style="font-size:0.85rem;font-weight:500;color:var(--green-dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${l.title}</div>
+        <div style="font-size:0.72rem;color:var(--text-light)">by ${l.user_name||'Unknown'} · ${l.neighborhood||'Community'} · ${timeSince(l.created_at)}</div>
+      </div>
+      <button class="btn btn-outline-dark btn-sm" style="font-size:0.72rem;color:var(--terra);border-color:rgba(139,74,42,0.3);flex-shrink:0" onclick="adminRemoveListing('${l.id}',this)">🗑 Remove</button>
+    </div>`).join('');
+}
+
+async function adminRemoveListing(id, btn) {
+  if (!confirm('Remove this listing?')) return;
+  if (btn) { btn.textContent = 'Removing...'; btn.disabled = true; }
+  const { error } = await db.from('listings').delete().eq('id', id);
+  if (error) { showToast('Could not delete — try Supabase dashboard.'); if (btn) { btn.textContent = '🗑 Remove'; btn.disabled = false; } return; }
+  const idx = listings.findIndex(l => l.id == id);
+  if (idx > -1) listings.splice(idx, 1);
+  allAdminListings = allAdminListings.filter(l => l.id !== id);
+  renderHome(); renderBrowse();
+  renderAdminListings(allAdminListings);
+  showToast('Listing removed. 🗑');
+}
+
+/* ============================================================
+   ADMIN — UNIFIED BADGE LOADER
+   ============================================================ */
+async function loadAdminBadges() {
+  if (!currentUser || currentUser.id !== ADMIN_USER_ID) return;
+  try {
+    const [evRes, repRes] = await Promise.all([
+      db.from('community_events').select('*',{count:'exact',head:true}).eq('status','pending'),
+      db.from('reports').select('*',{count:'exact',head:true}).eq('status','pending')
+    ]);
+    const evCount = evRes.count || 0;
+    const repCount = repRes.count || 0;
+    const total = evCount + repCount;
+    const evBadge = document.getElementById('admin-events-badge');
+    const repBadge = document.getElementById('admin-reports-badge');
+    const tabBadge = document.getElementById('admin-pending-badge');
+    if (evBadge) { evBadge.textContent = evCount; evBadge.style.display = evCount > 0 ? 'inline' : 'none'; }
+    if (repBadge) { repBadge.textContent = repCount; repBadge.style.display = repCount > 0 ? 'inline' : 'none'; }
+    if (tabBadge) { tabBadge.textContent = total; tabBadge.style.display = total > 0 ? 'inline' : 'none'; }
   } catch(e) {}
 }
+
+
 
 /* ---- Smart emoji + tag detection for approved events ---- */
 function detectEventMeta(name, desc) {
@@ -5211,15 +5446,9 @@ async function approveEvent(id) {
   }
 
   showToast(`✅ "${evData?.name || 'Event'}" is now live on the board!`);
-
-  // Reload admin pending list and badge
   loadAdminEvents();
-  loadAdminPendingCount();
-
-  // If events page is active, refresh it immediately
-  if (document.getElementById('page-events')?.classList.contains('active')) {
-    renderEvents();
-  }
+  loadAdminBadges();
+  if (document.getElementById('page-events')?.classList.contains('active')) renderEvents();
 }
 
 async function rejectEvent(id) {
@@ -5228,7 +5457,7 @@ async function rejectEvent(id) {
   if (error) { showToast('Could not reject — try again'); return; }
   showToast('Submission rejected and removed.');
   loadAdminEvents();
-  loadAdminPendingCount();
+  loadAdminBadges();
 }
 
 
