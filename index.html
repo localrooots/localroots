@@ -2496,7 +2496,7 @@ footer {
       </div>
     </div>
     <div class="form-group">
-      <label class="form-label">Pick an emoji for your listing</label>
+      <label class="form-label">Pick an emoji for your listing <span style="font-size:0.72rem;color:var(--text-light);font-weight:400">(shown if no photo)</span></label>
       <div id="emoji-picker-food" style="display:flex;flex-wrap:wrap;gap:6px">
         <span class="emoji-opt selected" onclick="selectEmoji(this,'🍅')">🍅</span>
         <span class="emoji-opt" onclick="selectEmoji(this,'🥚')">🥚</span>
@@ -2531,7 +2531,7 @@ footer {
         <span class="emoji-opt" onclick="selectEmoji(this,'🧵')">🧵</span>
         <span class="emoji-opt" onclick="selectEmoji(this,'🌵')">🌵</span>
         <span class="emoji-opt" onclick="selectEmoji(this,'🚲')">🚲</span>
-        <span class="emoji-opt" onclick="selectEmoji(this,'🛏️')">🛋️</span>
+        <span class="emoji-opt" onclick="selectEmoji(this,'🛒')">🛒</span>
         <span class="emoji-opt" onclick="selectEmoji(this,'🧸')">🧸</span>
         <span class="emoji-opt" onclick="selectEmoji(this,'⌚')">⌚</span>
         <span class="emoji-opt" onclick="selectEmoji(this,'🔑')">🔑</span>
@@ -2775,7 +2775,7 @@ footer {
           <text x="57" y="52" font-family="Arial,sans-serif" font-size="7.5" fill="#C8DEC8" letter-spacing="0.15em" opacity="0.75">TRADE · SHARE · GROW</text>
         </svg>
       </div>
-      <div class="footer-tagline">Neighbor to neighbor trading post.</div>
+      <div class="footer-tagline">Bountiful's trading post.</div>
     </div>
     <div class="footer-col">
       <h5>Explore</h5>
@@ -3677,8 +3677,11 @@ function previewListingPhoto(input) {
     document.getElementById('photo-preview-img').src = e.target.result;
     document.getElementById('photo-preview').style.display = 'block';
     document.getElementById('photo-upload-prompt').style.display = 'none';
-    document.getElementById('photo-upload-status').textContent = 'Photo ready';
+    document.getElementById('photo-upload-status').textContent = 'Photo ready — emoji will be hidden';
     document.getElementById('photo-upload-status').style.color = 'var(--green-mid)';
+    // Dim emoji picker since photo takes priority
+    const pickers = document.querySelectorAll('#emoji-picker-food,#emoji-picker-skill,#emoji-picker-goods');
+    pickers.forEach(p => { p.style.opacity = '0.35'; p.style.pointerEvents = 'none'; });
   };
   reader.readAsDataURL(file);
 }
@@ -3706,6 +3709,9 @@ function resetPhotoUpload() {
   if (preview) preview.style.display = 'none';
   if (prompt) prompt.style.display = 'block';
   if (status) status.textContent = '';
+  // Restore emoji picker
+  const pickers = document.querySelectorAll('#emoji-picker-food,#emoji-picker-skill,#emoji-picker-goods');
+  pickers.forEach(p => { p.style.opacity = ''; p.style.pointerEvents = ''; });
 }
 
 function openPostModal() {
