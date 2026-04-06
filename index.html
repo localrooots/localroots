@@ -1924,6 +1924,7 @@ footer {
   .trust-band-inner { gap: 1rem; }
   .inner { padding: 1.5rem 1rem; }
   #location-filter { width: 120px !important; }
+  #events-preview { grid-template-columns: 1fr 1fr !important; }
 }
 
 @media (max-width: 480px) {
@@ -1932,6 +1933,7 @@ footer {
   .steps-grid { grid-template-columns: 1fr 1fr; }
   .hero-actions { flex-direction: column; align-items: center; }
   .hero-actions .btn { width: 100%; max-width: 280px; justify-content: center; }
+  #events-preview { grid-template-columns: 1fr !important; }
 }
 
 </style>
@@ -2128,7 +2130,7 @@ footer {
         <div class="section-heading">Local events near Bountiful</div>
         <a onclick="showPage('events')" style="font-size:0.85rem;color:var(--green-mid);cursor:pointer;font-weight:500">See all events →</a>
       </div>
-      <div id="events-preview" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem"></div>
+      <div id="events-preview" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem"></div>
     </div>
   </div>
 
@@ -4276,11 +4278,20 @@ async function loadApprovedEvents() {
   } catch(e) { return []; }
 }
 
-function renderEventsPreview() {
+async function renderEventsPreview() {
   const grid = document.getElementById('events-preview');
   if (!grid) return;
-  const preview = localEvents.filter(e => !e.isSubmit).slice(0, 3);
-  grid.innerHTML = preview.map(e => `
+
+  // Load approved DB events and merge with hardcoded (exclude submit card)
+  const dbEvents = await loadApprovedEvents();
+  const allEvents = [...dbEvents, ...localEvents.filter(e => !e.isSubmit)];
+
+  if (allEvents.length === 0) {
+    grid.innerHTML = '';
+    return;
+  }
+
+  grid.innerHTML = allEvents.map(e => `
     <div onclick="${e.url ? `window.open('${e.url}','_blank')` : "showPage('events')"}"
       style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.3rem;cursor:pointer;transition:all 0.2s;box-shadow:var(--shadow)"
       onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='var(--shadow-lg)'"
@@ -5472,15 +5483,16 @@ function detectEventMeta(name, desc) {
     { keys: ['farmers market','farm market','produce market'], emoji: '🌽', tag: 'Farmers Market' },
     { keys: ['swap meet','swap'], emoji: '🔄', tag: 'Swap Meet' },
     { keys: ['concert','music','band','live music','performance'], emoji: '🎵', tag: 'Live Music' },
+    { keys: ['chalk','art festival','art walk','mural','painting','drawing','art event','arts festival','craft fair','artisan','maker','art fair','art show','craft'], emoji: '🎨', tag: 'Arts & Crafts' },
     { keys: ['garden','gardening','seed swap','seed'], emoji: '🌱', tag: 'Gardening' },
-    { keys: ['craft','artisan','maker','art fair','art show'], emoji: '🎨', tag: 'Arts & Crafts' },
-    { keys: ['food','eat','restaurant','taste','cuisine','festival'], emoji: '🍽️', tag: 'Food Event' },
+    { keys: ['food','eat','restaurant','taste','cuisine','food festival','food truck'], emoji: '🍽️', tag: 'Food Event' },
     { keys: ['cleanup','clean up','volunteer','community service'], emoji: '🤝', tag: 'Volunteer' },
     { keys: ['library','book','reading','story'], emoji: '📚', tag: 'Library' },
-    { keys: ['park','outdoor','picnic','nature'], emoji: '🌳', tag: 'Outdoors' },
+    { keys: ['park','outdoor','picnic','nature','hike'], emoji: '🌳', tag: 'Outdoors' },
     { keys: ['kids','children','family','youth'], emoji: '👨‍👩‍👧', tag: 'Family' },
     { keys: ['class','workshop','learn','course','skill'], emoji: '✏️', tag: 'Workshop' },
     { keys: ['sale','flea market','yard sale','rummage'], emoji: '🏷️', tag: 'Sale' },
+    { keys: ['festival','fair','expo','celebration'], emoji: '🎉', tag: 'Festival' },
   ];
   for (const c of checks) {
     if (c.keys.some(k => text.includes(k))) return { emoji: c.emoji, tag: c.tag };
