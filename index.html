@@ -102,7 +102,8 @@ body {
 /* ---- UTILITY ---- */
 .hidden { display: none !important; }
 .page { display: none; }
-.page.active { display: block; }
+.page.active { display: block; animation: pageFadeIn 0.15s ease; }
+@keyframes pageFadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 .inner { max-width: 1000px; margin: 0 auto; padding: 2.5rem 1.5rem; }
 .inner-wide { max-width: 1200px; margin: 0 auto; padding: 2.5rem 1.5rem; }
 
@@ -1989,7 +1990,7 @@ footer {
 
   <!-- Hero -->
   <section class="hero">
-    <div class="hero-tag">Your neighborhood · Your community</div>
+    <div class="hero-tag">Bountiful, Utah · Free to join</div>
     <h1>Trade what you have<br>for what you <em>need</em></h1>
     <p class="hero-sub">Everything your neighbors grow, make, and know in one place.</p>
     <div class="hero-actions">
@@ -2050,7 +2051,7 @@ footer {
   <div class="how-section">
     <div class="how-inner">
       <div class="how-title">How it works</div>
-      <div class="how-sub">Three simple steps to your first trade</div>
+      <div class="how-sub">Three steps to your first trade</div>
       <div class="steps-grid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem;align-items:stretch">
         <div class="step-card">
           <div class="step-num-badge">1</div>
@@ -2060,12 +2061,12 @@ footer {
         <div class="step-card">
           <div class="step-num-badge">2</div>
           <h4>Find &amp; message a neighbor</h4>
-          <p>Browse what your community is offering. When something catches your eye, message them directly. No fees, no platform in the middle just a real conversation.</p>
+          <p>Browse what your community is offering. When something catches your eye, message them directly — no middleman, just a real conversation.</p>
         </div>
         <div class="step-card">
           <div class="step-num-badge">3</div>
           <h4>Meet up &amp; make the trade</h4>
-          <p>Agree on a swap that works for both of you. Meet somewhere local, make the exchange, and walk away with something you needed and a neighbor you actually know.</p>
+          <p>Agree on a swap that works for both of you. Meet somewhere local, make the exchange, and walk away with something you needed and a neighbor worth knowing.</p>
         </div>
       </div>
       <div style="text-align:center;margin-top:2.5rem">
@@ -2748,7 +2749,7 @@ footer {
           <text x="57" y="52" font-family="Arial,sans-serif" font-size="7.5" fill="#C8DEC8" letter-spacing="0.15em" opacity="0.75">TRADE · SHARE · GROW</text>
         </svg>
       </div>
-      <div class="footer-tagline">Connecting neighbors. Building community.</div>
+      <div class="footer-tagline">Bountiful's trading post.</div>
     </div>
     <div class="footer-col">
       <h5>Explore</h5>
@@ -2799,40 +2800,24 @@ footer {
       <div style="display:flex;gap:1.5rem;align-items:flex-start">
         <div style="width:48px;height:48px;border-radius:50%;background:var(--green-dark);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--cream);font-weight:700;flex-shrink:0">1</div>
         <div>
-          <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--green-dark);font-weight:600;margin-bottom:0.4rem">Create your free account</div>
-          <p style="color:var(--text-mid);font-size:0.92rem;line-height:1.7">Sign up in under a minute with your name, email, and the town you live in. No subscriptions, no payment details, no catch. Just Neighbors helping neighbors.</p>
+          <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--green-dark);font-weight:600;margin-bottom:0.4rem">Sign up in 30 seconds</div>
+          <p style="color:var(--text-mid);font-size:0.92rem;line-height:1.7">Just your name, email, and town. No payment details, no subscriptions, no catch. Free forever.</p>
         </div>
       </div>
 
       <div style="display:flex;gap:1.5rem;align-items:flex-start">
         <div style="width:48px;height:48px;border-radius:50%;background:var(--green-dark);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--cream);font-weight:700;flex-shrink:0">2</div>
         <div>
-          <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--green-dark);font-weight:600;margin-bottom:0.4rem">Post what you have</div>
-          <p style="color:var(--text-mid);font-size:0.92rem;line-height:1.7">Got a glut of tomatoes? A skill you can teach? Tools gathering dust? Post a listing in seconds. Tell people what you have and what you'd like in return or just say you're open to offers.</p>
+          <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--green-dark);font-weight:600;margin-bottom:0.4rem">Post what you have, browse what's there</div>
+          <p style="color:var(--text-mid);font-size:0.92rem;line-height:1.7">Got tomatoes, a skill, or something gathering dust? Post it in seconds. See what neighbors are offering. Every listing shows exactly what they want in return.</p>
         </div>
       </div>
 
       <div style="display:flex;gap:1.5rem;align-items:flex-start">
-        <div style="width:48px;height:48px;border-radius:50%;background:var(--green-dark);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--cream);font-weight:700;flex-shrink:0">3</div>
+        <div style="width:48px;height:48px;border-radius:50%;background:var(--amber);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--white);font-weight:700;flex-shrink:0">3</div>
         <div>
-          <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--green-dark);font-weight:600;margin-bottom:0.4rem">Browse your community</div>
-          <p style="color:var(--text-mid);font-size:0.92rem;line-height:1.7">See what your neighbors are offering. Filter by food and garden goods, skills, or physical goods. Every listing shows exactly what the person is looking for in return so you know straight away if there's a match.</p>
-        </div>
-      </div>
-
-      <div style="display:flex;gap:1.5rem;align-items:flex-start">
-        <div style="width:48px;height:48px;border-radius:50%;background:var(--green-dark);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--cream);font-weight:700;flex-shrink:0">4</div>
-        <div>
-          <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--green-dark);font-weight:600;margin-bottom:0.4rem">Message and agree a trade</div>
-          <p style="color:var(--text-mid);font-size:0.92rem;line-height:1.7">See something you like? Hit the message button and talk directly with your neighbor. Agree what you're swapping, when, and where. No platform in the middle. No fees. Just two people making a fair deal.</p>
-        </div>
-      </div>
-
-      <div style="display:flex;gap:1.5rem;align-items:flex-start">
-        <div style="width:48px;height:48px;border-radius:50%;background:var(--amber);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--white);font-weight:700;flex-shrink:0">5</div>
-        <div>
-          <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--green-dark);font-weight:600;margin-bottom:0.4rem">Rate the trade and build trust</div>
-          <p style="color:var(--text-mid);font-size:0.92rem;line-height:1.7">After every trade, leave a short review. Over time your profile builds a trust score that tells the community who you are a generous neighbor, a reliable trader, someone worth knowing. That reputation is yours and you earn it honestly.</p>
+          <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--green-dark);font-weight:600;margin-bottom:0.4rem">Message, meet, and make the trade</div>
+          <p style="color:var(--text-mid);font-size:0.92rem;line-height:1.7">Message directly — no platform in the middle. Agree a time and place, make the swap, and leave a short review. Over time your trust score tells the community exactly who you are.</p>
         </div>
       </div>
 
@@ -3227,7 +3212,7 @@ function cardHTML(l) {
       <div class="card-cat cat-${l.cat}">${cat}</div>
       <div class="card-title">${l.title}</div>
       <div class="card-desc">${l.desc}</div>
-      <div class="trade-pill">↔ ${l.trade}</div>
+      <div class="trade-pill"${l.trade === 'Open to offers' ? ' style="font-style:italic;color:var(--text-light)"' : ''}>↔ ${l.trade}</div>
       <div class="card-footer-row" style="margin-top:10px">
         <div class="avatar-row">
           <div class="avatar ${l.av}">${l.initials}</div>
