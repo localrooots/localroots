@@ -564,6 +564,7 @@ nav {
 .listing-card.cat-border-food  { border-top: 3px solid var(--green-light); }
 .listing-card.cat-border-skill { border-top: 3px solid var(--amber); }
 .listing-card.cat-border-goods { border-top: 3px solid var(--terra); }
+.listing-card.cat-border-free  { border-top: 3px solid #7B68EE; }
 
 .listing-card:hover {
   transform: translateY(-4px);
@@ -647,6 +648,7 @@ nav {
 .cat-food { color: var(--green-light); }
 .cat-skill { color: var(--amber); }
 .cat-goods { color: var(--terra); }
+.cat-free { color: #7B68EE; }
 
 .card-title {
   font-size: 1.02rem;
@@ -2056,26 +2058,33 @@ footer {
         <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.4rem,2.5vw,1.9rem);color:var(--green-dark);font-weight:700;margin-bottom:0.4rem">Whatever you grow, make, or know</h2>
         <em style="color:var(--amber);font-style:italic;font-family:'Playfair Display',serif;font-size:clamp(1.1rem,2vw,1.4rem)">someone nearby wants it</em>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem">
         <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;display:flex;align-items:flex-start;gap:12px">
           <div class="feature-icon green" style="flex-shrink:0">🌱</div>
           <div>
             <div class="feature-title">Food & Garden</div>
-            <div style="font-size:0.82rem;color:var(--text-light);margin-top:4px;line-height:1.6">Vegetables, eggs, honey, jam, sourdough, seeds, herbs, ferments if it came from your garden, post it.</div>
+            <div style="font-size:0.82rem;color:var(--text-light);margin-top:4px;line-height:1.6">Vegetables, eggs, honey, jam, sourdough, seeds, herbs, ferments. If it came from your garden, post it.</div>
           </div>
         </div>
         <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;display:flex;align-items:flex-start;gap:12px">
           <div class="feature-icon amber" style="flex-shrink:0">✨</div>
           <div>
             <div class="feature-title">Skills, Crafts & Niches</div>
-            <div style="font-size:0.82rem;color:var(--text-light);margin-top:4px;line-height:1.6">Carpentry, music, sewing, photography, tutoring, baking your skill is your trade.</div>
+            <div style="font-size:0.82rem;color:var(--text-light);margin-top:4px;line-height:1.6">Carpentry, music, sewing, photography, tutoring, baking. If you can teach it, make it, or do it, your skill belongs here.</div>
           </div>
         </div>
         <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;display:flex;align-items:flex-start;gap:12px">
           <div class="feature-icon terra" style="flex-shrink:0">📦</div>
           <div>
             <div class="feature-title">Goods & Supplies</div>
-            <div style="font-size:0.82rem;color:var(--text-light);margin-top:4px;line-height:1.6">Books, tools, clothing, bikes, furniture, kitchen gear if it's sitting unused, trade it.</div>
+            <div style="font-size:0.82rem;color:var(--text-light);margin-top:4px;line-height:1.6">Books, tools, clothing, bikes, furniture, kitchen gear. If it is sitting unused, trade it to someone who needs it.</div>
+          </div>
+        </div>
+        <div style="background:var(--white);border:1px solid var(--border);border-top:3px solid #7B68EE;border-radius:var(--radius);padding:1.5rem;display:flex;align-items:flex-start;gap:12px">
+          <div style="width:46px;height:46px;border-radius:10px;background:rgba(123,104,238,0.1);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0">🎁</div>
+          <div>
+            <div class="feature-title">Free & Giveaway</div>
+            <div style="font-size:0.82rem;color:var(--text-light);margin-top:4px;line-height:1.6">Giving something away? Post it free. No trade needed, just pass it on to a neighbor who wants it.</div>
           </div>
         </div>
       </div>
@@ -2154,6 +2163,7 @@ footer {
         <button class="filter-btn" data-cat="food" onclick="setFilter(this,'food')">🌱 Food & Garden</button>
         <button class="filter-btn" data-cat="skill" onclick="setFilter(this,'skill')">🔧 Skills</button>
         <button class="filter-btn" data-cat="goods" onclick="setFilter(this,'goods')">📦 Goods</button>
+        <button class="filter-btn" data-cat="free" onclick="setFilter(this,'free')">🎁 Free</button>
         <div style="margin-left:auto">
           <input type="text" id="location-filter" style="background:rgba(255,255,255,0.12);border:1px solid rgba(200,222,200,0.2);border-radius:var(--radius-pill);padding:6px 14px;font-size:0.8rem;color:var(--cream);font-family:'DM Sans',sans-serif;outline:none;width:160px" oninput="renderBrowse()" placeholder="Filter by city...">
         </div>
@@ -2558,6 +2568,7 @@ footer {
         <div class="type-opt selected" onclick="selectType(this,'food')"><span class="type-emoji">🌱</span>Food & Garden</div>
         <div class="type-opt" onclick="selectType(this,'skill')"><span class="type-emoji">🔧</span>Skills</div>
         <div class="type-opt" onclick="selectType(this,'goods')"><span class="type-emoji">📦</span>Goods</div>
+        <div class="type-opt" onclick="selectType(this,'free')"><span class="type-emoji">🎁</span>Free / Giveaway</div>
       </div>
     </div>
     <div class="form-group">
@@ -2604,6 +2615,20 @@ footer {
         <span class="emoji-opt" onclick="selectEmoji(this,'👕')">👕</span>
         <span class="emoji-opt" onclick="selectEmoji(this,'🎮')">🎮</span>
       </div>
+      <div id="emoji-picker-free" style="display:none;flex-wrap:wrap;gap:6px">
+        <span class="emoji-opt selected" onclick="selectEmoji(this,'🎁')">🎁</span>
+        <span class="emoji-opt" onclick="selectEmoji(this,'🌱')">🌱</span>
+        <span class="emoji-opt" onclick="selectEmoji(this,'🍎')">🍎</span>
+        <span class="emoji-opt" onclick="selectEmoji(this,'🥚')">🥚</span>
+        <span class="emoji-opt" onclick="selectEmoji(this,'🍞')">🍞</span>
+        <span class="emoji-opt" onclick="selectEmoji(this,'🌿')">🌿</span>
+        <span class="emoji-opt" onclick="selectEmoji(this,'📦')">📦</span>
+        <span class="emoji-opt" onclick="selectEmoji(this,'🧸')">🧸</span>
+        <span class="emoji-opt" onclick="selectEmoji(this,'👕')">👕</span>
+        <span class="emoji-opt" onclick="selectEmoji(this,'🚲')">🚲</span>
+        <span class="emoji-opt" onclick="selectEmoji(this,'🛋️')">🪑</span>
+        <span class="emoji-opt" onclick="selectEmoji(this,'🧰')">🧰</span>
+      </div>
     </div>
     <div class="form-group">
       <label class="form-label" for="post-title">Listing title <span style="color:var(--text-light);font-weight:400" id="title-counter">0/60</span></label>
@@ -2628,8 +2653,8 @@ footer {
       <label class="form-label" for="post-desc">Description <span style="color:var(--text-light);font-weight:400;font-size:0.75rem">(optional)</span> <span style="color:var(--text-light);font-weight:400;font-size:0.75rem" id="desc-counter">0/300</span></label>
       <textarea class="form-textarea" id="post-desc" placeholder="Tell your neighbors what you have and what you're looking for in return..." maxlength="300" oninput="document.getElementById('desc-counter').textContent=this.value.length+'/300'"></textarea>
     </div>
-    <div class="form-group">
-      <label class="form-label" for="post-trade">Looking to trade for</label>
+    <div class="form-group" id="trade-field-group">
+      <label class="form-label" for="post-trade" id="trade-field-label">Looking to trade for</label>
       <input class="form-input" type="text" id="post-trade" placeholder="e.g. Eggs, herbs, or homemade jam">
     </div>
     <div class="form-group">
@@ -2877,6 +2902,7 @@ footer {
       <a onclick="showPage('browse');setFilterByName('food')">Food & Garden</a>
       <a onclick="showPage('browse');setFilterByName('skill')">Skills</a>
       <a onclick="showPage('browse');setFilterByName('goods')">Goods</a>
+      <a onclick="showPage('browse');setFilterByName('free')">Free & Giveaway</a>
     </div>
     <div class="footer-col">
       <h5>Community</h5>
@@ -3318,7 +3344,7 @@ function closeMobileNav() {
 
 /* ---- CARD HTML ---- */
 function cardHTML(l) {
-  const cat = l.cat === 'food' ? 'Food & Garden' : l.cat === 'skill' ? 'Skill' : 'Goods';
+  const cat = l.cat === 'food' ? 'Food & Garden' : l.cat === 'skill' ? 'Skill' : l.cat === 'free' ? '🎁 Free' : 'Goods';
   const timeStr = l.created_at ? timeSince(l.created_at) : '';
   const ageMs = l.created_at ? (new Date() - new Date(l.created_at)) : 0;
   const isNew = ageMs > 0 && ageMs < 86400000;
@@ -3328,14 +3354,15 @@ function cardHTML(l) {
     : l.emoji;
   const newDot = isNew ? `<div class="card-new-dot" title="Posted today"></div>` : '';
   const staleBadge = isStale ? `<div style="position:absolute;top:10px;left:10px;background:rgba(122,122,122,0.85);color:#fff;font-size:0.65rem;padding:2px 8px;border-radius:20px;font-weight:500;letter-spacing:0.04em;z-index:2">May be filled</div>` : '';
+  const freeBadge = l.cat === 'free' ? `<div style="position:absolute;top:10px;right:10px;background:#7B68EE;color:#fff;font-size:0.65rem;padding:2px 10px;border-radius:20px;font-weight:700;letter-spacing:0.06em;z-index:2">FREE</div>` : '';
   return `<div class="listing-card cat-border-${l.cat}${isStale ? ' listing-stale' : ''}" onclick="openListingDetail(${JSON.stringify(l).replace(/"/g,'&quot;')})">
     ${newDot}
-    <div class="card-img" style="background:${l.bg};overflow:hidden;position:relative">${imgContent}${staleBadge}${!l.photo_url && l.badge ? `<div class="card-badge">${l.badge}</div>` : ''}</div>
+    <div class="card-img" style="background:${l.bg};overflow:hidden;position:relative">${imgContent}${staleBadge}${freeBadge}${!l.photo_url && l.badge ? `<div class="card-badge">${l.badge}</div>` : ''}</div>
     <div class="card-body">
       <div class="card-cat cat-${l.cat}">${cat}</div>
       <div class="card-title">${l.title}</div>
       <div class="card-desc">${l.desc}</div>
-      <div class="trade-pill"${l.trade === 'Open to offers' ? ' style="font-style:italic;color:var(--text-light)"' : ''}>↔ ${l.trade}</div>
+      <div class="trade-pill"${l.cat === 'free' ? ' style="background:rgba(123,104,238,0.08);color:#7B68EE;border-color:rgba(123,104,238,0.2);font-weight:500"' : (l.trade === 'Open to offers' ? ' style="font-style:italic;color:var(--text-light)"' : '')}>↔ ${l.cat === 'free' ? 'Free — just come get it!' : l.trade}</div>
       <div class="card-footer-row" style="margin-top:10px">
         <div class="avatar-row">
           <div class="avatar ${l.av}" style="${l.avColor ? `background:${l.avColor};` : ''}">${l.initials}</div>
@@ -3378,8 +3405,8 @@ function closeSafetyModal() {
   if (pendingMessageAction) { pendingMessageAction(); pendingMessageAction = null; }
 }
 function openListingDetail(l) {
-  const bgMap = { food:'#E8F5E8', skill:'#FEF3E2', goods:'#FDF0EC' };
-  const catLabel = l.cat === 'food' ? 'Food & Garden' : l.cat === 'skill' ? 'Skill' : 'Goods';
+  const bgMap = { food:'#E8F5E8', skill:'#FEF3E2', goods:'#FDF0EC', free:'#F0EEFF' };
+  const catLabel = l.cat === 'food' ? 'Food & Garden' : l.cat === 'skill' ? 'Skill' : l.cat === 'free' ? '🎁 Free' : 'Goods';
   document.getElementById('detail-img').style.background = l.bg || bgMap[l.cat] || '#F5F5F5';
   if (l.photo_url) {
     document.getElementById('detail-img').innerHTML = `<img src="${l.photo_url}" style="width:100%;height:100%;object-fit:cover" alt="${l.title}"><button onclick="closeListingDetail()" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.9);border:none;border-radius:50%;width:32px;height:32px;font-size:1rem;cursor:pointer">✕</button>`;
@@ -3775,7 +3802,7 @@ function previewListingPhoto(input) {
     document.getElementById('photo-upload-status').textContent = 'Photo ready — emoji will be hidden';
     document.getElementById('photo-upload-status').style.color = 'var(--green-mid)';
     // Dim emoji picker since photo takes priority
-    const pickers = document.querySelectorAll('#emoji-picker-food,#emoji-picker-skill,#emoji-picker-goods');
+    const pickers = document.querySelectorAll('#emoji-picker-food,#emoji-picker-skill,#emoji-picker-goods,#emoji-picker-free');
     pickers.forEach(p => { p.style.opacity = '0.35'; p.style.pointerEvents = 'none'; });
   };
   reader.readAsDataURL(file);
@@ -3805,7 +3832,7 @@ function resetPhotoUpload() {
   if (prompt) prompt.style.display = 'block';
   if (status) status.textContent = '';
   // Restore emoji picker
-  const pickers = document.querySelectorAll('#emoji-picker-food,#emoji-picker-skill,#emoji-picker-goods');
+  const pickers = document.querySelectorAll('#emoji-picker-food,#emoji-picker-skill,#emoji-picker-goods,#emoji-picker-free');
   pickers.forEach(p => { p.style.opacity = ''; p.style.pointerEvents = ''; });
 }
 
@@ -3824,15 +3851,26 @@ function selectType(el, type) {
   document.querySelectorAll('.type-opt').forEach(b => b.classList.remove('selected'));
   el.classList.add('selected');
   selectedType = type;
-  ['food','skill','goods'].forEach(t => {
+  ['food','skill','goods','free'].forEach(t => {
     const picker = document.getElementById('emoji-picker-' + t);
     if (picker) picker.style.display = t === type ? 'flex' : 'none';
   });
-  const defaults = { food:'🍅', skill:'🔨', goods:'📦' };
+  const defaults = { food:'🍅', skill:'🔨', goods:'📦', free:'🎁' };
   selectedEmoji = defaults[type];
   document.querySelectorAll('.emoji-opt').forEach(e => e.classList.remove('selected'));
   const pickers = document.querySelectorAll('#emoji-picker-' + type + ' .emoji-opt');
   if (pickers[0]) pickers[0].classList.add('selected');
+
+  // Hide trade field for free listings, show for others
+  const tradeGroup = document.getElementById('trade-field-group');
+  const tradeInput = document.getElementById('post-trade');
+  if (type === 'free') {
+    if (tradeGroup) tradeGroup.style.display = 'none';
+    if (tradeInput) tradeInput.value = 'Free — just come get it!';
+  } else {
+    if (tradeGroup) tradeGroup.style.display = 'block';
+    if (tradeInput && tradeInput.value === 'Free — just come get it!') tradeInput.value = '';
+  }
 }
 
 function selectEmoji(el, emoji) {
@@ -3846,8 +3884,8 @@ function submitListing() {
   const desc = document.getElementById('post-desc').value.trim();
   const trade = document.getElementById('post-trade').value.trim();
   if (!title) { showToast('Please add a title for your listing'); return; }
-  const emojiMap = { food:'🌱', skill:'⭐', goods:'📦' };
-  const bgMap = { food:'#E8F5E8', skill:'#FEF3E2', goods:'#FDF0EC' };
+  const emojiMap = { food:'🌱', skill:'⭐', goods:'📦', free:'🎁' };
+  const bgMap = { food:'#E8F5E8', skill:'#FEF3E2', goods:'#FDF0EC', free:'#F0EEFF' };
   listings.unshift({
     id: Date.now(), cat: selectedType,
     emoji: emojiMap[selectedType], bg: bgMap[selectedType],
@@ -4453,9 +4491,9 @@ async function viewPublicProfile(userId, userName) {
     return;
   }
 
-  const bgMap = { food:'#E8F5E8', skill:'#FEF3E2', goods:'#FDF0EC' };
+  const bgMap = { food:'#E8F5E8', skill:'#FEF3E2', goods:'#FDF0EC', free:'#F0EEFF' };
   grid.innerHTML = listings.map(l => {
-    const cat = l.category === 'food' ? 'Food & Garden' : l.category === 'skill' ? 'Skill' : 'Goods';
+    const cat = l.category === 'food' ? 'Food & Garden' : l.category === 'skill' ? 'Skill' : l.category === 'free' ? '🎁 Free' : 'Goods';
     const catClass = 'cat-' + l.category;
     const listing = {
       id: l.id, cat: l.category, emoji: l.emoji || '📦',
@@ -4529,9 +4567,9 @@ async function loadProfileListings() {
   if (empty) empty.style.display = 'none';
   if (countEl) countEl.textContent = data.length;
 
-  const bgMap = { food:'#E8F5E8', skill:'#FEF3E2', goods:'#FDF0EC' };
+  const bgMap = { food:'#E8F5E8', skill:'#FEF3E2', goods:'#FDF0EC', free:'#F0EEFF' };
   grid.innerHTML = data.map(l => {
-    const cat = l.category === 'food' ? 'Food & Garden' : l.category === 'skill' ? 'Skill' : 'Goods';
+    const cat = l.category === 'food' ? 'Food & Garden' : l.category === 'skill' ? 'Skill' : l.category === 'free' ? '🎁 Free' : 'Goods';
     const catClass = 'cat-' + l.category;
     const listing = {
       id: l.id,
@@ -4736,7 +4774,7 @@ async function loadListingsFromDB() {
         id: row.id,
         cat: row.category,
         emoji: row.emoji,
-        bg: row.category === 'food' ? '#E8F5E8' : row.category === 'skill' ? '#FEF3E2' : '#FDF0EC',
+        bg: row.category === 'food' ? '#E8F5E8' : row.category === 'skill' ? '#FEF3E2' : row.category === 'free' ? '#F0EEFF' : '#FDF0EC',
         title: row.title,
         desc: row.description || 'No description.',
         trade: row.trade_for || 'Open to offers',
@@ -4847,8 +4885,8 @@ window.submitListing = async function() {
   const hood = document.getElementById('post-hood').value;
   if (!title) { showToast('Please add a title for your listing'); return; }
 
-  const bgMap = { food:'#E8F5E8', skill:'#FEF3E2', goods:'#FDF0EC' };
-  const chosenEmoji = selectedEmoji || (selectedType === 'food' ? '🍅' : selectedType === 'skill' ? '🔨' : '📦');
+  const bgMap = { food:'#E8F5E8', skill:'#FEF3E2', goods:'#FDF0EC', free:'#F0EEFF' };
+  const chosenEmoji = selectedEmoji || (selectedType === 'food' ? '🍅' : selectedType === 'skill' ? '🔨' : selectedType === 'free' ? '🎁' : '📦');
 
   const userName = currentUser ? (currentUser.user_metadata?.full_name || currentUser.email.split('@')[0]) : 'Neighbor';
   const userInitials = userName.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
@@ -4886,7 +4924,16 @@ window.submitListing = async function() {
   document.getElementById('post-hood').value = '';
   document.getElementById('title-counter').textContent = '0/60';
   document.getElementById('desc-counter').textContent = '0/300';
+  // Reset to food type
+  const tradeGroup = document.getElementById('trade-field-group');
+  if (tradeGroup) tradeGroup.style.display = 'block';
+  selectedType = 'food';
   selectedEmoji = '🍅';
+  document.querySelectorAll('.type-opt').forEach((b,i) => b.classList.toggle('selected', i===0));
+  ['food','skill','goods','free'].forEach(t => {
+    const p = document.getElementById('emoji-picker-' + t);
+    if (p) p.style.display = t === 'food' ? 'flex' : 'none';
+  });
   resetPhotoUpload();
   renderHome();
   renderBrowse();
