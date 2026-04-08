@@ -219,6 +219,17 @@ nav {
 
 .nav-cta:hover { background: var(--amber-light) !important; color: var(--text-dark) !important; }
 
+.nav-cta-outline {
+  background: transparent !important;
+  color: var(--green-pale) !important;
+  padding: 8px 18px !important;
+  border-radius: var(--radius-pill) !important;
+  font-weight: 500 !important;
+  border: 1.5px solid rgba(200,222,200,0.4) !important;
+  transition: all 0.2s !important;
+}
+.nav-cta-outline:hover { background: rgba(200,222,200,0.1) !important; color: var(--cream) !important; border-color: var(--green-pale) !important; }
+
 .nav-notif {
   position: relative;
   color: var(--green-pale) !important;
@@ -2026,7 +2037,7 @@ footer {
     <a onclick="showPage('messages')" data-page="messages">Messages <span id="msg-badge" style="display:none;background:var(--amber);color:white;font-size:0.65rem;padding:1px 6px;border-radius:10px;margin-left:2px">0</span></a>
     <a onclick="toggleNotif()" class="nav-notif" title="Notifications">🔔<span class="notif-dot" style="display:none"></span></a>
     <a onclick="openPostModal()" class="nav-cta" id="nav-post-btn">+ Post listing</a>
-    <a onclick="openSubmitEvent()" class="nav-cta" id="nav-event-btn" style="background:var(--green-mid)">+ Post event</a>
+    <a onclick="openSubmitEvent()" class="nav-cta-outline" id="nav-event-btn">+ Post event</a>
     <a onclick="openAuthModal()" class="nav-cta" id="nav-login-btn" style="display:none">Sign in</a>
     <div class="nav-user-menu" id="nav-user-menu" style="display:none">
       <div class="nav-user-btn" onclick="toggleUserDropdown()">
