@@ -2022,9 +2022,11 @@ footer {
   </div>
   <div class="nav-links">
     <a onclick="showPage('browse')" data-page="browse">Browse</a>
+    <a onclick="showPage('events')" data-page="events">Events</a>
     <a onclick="showPage('messages')" data-page="messages">Messages <span id="msg-badge" style="display:none;background:var(--amber);color:white;font-size:0.65rem;padding:1px 6px;border-radius:10px;margin-left:2px">0</span></a>
     <a onclick="toggleNotif()" class="nav-notif" title="Notifications">🔔<span class="notif-dot" style="display:none"></span></a>
     <a onclick="openPostModal()" class="nav-cta" id="nav-post-btn">+ Post listing</a>
+    <a onclick="openSubmitEvent()" class="nav-cta" id="nav-event-btn" style="background:var(--green-mid)">+ Post event</a>
     <a onclick="openAuthModal()" class="nav-cta" id="nav-login-btn" style="display:none">Sign in</a>
     <div class="nav-user-menu" id="nav-user-menu" style="display:none">
       <div class="nav-user-btn" onclick="toggleUserDropdown()">
@@ -2046,9 +2048,11 @@ footer {
 
 <div class="nav-mobile" id="nav-mobile">
   <a onclick="showPage('browse');closeMobileNav()">Browse listings</a>
+  <a onclick="showPage('events');closeMobileNav()">Browse events</a>
   <a onclick="showPage('messages');closeMobileNav()">Messages</a>
   <a onclick="showPage('profile');closeMobileNav()" id="mobile-profile-link" style="display:none">My Profile</a>
   <a onclick="openPostModal();closeMobileNav()" id="mobile-post-link" style="display:none">+Post Listing</a>
+  <a onclick="openSubmitEvent();closeMobileNav()" id="mobile-event-link" style="display:none">+Post Event</a>
   <a onclick="openAuthModal();closeMobileNav()" id="mobile-login-link">Sign in / Sign up</a>
   <a onclick="signOut();closeMobileNav()" id="mobile-logout-link" style="display:none;color:var(--amber-light)">Sign out</a>
 </div>
@@ -5159,12 +5163,14 @@ function onUserLoggedIn(user) {
   document.getElementById('nav-login-btn').style.display = 'none';
   document.getElementById('nav-user-menu').style.display = 'flex';
   document.getElementById('nav-post-btn').style.display = 'flex';
+  document.getElementById('nav-event-btn').style.display = 'flex';
   document.getElementById('nav-user-name').textContent = name.split(' ')[0];
 
   document.getElementById('mobile-login-link').style.display = 'none';
   document.getElementById('mobile-logout-link').style.display = 'block';
   document.getElementById('mobile-profile-link').style.display = 'block';
   document.getElementById('mobile-post-link').style.display = 'block';
+  document.getElementById('mobile-event-link').style.display = 'block';
 
   document.getElementById('profile-name').textContent = name;
   document.getElementById('profile-location').textContent = '📍 ' + (location || 'Community') + ' · Member since ' + memberSince;
@@ -5205,11 +5211,13 @@ function onUserLoggedOut() {
   document.getElementById('nav-login-btn').style.display = 'flex';
   document.getElementById('nav-user-menu').style.display = 'none';
   document.getElementById('nav-post-btn').style.display = 'flex';
+  document.getElementById('nav-event-btn').style.display = 'flex';
 
   document.getElementById('mobile-login-link').style.display = 'block';
   document.getElementById('mobile-logout-link').style.display = 'none';
   document.getElementById('mobile-profile-link').style.display = 'none';
   document.getElementById('mobile-post-link').style.display = 'none';
+  document.getElementById('mobile-event-link').style.display = 'none';
   stopNotifPolling();
 }
 
