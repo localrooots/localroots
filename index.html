@@ -3473,27 +3473,28 @@ function cardHTML(l) {
   const ageMs = l.created_at ? (new Date() - new Date(l.created_at)) : 0;
   const isNew = ageMs > 0 && ageMs < 86400000;
   const isStale = ageMs > 2592000000; // 30 days
-  const imgContent = l.photo_url
-    ? `<img src="${l.photo_url}" loading="lazy" style="width:100%;height:100%;object-fit:cover" alt="${l.title}">`
-    : l.emoji;
+  const safePhoto = l.photo_url && /^https?:\/\/.+\..+/i.test(l.photo_url) ? _esc(l.photo_url) : '';
+  const imgContent = safePhoto
+    ? `<img src="${safePhoto}" loading="lazy" style="width:100%;height:100%;object-fit:cover" alt="${_esc(l.title)}">`
+    : _esc(l.emoji || '📦');
   const newDot = isNew ? `<div class="card-new-dot" title="Posted today"></div>` : '';
   const staleBadge = isStale ? `<div style="position:absolute;top:10px;left:10px;background:rgba(122,122,122,0.85);color:#fff;font-size:0.65rem;padding:2px 8px;border-radius:20px;font-weight:500;letter-spacing:0.04em;z-index:2">May be filled</div>` : '';
   const freeBadge = l.cat === 'free' ? `<div style="position:absolute;top:10px;right:10px;background:#7B68EE;color:#fff;font-size:0.65rem;padding:2px 10px;border-radius:20px;font-weight:700;letter-spacing:0.06em;z-index:2">FREE</div>` : '';
-  return `<div class="listing-card cat-border-${l.cat}${isStale ? ' listing-stale' : ''}" onclick="openListingDetail(${JSON.stringify(l).replace(/"/g,'&quot;')})">
+  return `<div class="listing-card cat-border-${_esc(l.cat)}${isStale ? ' listing-stale' : ''}" onclick="openListingDetail(${JSON.stringify(l).replace(/"/g,'&quot;')})">
     ${newDot}
-    <div class="card-img" style="background:${l.bg};overflow:hidden;position:relative">${imgContent}${staleBadge}${freeBadge}${!l.photo_url && l.badge ? `<div class="card-badge">${l.badge}</div>` : ''}</div>
+    <div class="card-img" style="background:${_esc(l.bg)};overflow:hidden;position:relative">${imgContent}${staleBadge}${freeBadge}${!safePhoto && l.badge ? `<div class="card-badge">${_esc(l.badge)}</div>` : ''}</div>
     <div class="card-body">
-      <div class="card-cat cat-${l.cat}">${cat}</div>
-      <div class="card-title">${l.title}</div>
-      <div class="card-desc">${l.desc}</div>
-      <div class="trade-pill"${l.cat === 'free' ? ' style="background:rgba(123,104,238,0.08);color:#7B68EE;border-color:rgba(123,104,238,0.2);font-weight:500"' : (l.trade === 'Open to offers' ? ' style="font-style:italic;color:var(--text-light)"' : '')}>↔ ${l.cat === 'free' ? 'Free — just come get it!' : l.trade}</div>
+      <div class="card-cat cat-${_esc(l.cat)}">${cat}</div>
+      <div class="card-title">${_esc(l.title)}</div>
+      <div class="card-desc">${_esc(l.desc)}</div>
+      <div class="trade-pill"${l.cat === 'free' ? ' style="background:rgba(123,104,238,0.08);color:#7B68EE;border-color:rgba(123,104,238,0.2);font-weight:500"' : (l.trade === 'Open to offers' ? ' style="font-style:italic;color:var(--text-light)"' : '')}>↔ ${l.cat === 'free' ? 'Free — just come get it!' : _esc(l.trade)}</div>
       <div class="card-footer-row" style="margin-top:10px">
         <div class="avatar-row">
-          <div class="avatar ${l.av}" style="${l.avColor ? `background:${l.avColor};` : ''}">${l.initials}</div>
-          <span class="card-user-name" onclick="event.stopPropagation();${l.user_id ? `viewPublicProfile('${l.user_id}','${l.user}')` : ''}" style="${l.user_id ? 'cursor:pointer;text-decoration:underline;text-underline-offset:2px' : ''}">${l.user}</span>
+          <div class="avatar ${_esc(l.av)}" style="${l.avColor ? `background:${_esc(l.avColor)};` : ''}">${_esc(l.initials)}</div>
+          <span class="card-user-name" onclick="event.stopPropagation();${l.user_id ? `viewPublicProfile('${_esc(l.user_id)}','${_esc(l.user)}')` : ''}" style="${l.user_id ? 'cursor:pointer;text-decoration:underline;text-underline-offset:2px' : ''}">${_esc(l.user)}</span>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
-          ${l.dist && l.dist !== 'Community' ? `<div class="card-dist">📍 ${l.dist}</div>` : ''}
+          ${l.dist && l.dist !== 'Community' ? `<div class="card-dist">📍 ${_esc(l.dist)}</div>` : ''}
           ${timeStr ? `<div class="card-dist" style="color:${isNew ? 'var(--green-light)' : 'var(--text-light)'};font-weight:${isNew ? '500' : '400'}">${timeStr}</div>` : ''}
         </div>
       </div>
@@ -3533,9 +3534,14 @@ function openListingDetail(l) {
   const catLabel = l.cat === 'food' ? 'Food & Garden' : l.cat === 'skill' ? 'Skill' : l.cat === 'free' ? '🎁 Free' : 'Goods';
   document.getElementById('detail-img').style.background = l.bg || bgMap[l.cat] || '#F5F5F5';
   if (l.photo_url) {
-    document.getElementById('detail-img').innerHTML = `<img src="${l.photo_url}" style="width:100%;height:100%;object-fit:cover" alt="${l.title}"><button onclick="closeListingDetail()" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.9);border:none;border-radius:50%;width:32px;height:32px;font-size:1rem;cursor:pointer">✕</button>`;
+    const safeUrl = /^https?:\/\/.+\..+/i.test(l.photo_url) ? _esc(l.photo_url) : '';
+    if (safeUrl) {
+      document.getElementById('detail-img').innerHTML = `<img src="${safeUrl}" style="width:100%;height:100%;object-fit:cover" alt="${_esc(l.title)}"><button onclick="closeListingDetail()" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.9);border:none;border-radius:50%;width:32px;height:32px;font-size:1rem;cursor:pointer">✕</button>`;
+    } else {
+      document.getElementById('detail-img').innerHTML = `${_esc(l.emoji || '📦')}<button onclick="closeListingDetail()" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.9);border:none;border-radius:50%;width:32px;height:32px;font-size:1rem;cursor:pointer">✕</button>`;
+    }
   } else {
-    document.getElementById('detail-img').innerHTML = `${l.emoji || '📦'}<button onclick="closeListingDetail()" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.9);border:none;border-radius:50%;width:32px;height:32px;font-size:1rem;cursor:pointer">✕</button>`;
+    document.getElementById('detail-img').innerHTML = `${_esc(l.emoji || '📦')}<button onclick="closeListingDetail()" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.9);border:none;border-radius:50%;width:32px;height:32px;font-size:1rem;cursor:pointer">✕</button>`;
   }
   document.getElementById('detail-cat').textContent = catLabel;
   document.getElementById('detail-cat').className = 'listing-detail-cat cat-' + l.cat;
@@ -3564,14 +3570,14 @@ function openListingDetail(l) {
   if (isOwn) {
     actions.innerHTML = `
       <button class="btn btn-dark btn-sm" onclick="closeListingDetail();openEditModal(${JSON.stringify(l).replace(/"/g,'&quot;')})">✏️ Edit</button>
-      <button class="btn btn-outline-dark btn-sm" style="color:var(--green-light);border-color:rgba(74,139,92,0.35)" onclick="markAsTraded('${l.id}')">🤝 Mark as traded</button>
-      <button class="btn btn-outline-dark btn-sm" onclick="deleteListingFromDetail('${l.id}')">🗑 Delete</button>
+      <button class="btn btn-outline-dark btn-sm" style="color:var(--green-light);border-color:rgba(74,139,92,0.35)" onclick="markAsTraded('${_esc(l.id)}')">🤝 Mark as traded</button>
+      <button class="btn btn-outline-dark btn-sm" onclick="deleteListingFromDetail('${_esc(l.id)}')">🗑 Delete</button>
       <button class="btn btn-outline-dark btn-sm" onclick="closeListingDetail()">Close</button>`;
   } else if (canMsg) {
     actions.innerHTML = `
-      <button class="btn btn-dark btn-sm" onclick="closeListingDetail();openMessageModal('${l.user_id}','${l.user}','${l.id}','${l.title}')">✉ Message ${l.user.split(' ')[0]}</button>
+      <button class="btn btn-dark btn-sm" onclick="closeListingDetail();openMessageModal('${_esc(l.user_id)}','${_esc(l.user)}','${_esc(l.id)}','${_esc(l.title)}')">✉ Message ${_esc((l.user||'').split(' ')[0])}</button>
       <button class="btn btn-outline-dark btn-sm" onclick="closeListingDetail()">Close</button>
-      <button onclick="openReportModal('${l.id}','${l.title.replace(/'/g,"\\'")}','${l.user_id}')" style="background:none;border:none;font-size:0.72rem;color:var(--text-light);cursor:pointer;padding:4px 8px;margin-left:auto;text-decoration:underline;text-underline-offset:2px;font-family:'DM Sans',sans-serif">🚩 Report</button>`;
+      <button onclick="openReportModal('${_esc(l.id)}','${_esc(l.title)}','${_esc(l.user_id)}')" style="background:none;border:none;font-size:0.72rem;color:var(--text-light);cursor:pointer;padding:4px 8px;margin-left:auto;text-decoration:underline;text-underline-offset:2px;font-family:'DM Sans',sans-serif">🚩 Report</button>`;
   } else if (!currentUser) {
     actions.innerHTML = `
       <button class="btn btn-dark btn-sm" onclick="closeListingDetail();openAuthModal()">Sign in to message</button>
@@ -4093,13 +4099,13 @@ async function loadConversations() {
   }
 
   list.innerHTML = convos.map(c => {
-    const initials = c.otherName.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+    const initials = (c.otherName||'N').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
     const timeAgo = timeSince(c.time);
-    return `<div class="msg-thread" onclick="openConversation('${c.otherId}','${c.otherName}','')">
-      <div class="thread-av av-green">${initials}</div>
+    return `<div class="msg-thread" onclick="openConversation('${_esc(c.otherId)}','${_esc(c.otherName)}','')">
+      <div class="thread-av av-green">${_esc(initials)}</div>
       <div class="thread-body">
-        <div class="thread-name">${c.otherName}</div>
-        <div class="thread-preview">${c.lastMsg}</div>
+        <div class="thread-name">${_esc(c.otherName)}</div>
+        <div class="thread-preview">${_esc(c.lastMsg)}</div>
       </div>
       <div class="thread-right">
         <span class="thread-time">${timeAgo}</span>
@@ -4592,7 +4598,7 @@ async function viewPublicProfile(userId, userName) {
     if (profile.location) document.getElementById('pub-location').textContent = '📍 ' + profile.location;
     if (profile.bio) document.getElementById('pub-bio').textContent = profile.bio;
     if (profile.avatar_color) document.getElementById('pub-avatar').style.background = profile.avatar_color;
-    if (profile.avatar_url) {
+    if (profile.avatar_url && /^https?:\/\/.+\..+/i.test(profile.avatar_url)) {
       const av = document.getElementById('pub-avatar');
       av.style.backgroundImage = `url(${profile.avatar_url})`;
       av.style.backgroundSize = 'cover';
@@ -4629,15 +4635,16 @@ async function viewPublicProfile(userId, userName) {
       user_id: l.user_id, created_at: l.created_at, photo_url: l.photo_url || null
     };
     const listingJson = JSON.stringify(listing).replace(/"/g, '&quot;');
-    const imgContent = l.photo_url
-      ? `<img src="${l.photo_url}" style="width:100%;height:100%;object-fit:cover;border-radius:10px 10px 0 0" alt="${l.title}">`
-      : (l.emoji || '📦');
+    const safePhoto = listing.photo_url && /^https?:\/\/.+\..+/i.test(listing.photo_url) ? _esc(listing.photo_url) : '';
+    const imgContent = safePhoto
+      ? `<img src="${safePhoto}" style="width:100%;height:100%;object-fit:cover;border-radius:10px 10px 0 0" alt="${_esc(l.title)}">`
+      : _esc(l.emoji || '📦');
     return `<div class="mini-listing" onclick="openListingDetail(${listingJson})">
-      <div class="mini-img" style="background:${listing.bg};overflow:hidden">${imgContent}</div>
+      <div class="mini-img" style="background:${_esc(listing.bg)};overflow:hidden">${imgContent}</div>
       <div class="mini-body">
         <div class="mini-cat ${catClass}">${cat}</div>
-        <div class="mini-title">${l.title}</div>
-        <div class="mini-trade-pill">↔ ${listing.trade}</div>
+        <div class="mini-title">${_esc(l.title)}</div>
+        <div class="mini-trade-pill">↔ ${_esc(listing.trade)}</div>
       </div>
     </div>`;
   }).join('');
@@ -4712,15 +4719,16 @@ async function loadProfileListings() {
       photo_url: l.photo_url || null
     };
     const listingJson = JSON.stringify(listing).replace(/"/g, '&quot;');
-    const imgContent = listing.photo_url
-      ? `<img src="${listing.photo_url}" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:10px 10px 0 0" alt="${l.title}">`
-      : listing.emoji;
+    const safePhoto = listing.photo_url && /^https?:\/\/.+\..+/i.test(listing.photo_url) ? _esc(listing.photo_url) : '';
+    const imgContent = safePhoto
+      ? `<img src="${safePhoto}" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:10px 10px 0 0" alt="${_esc(l.title)}">`
+      : _esc(listing.emoji);
     return `<div class="mini-listing" onclick="openListingDetail(${listingJson})">
-      <div class="mini-img" style="background:${listing.bg};overflow:hidden">${imgContent}</div>
+      <div class="mini-img" style="background:${_esc(listing.bg)};overflow:hidden">${imgContent}</div>
       <div class="mini-body">
         <div class="mini-cat ${catClass}">${cat}</div>
-        <div class="mini-title">${l.title}</div>
-        <div class="mini-trade-pill">↔ ${listing.trade}</div>
+        <div class="mini-title">${_esc(l.title)}</div>
+        <div class="mini-trade-pill">↔ ${_esc(listing.trade)}</div>
       </div>
     </div>`;
   }).join('');
@@ -5253,7 +5261,7 @@ async function signUp() {
 
   if (!name) { showAuthError('Please enter your name'); return; }
   if (!email) { showAuthError('Please enter your email'); return; }
-  if (password.length < 6) { showAuthError('Password must be at least 6 characters'); return; }
+  if (password.length < 8) { showAuthError('Password must be at least 8 characters'); return; }
 
   const { data, error } = await db.auth.signUp({
     email,
@@ -5768,10 +5776,39 @@ function _wcRender(){
   const uC={flexible:'uf',anytime:'ua',soon:'us',this_week:'uw'};
   const uL={flexible:'Flexible',anytime:'Anytime',soon:'Soon',this_week:'This week'};
   const cBg={food:'var(--green-mid)',skill:'var(--amber)',goods:'var(--terra)'};
+  const isAdmin=currentUser&&currentUser.id===ADMIN_USER_ID;
   el.innerHTML=f.map(w=>{
     const ini=(w.user_name||'N').split(' ').map(x=>x[0]).join('').toUpperCase().slice(0,2);
-    return `<div class="wc"><div class="wc-hd"><div class="wc-av" style="background:${cBg[w.category]||'var(--green-mid)'}">${ini}</div><div class="wc-ui"><div class="wc-nm">${_esc(w.user_name||'Neighbor')}</div><div class="wc-mt">${_esc(w.city||'')} · ${_ago(w.created_at)}</div></div><span class="wc-urg ${uC[w.urgency]||'uf'}">${uL[w.urgency]||'Flexible'}</span></div><div class="wc-ti">${_esc(w.emoji||'🔍')} Looking for: ${_esc(w.title)}</div><div class="wc-of"><strong>Willing to trade:</strong> ${_esc(w.offering||'Open to offers')}</div><div class="wc-ft"><span class="wc-rs">${(w.response_count||0)>0?(w.response_count+' responded'):'No responses yet'}</span><button class="wc-rb" onclick="respondToWish('${w.id}')">I can help →</button></div></div>`;
+    const isOwn=currentUser&&w.user_id===currentUser.id;
+    const canManage=isOwn||isAdmin;
+    const manageHtml=canManage?`<div style="display:flex;gap:6px;padding:4px 1rem 8px"><button onclick="closeWish('${_esc(w.id)}')" style="font-size:0.72rem;color:var(--green-mid);background:none;border:1px solid var(--border);border-radius:var(--radius-pill);padding:3px 10px;cursor:pointer;font-family:'DM Sans',sans-serif">✓ Mark fulfilled</button><button onclick="deleteWish('${_esc(w.id)}')" style="font-size:0.72rem;color:var(--terra);background:none;border:1px solid rgba(139,74,42,0.3);border-radius:var(--radius-pill);padding:3px 10px;cursor:pointer;font-family:'DM Sans',sans-serif">🗑 Delete</button></div>`:'';
+    return `<div class="wc"><div class="wc-hd"><div class="wc-av" style="background:${cBg[w.category]||'var(--green-mid)'}">${ini}</div><div class="wc-ui"><div class="wc-nm">${_esc(w.user_name||'Neighbor')}</div><div class="wc-mt">${_esc(w.city||'')} · ${_ago(w.created_at)}</div></div><span class="wc-urg ${uC[w.urgency]||'uf'}">${uL[w.urgency]||'Flexible'}</span></div><div class="wc-ti">${_esc(w.emoji||'🔍')} Looking for: ${_esc(w.title)}</div><div class="wc-of"><strong>Willing to trade:</strong> ${_esc(w.offering||'Open to offers')}</div>${manageHtml}<div class="wc-ft"><span class="wc-rs">${(w.response_count||0)>0?(w.response_count+' responded'):'No responses yet'}</span><button class="wc-rb" onclick="respondToWish('${w.id}')">I can help →</button></div></div>`;
   }).join('');
+}
+
+async function deleteWish(id){
+  if(!currentUser)return;
+  if(!confirm('Delete this wish?'))return;
+  const isAdmin=currentUser.id===ADMIN_USER_ID;
+  let query=db.from('wishes').delete().eq('id',id);
+  if(!isAdmin)query=query.eq('user_id',currentUser.id);
+  const{error}=await query;
+  if(error){showToast('Could not delete — try again.');console.error(error);return;}
+  window._wishes=window._wishes.filter(w=>w.id!==id);
+  _wcRender();_afRender();
+  showToast('Wish deleted. 🗑');
+}
+
+async function closeWish(id){
+  if(!currentUser)return;
+  const isAdmin=currentUser.id===ADMIN_USER_ID;
+  let query=db.from('wishes').update({status:'closed'}).eq('id',id);
+  if(!isAdmin)query=query.eq('user_id',currentUser.id);
+  const{error}=await query;
+  if(error){showToast('Could not update — try again.');return;}
+  window._wishes=window._wishes.filter(w=>w.id!==id);
+  _wcRender();_afRender();
+  showToast('Wish marked as fulfilled! 🎉');
 }
 
 function wfSet(v,btn){_wfilt=v;document.querySelectorAll('#wf-row .feed-fbtn').forEach(b=>b.classList.remove('on'));if(btn)btn.classList.add('on');_wcRender();}
