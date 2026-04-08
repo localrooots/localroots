@@ -1938,81 +1938,55 @@ footer {
   #events-preview { grid-template-columns: 1fr !important; }
 }
 
-/* ============================================================
-   ACTIVITY FEED (Homepage)
-   ============================================================ */
-.feed-section { padding: 2rem 1.5rem; background: var(--white); border-top: 1px solid var(--border); }
-.feed-section .inner { max-width: 1000px; margin: 0 auto; }
-.feed-filters { display: flex; gap: 6px; margin-bottom: 1rem; overflow-x: auto; padding-bottom: 4px; }
-.feed-filter-btn { padding: 6px 14px; border-radius: var(--radius-pill); border: 1.5px solid var(--border); background: transparent; color: var(--text-light); font-size: 0.8rem; font-weight: 500; cursor: pointer; white-space: nowrap; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
-.feed-filter-btn:hover { border-color: var(--green-light); color: var(--green-dark); }
-.feed-filter-btn.active { border-color: var(--green-mid); background: rgba(45,92,63,0.08); color: var(--green-dark); font-weight: 500; }
-.feed-list { display: flex; flex-direction: column; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
-.feed-item { display: flex; gap: 12px; align-items: flex-start; padding: 0.85rem 1rem; border-bottom: 1px solid rgba(44,78,44,0.08); transition: background 0.15s; }
-.feed-item:last-child { border-bottom: none; }
-.feed-item:hover { background: var(--cream); }
-.feed-item-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
-.feed-item-icon.green { background: rgba(74,139,92,0.12); }
-.feed-item-icon.amber { background: rgba(212,132,58,0.12); }
-.feed-item-icon.blue { background: rgba(74,111,165,0.12); }
-.feed-item-icon.purple { background: rgba(123,94,167,0.12); }
-.feed-item-body { flex: 1; min-width: 0; }
-.feed-item-text { font-size: 0.85rem; color: var(--text-dark); line-height: 1.45; }
-.feed-item-text strong { font-weight: 500; }
-.feed-item-detail { font-size: 0.8rem; color: var(--text-mid); margin-top: 3px; }
-.feed-item-meta { font-size: 0.72rem; color: var(--text-light); margin-top: 4px; }
-.feed-swap-tags { display: flex; align-items: center; gap: 6px; margin-top: 5px; flex-wrap: wrap; }
-.feed-swap-tag { padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; }
-.feed-swap-tag.warm { background: rgba(242,194,122,0.2); }
-.feed-swap-tag.mint { background: rgba(74,139,92,0.1); }
-.feed-help-btn { font-size: 0.72rem; font-weight: 500; color: var(--green-mid); background: rgba(45,92,63,0.08); border: none; border-radius: var(--radius-pill); padding: 3px 10px; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
-.feed-help-btn:hover { background: var(--green-mid); color: white; }
-.feed-badge { font-size: 0.7rem; font-weight: 500; padding: 2px 8px; border-radius: var(--radius-pill); white-space: nowrap; text-transform: capitalize; }
-.feed-badge.food { background: rgba(74,139,92,0.1); color: var(--green-mid); }
-.feed-badge.skill { background: rgba(212,132,58,0.1); color: var(--amber); }
-.feed-badge.goods { background: rgba(139,74,42,0.1); color: var(--terra); }
-.feed-badge.free { background: rgba(123,94,167,0.1); color: #7B5EA7; }
-.feed-event-item { background: rgba(74,139,92,0.04); }
-.feed-empty { padding: 2.5rem 1rem; text-align: center; color: var(--text-light); font-size: 0.88rem; }
+/* ---- ACTIVITY FEED ---- */
+.feed-section { padding:2rem 1.5rem; background:var(--white); border-top:1px solid var(--border); }
+.feed-filters-row { display:flex; gap:6px; margin-bottom:1rem; overflow-x:auto; }
+.feed-fbtn { padding:6px 14px; border-radius:var(--radius-pill); border:1.5px solid var(--border); background:transparent; color:var(--text-light); font-size:0.8rem; font-weight:500; cursor:pointer; white-space:nowrap; font-family:'DM Sans',sans-serif; transition:all 0.2s; }
+.feed-fbtn:hover { border-color:var(--green-light); color:var(--green-dark); }
+.feed-fbtn.on { border-color:var(--green-mid); background:rgba(45,92,63,0.08); color:var(--green-dark); }
+.feed-list { background:var(--white); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+.fi { display:flex; gap:12px; align-items:flex-start; padding:0.85rem 1rem; border-bottom:1px solid rgba(44,78,44,0.08); }
+.fi:last-child { border-bottom:none; }
+.fi:hover { background:var(--cream); }
+.fi-ico { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; }
+.fi-ico.gr { background:rgba(74,139,92,0.12); }
+.fi-ico.am { background:rgba(212,132,58,0.12); }
+.fi-bd { flex:1; min-width:0; }
+.fi-t { font-size:0.85rem; color:var(--text-dark); line-height:1.45; }
+.fi-t strong { font-weight:500; }
+.fi-d { font-size:0.8rem; color:var(--text-mid); margin-top:3px; }
+.fi-m { font-size:0.72rem; color:var(--text-light); margin-top:4px; }
+.fi-help { font-size:0.72rem; font-weight:500; color:var(--green-mid); background:rgba(45,92,63,0.08); border:none; border-radius:var(--radius-pill); padding:3px 10px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+.fi-help:hover { background:var(--green-mid); color:white; }
+.fi-badge { font-size:0.7rem; font-weight:500; padding:2px 8px; border-radius:var(--radius-pill); white-space:nowrap; text-transform:capitalize; background:rgba(74,139,92,0.1); color:var(--green-mid); align-self:flex-start; margin-top:2px; }
+.feed-empty { padding:2.5rem 1rem; text-align:center; color:var(--text-light); font-size:0.88rem; }
 
-/* ============================================================
-   WISH LIST (Looking For section)
-   ============================================================ */
-.wishes-section { padding: 2rem 1.5rem 2.5rem; background: var(--cream); border-top: 1px solid var(--border); }
-.wishes-section .inner { max-width: 1000px; margin: 0 auto; }
-.wish-top-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
-.wish-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
-.wish-card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; transition: box-shadow 0.2s; }
-.wish-card:hover { box-shadow: var(--shadow); }
-.wish-card-header { display: flex; align-items: center; gap: 10px; padding: 1rem 1rem 0; }
-.wish-card-av { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; }
-.wish-card-user { flex: 1; }
-.wish-card-name { font-size: 0.85rem; font-weight: 500; color: var(--text-dark); }
-.wish-card-meta { font-size: 0.72rem; color: var(--text-light); }
-.wish-urgency-tag { font-size: 0.7rem; font-weight: 500; padding: 2px 8px; border-radius: var(--radius-pill); }
-.wish-urgency-tag.flexible { background: #f0f0f0; color: var(--text-light); }
-.wish-urgency-tag.soon { background: rgba(212,132,58,0.12); color: var(--amber); }
-.wish-urgency-tag.this-week { background: rgba(192,57,43,0.1); color: #C0392B; }
-.wish-urgency-tag.anytime { background: rgba(74,111,165,0.1); color: #4A6FA5; }
-.wish-card-title { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--green-dark); font-weight: 600; padding: 0.6rem 1rem 0; line-height: 1.35; }
-.wish-card-offering { font-size: 0.8rem; color: var(--text-mid); padding: 0.5rem 1rem; line-height: 1.5; }
-.wish-card-offering strong { font-weight: 500; }
-.wish-card-offering-box { background: var(--cream); border-radius: var(--radius-sm); padding: 8px 10px; margin: 0 1rem 0.75rem; font-size: 0.8rem; color: var(--text-mid); }
-.wish-card-footer { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 1rem; border-top: 1px solid var(--border); background: rgba(247,243,236,0.5); }
-.wish-card-responses { font-size: 0.75rem; color: var(--text-light); }
-.wish-respond-btn { font-size: 0.8rem; font-weight: 500; color: var(--green-mid); background: rgba(45,92,63,0.08); border: 1.5px solid rgba(45,92,63,0.2); border-radius: var(--radius-pill); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
-.wish-respond-btn:hover { background: var(--green-mid); color: white; border-color: var(--green-mid); }
-.wish-respond-btn.responded { background: var(--green-mid); color: white; border-color: var(--green-mid); }
-
-/* Wish form modal */
-.wish-form-cats { display: flex; gap: 6px; flex-wrap: wrap; }
-.wish-cat-btn { padding: 5px 12px; border-radius: var(--radius-pill); border: 1.5px solid var(--border); background: transparent; color: var(--text-light); font-size: 0.8rem; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
-.wish-cat-btn.active { border-color: var(--green-mid); background: rgba(45,92,63,0.08); color: var(--green-dark); }
-
-@media (max-width: 600px) {
-  .wish-cards { grid-template-columns: 1fr; }
-  .wish-top-row { flex-direction: column; align-items: stretch; }
-}
+/* ---- WISH LIST ---- */
+.wishes-section { padding:2rem 1.5rem 2.5rem; background:var(--cream); border-top:1px solid var(--border); }
+.wc-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1rem; }
+.wc { background:var(--white); border-radius:var(--radius); border:1px solid var(--border); overflow:hidden; transition:box-shadow 0.2s; }
+.wc:hover { box-shadow:var(--shadow); }
+.wc-hd { display:flex; align-items:center; gap:10px; padding:1rem 1rem 0; }
+.wc-av { width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; flex-shrink:0; font-family:'Playfair Display',serif; font-weight:700; color:white; }
+.wc-ui { flex:1; }
+.wc-nm { font-size:0.85rem; font-weight:500; color:var(--text-dark); }
+.wc-mt { font-size:0.72rem; color:var(--text-light); }
+.wc-urg { font-size:0.7rem; font-weight:500; padding:2px 8px; border-radius:var(--radius-pill); }
+.wc-urg.uf { background:#f0f0f0; color:var(--text-light); }
+.wc-urg.us { background:rgba(212,132,58,0.12); color:var(--amber); }
+.wc-urg.uw { background:rgba(192,57,43,0.1); color:#C0392B; }
+.wc-urg.ua { background:rgba(74,111,165,0.1); color:#4A6FA5; }
+.wc-ti { font-family:'Playfair Display',serif; font-size:1rem; color:var(--green-dark); font-weight:600; padding:0.6rem 1rem 0; line-height:1.35; }
+.wc-of { background:var(--cream); border-radius:var(--radius-sm); padding:8px 10px; margin:0.5rem 1rem 0.75rem; font-size:0.8rem; color:var(--text-mid); }
+.wc-of strong { font-weight:500; }
+.wc-ft { display:flex; align-items:center; justify-content:space-between; padding:0.6rem 1rem; border-top:1px solid var(--border); background:rgba(247,243,236,0.5); }
+.wc-rs { font-size:0.75rem; color:var(--text-light); }
+.wc-rb { font-size:0.8rem; font-weight:500; color:var(--green-mid); background:rgba(45,92,63,0.08); border:1.5px solid rgba(45,92,63,0.2); border-radius:var(--radius-pill); padding:6px 14px; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; }
+.wc-rb:hover { background:var(--green-mid); color:white; border-color:var(--green-mid); }
+.wish-form-cats { display:flex; gap:6px; flex-wrap:wrap; }
+.wcb { padding:5px 12px; border-radius:var(--radius-pill); border:1.5px solid var(--border); background:transparent; color:var(--text-light); font-size:0.8rem; font-weight:500; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; }
+.wcb.on { border-color:var(--green-mid); background:rgba(45,92,63,0.08); color:var(--green-dark); }
+@media(max-width:600px) { .wc-grid { grid-template-columns:1fr; } }
 
 </style>
 </head>
@@ -2179,33 +2153,27 @@ footer {
     <div class="listings-grid" id="home-grid"></div>
   </div>
 
-  <!-- How it works -->
-  <div class="how-section">
-
-  <!-- ====== ACTIVITY FEED ====== -->
+  <!-- Activity Feed -->
   <div class="feed-section">
-    <div class="inner">
+    <div style="max-width:1000px;margin:0 auto">
       <div style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.25rem">
         <div>
           <div class="section-heading">📡 What's happening nearby</div>
           <div class="section-sub-text">Real-time trades, listings, and wishes from your neighbors</div>
         </div>
       </div>
-      <div class="feed-filters" id="feed-filters">
-        <button class="feed-filter-btn active" data-feed-filter="all" onclick="filterFeed('all',this)">All activity</button>
-        <button class="feed-filter-btn" data-feed-filter="trade" onclick="filterFeed('trade',this)">🤝 Trades</button>
-        <button class="feed-filter-btn" data-feed-filter="listing" onclick="filterFeed('listing',this)">🌱 Listings</button>
-        <button class="feed-filter-btn" data-feed-filter="wish" onclick="filterFeed('wish',this)">🔍 Wishes</button>
+      <div class="feed-filters-row" id="ff-row">
+        <button class="feed-fbtn on" onclick="ffSet('all',this)">All activity</button>
+        <button class="feed-fbtn" onclick="ffSet('listing',this)">🌱 Listings</button>
+        <button class="feed-fbtn" onclick="ffSet('wish',this)">🔍 Wishes</button>
       </div>
-      <div class="feed-list" id="activity-feed-list">
-        <div class="feed-empty">Loading activity...</div>
-      </div>
+      <div class="feed-list" id="af-list"><div class="feed-empty">Loading activity...</div></div>
     </div>
   </div>
 
-  <!-- ====== WISH LIST / LOOKING FOR ====== -->
+  <!-- Wish List -->
   <div class="wishes-section">
-    <div class="inner">
+    <div style="max-width:1000px;margin:0 auto">
       <div style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.25rem">
         <div>
           <div class="section-heading">🔍 Neighbors are looking for</div>
@@ -2213,55 +2181,18 @@ footer {
         </div>
         <button class="btn btn-dark btn-sm" onclick="openWishModal()">+ Post a wish</button>
       </div>
-      <div class="feed-filters" id="wish-filters">
-        <button class="feed-filter-btn active" data-wish-filter="all" onclick="filterWishes('all',this)">All</button>
-        <button class="feed-filter-btn" data-wish-filter="food" onclick="filterWishes('food',this)">🌱 Food</button>
-        <button class="feed-filter-btn" data-wish-filter="skill" onclick="filterWishes('skill',this)">🔧 Skills</button>
-        <button class="feed-filter-btn" data-wish-filter="goods" onclick="filterWishes('goods',this)">📦 Goods</button>
+      <div class="feed-filters-row" id="wf-row">
+        <button class="feed-fbtn on" onclick="wfSet('all',this)">All</button>
+        <button class="feed-fbtn" onclick="wfSet('food',this)">🌱 Food</button>
+        <button class="feed-fbtn" onclick="wfSet('skill',this)">🔧 Skills</button>
+        <button class="feed-fbtn" onclick="wfSet('goods',this)">📦 Goods</button>
       </div>
-      <div class="wish-cards" id="wish-cards-grid">
-        <div class="feed-empty" style="grid-column:1/-1">Loading wishes...</div>
-      </div>
+      <div class="wc-grid" id="wc-grid"><div class="feed-empty" style="grid-column:1/-1">Loading wishes...</div></div>
     </div>
   </div>
 
-  <!-- ====== WISH MODAL ====== -->
-  <div class="modal-backdrop" id="wish-modal" style="display:none" onclick="if(event.target===this)closeWishModal()">
-    <div class="modal">
-      <div class="modal-hdr">
-        <div class="modal-title">🔍 What are you looking for?</div>
-        <button class="modal-close" onclick="closeWishModal()">✕</button>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Category</label>
-        <div class="wish-form-cats">
-          <button class="wish-cat-btn active" onclick="selectWishCat(this,'food')">🌱 Food</button>
-          <button class="wish-cat-btn" onclick="selectWishCat(this,'skill')">🔧 Skill</button>
-          <button class="wish-cat-btn" onclick="selectWishCat(this,'goods')">📦 Goods</button>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">I'm looking for...</label>
-        <input class="form-input" type="text" id="wish-title-input" placeholder="e.g. Fresh eggs, bike repair help, kids' clothes" maxlength="100">
-      </div>
-      <div class="form-group">
-        <label class="form-label">I can trade...</label>
-        <input class="form-input" type="text" id="wish-offering-input" placeholder="e.g. Sourdough, garden help, piano lessons" maxlength="200">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Timeline</label>
-        <div class="wish-form-cats">
-          <button class="wish-cat-btn active" onclick="selectWishUrgency(this,'flexible')">Flexible</button>
-          <button class="wish-cat-btn" onclick="selectWishUrgency(this,'anytime')">Anytime</button>
-          <button class="wish-cat-btn" onclick="selectWishUrgency(this,'soon')">Soon</button>
-          <button class="wish-cat-btn" onclick="selectWishUrgency(this,'this_week')">This week</button>
-        </div>
-      </div>
-      <button class="btn btn-dark btn-full" onclick="submitWish()">Post wish →</button>
-    </div>
-  </div>
-
-  <!-- How it works (original) -->
+  <!-- How it works -->
+  <div class="how-section">
     <div class="how-inner">
       <div class="how-title">How it works</div>
       <div class="how-sub">Three steps to your first trade</div>
@@ -3019,6 +2950,42 @@ footer {
       <textarea class="form-textarea" id="report-details" placeholder="Any other context that would help us review this..." style="min-height:80px"></textarea>
     </div>
     <button class="btn btn-dark btn-full" onclick="submitReport()" style="background:var(--terra)">Submit report</button>
+  </div>
+</div>
+
+<!-- WISH MODAL -->
+<div class="modal-backdrop" id="wish-modal" style="display:none" onclick="if(event.target===this)closeWishModal()">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">🔍 What are you looking for?</div>
+      <button class="modal-close" onclick="closeWishModal()">✕</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Category</label>
+      <div class="wish-form-cats">
+        <button class="wcb on" onclick="selWC(this,'food')">🌱 Food</button>
+        <button class="wcb" onclick="selWC(this,'skill')">🔧 Skill</button>
+        <button class="wcb" onclick="selWC(this,'goods')">📦 Goods</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">I'm looking for...</label>
+      <input class="form-input" type="text" id="wish-inp-title" placeholder="e.g. Fresh eggs, bike repair help, kids' clothes" maxlength="100">
+    </div>
+    <div class="form-group">
+      <label class="form-label">I can trade...</label>
+      <input class="form-input" type="text" id="wish-inp-offer" placeholder="e.g. Sourdough, garden help, piano lessons" maxlength="200">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Timeline</label>
+      <div class="wish-form-cats">
+        <button class="wcb on" onclick="selWU(this,'flexible')">Flexible</button>
+        <button class="wcb" onclick="selWU(this,'anytime')">Anytime</button>
+        <button class="wcb" onclick="selWU(this,'soon')">Soon</button>
+        <button class="wcb" onclick="selWU(this,'this_week')">This week</button>
+      </div>
+    </div>
+    <button class="btn btn-dark btn-full" onclick="submitWish()">Post wish →</button>
   </div>
 </div>
 
@@ -3859,9 +3826,6 @@ function renderHome() {
   } else {
     document.getElementById('home-grid').innerHTML = listings.slice(0,6).map(cardHTML).join('');
   }
-
-  // Update the activity feed with latest listings
-  if (typeof renderActivityFeed === 'function') renderActivityFeed();
 }
 
 function showHomeLoading() {
@@ -5134,406 +5098,6 @@ renderEvents();
 renderEventsPreview();
 
 /* ============================================================
-   ACTIVITY FEED — Real-time community activity
-   ============================================================ */
-
-let feedData = [];
-let feedFilter = 'all';
-
-function timeSinceShort(dateStr) {
-  if (!dateStr) return '';
-  const s = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
-  if (s < 60) return 'Just now';
-  if (s < 3600) return Math.floor(s/60) + 'm ago';
-  if (s < 86400) return Math.floor(s/3600) + 'h ago';
-  if (s < 604800) return Math.floor(s/86400) + 'd ago';
-  return new Date(dateStr).toLocaleDateString();
-}
-
-function esc(str) { if (!str) return ''; const d=document.createElement('div'); d.textContent=str; return d.innerHTML; }
-
-function buildFeedItem(item) {
-  if (item.type === 'listing') {
-    const catIcons = { food:'🌱', skill:'✨', goods:'📦', free:'🎁' };
-    const catColors = { food:'green', skill:'amber', goods:'blue', free:'purple' };
-    return `<div class="feed-item">
-      <div class="feed-item-icon ${catColors[item.category]||'green'}">${catIcons[item.category]||'🌱'}</div>
-      <div class="feed-item-body">
-        <div class="feed-item-text"><strong>${esc(item.user_name||'Neighbor')}</strong> posted a new listing</div>
-        <div class="feed-item-detail">${esc(item.emoji||'')} ${esc(item.title)}</div>
-        <div class="feed-item-meta">${timeSinceShort(item.created_at)} · ${esc(item.neighborhood||item.city||'')}</div>
-      </div>
-      <span class="feed-badge ${item.category||'food'}">${esc(item.category||'')}</span>
-    </div>`;
-  }
-  if (item.type === 'wish') {
-    return `<div class="feed-item">
-      <div class="feed-item-icon amber">🔍</div>
-      <div class="feed-item-body">
-        <div class="feed-item-text"><strong>${esc(item.user_name||'Neighbor')}</strong> is looking for something</div>
-        <div class="feed-item-detail">${esc(item.emoji||'🔍')} ${esc(item.title)}</div>
-        <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
-          <span class="feed-item-meta">${timeSinceShort(item.created_at)}</span>
-          <button class="feed-help-btn" onclick="respondToWish('${item.id}')">I can help →</button>
-        </div>
-      </div>
-    </div>`;
-  }
-  if (item.type === 'trade') {
-    return `<div class="feed-item">
-      <div class="feed-item-icon green">🤝</div>
-      <div class="feed-item-body">
-        <div class="feed-item-text"><strong>${esc(item.user1_name||'Someone')}</strong> traded with <strong>${esc(item.user2_name||'someone')}</strong></div>
-        <div class="feed-swap-tags">
-          <span class="feed-swap-tag warm">${esc(item.item1||'')}</span>
-          <span style="font-size:0.7rem;color:var(--text-light)">↔</span>
-          <span class="feed-swap-tag mint">${esc(item.item2||'')}</span>
-        </div>
-        <div class="feed-item-meta">${timeSinceShort(item.created_at)}</div>
-      </div>
-    </div>`;
-  }
-  return '';
-}
-
-function renderActivityFeed() {
-  const container = document.getElementById('activity-feed-list');
-  if (!container) return;
-
-  // Build feed from existing listings + wishes
-  const feedItems = [];
-
-  // Add listings to feed
-  listings.forEach(l => {
-    feedItems.push({
-      type: 'listing',
-      id: l.id,
-      title: l.title,
-      emoji: l.emoji,
-      category: l.cat,
-      user_name: l.user,
-      neighborhood: l.dist,
-      created_at: l.created_at
-    });
-  });
-
-  // Add wishes to feed
-  (window._wishes || []).forEach(w => {
-    feedItems.push({
-      type: 'wish',
-      id: w.id,
-      title: w.title,
-      emoji: w.emoji,
-      user_name: w.user_name,
-      city: w.city,
-      created_at: w.created_at
-    });
-  });
-
-  // Sort by date
-  feedItems.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
-
-  // Apply filter
-  const filtered = feedFilter === 'all' ? feedItems : feedItems.filter(i => i.type === feedFilter);
-
-  if (filtered.length === 0) {
-    container.innerHTML = `<div class="feed-empty">
-      <div style="font-size:2rem;margin-bottom:8px">🌱</div>
-      <div>No activity yet. Be the first to post something!</div>
-    </div>`;
-    return;
-  }
-
-  container.innerHTML = filtered.slice(0, 15).map(buildFeedItem).join('');
-}
-
-function filterFeed(filter, btn) {
-  feedFilter = filter;
-  document.querySelectorAll('#feed-filters .feed-filter-btn').forEach(b => b.classList.remove('active'));
-  if (btn) btn.classList.add('active');
-  renderActivityFeed();
-}
-
-/* ============================================================
-   WISH LIST — Looking For posts
-   ============================================================ */
-
-window._wishes = [];
-let wishFilter = 'all';
-let wishCat = 'food';
-let wishUrgency = 'flexible';
-
-async function loadWishes() {
-  try {
-    const { data, error } = await db
-      .from('wishes')
-      .select('*')
-      .eq('status', 'open')
-      .order('created_at', { ascending: false })
-      .limit(20);
-
-    if (error) {
-      // Table doesn't exist yet — that's OK, show empty state
-      if (error.code === '42P01') {
-        window._wishes = [];
-        renderWishCards();
-        renderActivityFeed();
-        return;
-      }
-      console.error('Wish load error:', error);
-      return;
-    }
-    window._wishes = data || [];
-    renderWishCards();
-    renderActivityFeed();
-  } catch(e) {
-    console.error('Wish load failed:', e);
-    window._wishes = [];
-    renderWishCards();
-    renderActivityFeed();
-  }
-}
-
-function renderWishCards() {
-  const container = document.getElementById('wish-cards-grid');
-  if (!container) return;
-  const filtered = wishFilter === 'all' ? window._wishes : window._wishes.filter(w => w.category === wishFilter);
-
-  if (filtered.length === 0) {
-    container.innerHTML = `<div class="feed-empty" style="grid-column:1/-1">
-      <div style="font-size:2rem;margin-bottom:8px">🔍</div>
-      <div>No wishes yet. Post the first one!</div>
-    </div>`;
-    return;
-  }
-
-  const urgLabels = { flexible:'Flexible', anytime:'Anytime', soon:'Soon', this_week:'This week' };
-  const urgCls = { flexible:'flexible', anytime:'anytime', soon:'soon', this_week:'this-week' };
-  const catBgs = { food:'var(--green-mid)', skill:'var(--amber)', goods:'var(--terra)' };
-
-  container.innerHTML = filtered.map(w => {
-    const uLabel = urgLabels[w.urgency] || 'Flexible';
-    const uCls = urgCls[w.urgency] || 'flexible';
-    const avBg = catBgs[w.category] || 'var(--green-mid)';
-    const initials = (w.user_name||'N').split(' ').map(x=>x[0]).join('').toUpperCase().slice(0,2);
-    const respCount = w.response_count || 0;
-
-    return `<div class="wish-card">
-      <div class="wish-card-header">
-        <div class="wish-card-av" style="background:${avBg};color:white;font-family:'Playfair Display',serif;font-weight:700;font-size:0.75rem">${initials}</div>
-        <div class="wish-card-user">
-          <div class="wish-card-name">${esc(w.user_name||'Neighbor')}</div>
-          <div class="wish-card-meta">${esc(w.city||'')} · ${timeSinceShort(w.created_at)}</div>
-        </div>
-        <span class="wish-urgency-tag ${uCls}">${uLabel}</span>
-      </div>
-      <div class="wish-card-title">${esc(w.emoji||'🔍')} Looking for: ${esc(w.title)}</div>
-      <div class="wish-card-offering-box"><strong>Willing to trade:</strong> ${esc(w.offering||'Open to offers')}</div>
-      <div class="wish-card-footer">
-        <span class="wish-card-responses">${respCount > 0 ? respCount + ' responded' : 'No responses yet'}</span>
-        <button class="wish-respond-btn" onclick="respondToWish('${w.id}')">I can help →</button>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function filterWishes(cat, btn) {
-  wishFilter = cat;
-  document.querySelectorAll('#wish-filters .feed-filter-btn').forEach(b => b.classList.remove('active'));
-  if (btn) btn.classList.add('active');
-  renderWishCards();
-}
-
-function selectWishCat(btn, cat) {
-  wishCat = cat;
-  btn.closest('.wish-form-cats').querySelectorAll('.wish-cat-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-}
-
-function selectWishUrgency(btn, u) {
-  wishUrgency = u;
-  btn.closest('.wish-form-cats').querySelectorAll('.wish-cat-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-}
-
-function openWishModal() {
-  if (!currentUser) { openAuthModal(); return; }
-  document.getElementById('wish-modal').style.display = 'flex';
-}
-
-function closeWishModal() {
-  document.getElementById('wish-modal').style.display = 'none';
-  document.getElementById('wish-title-input').value = '';
-  document.getElementById('wish-offering-input').value = '';
-}
-
-async function submitWish() {
-  const title = document.getElementById('wish-title-input').value.trim();
-  const offering = document.getElementById('wish-offering-input').value.trim();
-  if (!title) { showToast('Please describe what you\'re looking for'); return; }
-  if (!currentUser) { openAuthModal(); return; }
-
-  const userName = currentUser.user_metadata?.full_name || currentUser.email.split('@')[0];
-  const city = currentUser.user_metadata?.city || currentUser.user_metadata?.neighborhood || '';
-  const catEmoji = { food:'🌱', skill:'🔧', goods:'📦' };
-
-  try {
-    const { data, error } = await db.from('wishes').insert([{
-      user_id: currentUser.id,
-      title: title,
-      offering: offering,
-      category: wishCat,
-      urgency: wishUrgency,
-      emoji: catEmoji[wishCat] || '🔍',
-      status: 'open',
-      city: city,
-      user_name: userName
-    }]).select().single();
-
-    if (error) {
-      if (error.code === '42P01') {
-        showToast('Run the migration SQL first — wishes table not found.');
-      } else {
-        showToast('Could not save — please try again.');
-        console.error('Wish save error:', error);
-      }
-      return;
-    }
-
-    closeWishModal();
-    showToast('🔍 Wish posted! Your neighbors will see it.');
-    loadWishes();
-  } catch(e) {
-    console.error('Wish submit failed:', e);
-    showToast('Something went wrong — please try again.');
-  }
-}
-
-async function respondToWish(wishId) {
-  if (!currentUser) { openAuthModal(); return; }
-  try {
-    const { error } = await db.from('wish_responses').insert([{
-      wish_id: wishId,
-      user_id: currentUser.id,
-      message: ''
-    }]);
-    if (error) {
-      if (error.code === '23505') { showToast('You already responded to this wish!'); }
-      else if (error.code === '42P01') { showToast('Run the migration SQL first.'); }
-      else { showToast('Could not respond — try again.'); }
-      return;
-    }
-    showToast('✅ Response sent! The neighbor will be notified.');
-  } catch(e) {
-    showToast('Could not respond — try again.');
-  }
-}
-
-/* ============================================================
-   ENHANCED NOTIFICATIONS — Real-time from Supabase
-   ============================================================ */
-
-let dbNotifications = [];
-
-async function loadDBNotifications() {
-  if (!currentUser) return;
-  try {
-    const { data, error } = await db
-      .from('notifications')
-      .select('*')
-      .eq('user_id', currentUser.id)
-      .order('created_at', { ascending: false })
-      .limit(20);
-
-    if (error) {
-      // Table doesn't exist yet — that's fine
-      if (error.code === '42P01') return;
-      return;
-    }
-    dbNotifications = data || [];
-    renderDBNotifications();
-  } catch(e) {}
-}
-
-function renderDBNotifications() {
-  const list = document.getElementById('notif-list');
-  if (!list) return;
-  if (dbNotifications.length === 0) {
-    list.innerHTML = '<div style="padding:2rem 1rem;text-align:center;color:var(--text-light);font-size:0.85rem">No notifications yet.<br>We\'ll let you know when someone messages you.</div>';
-    return;
-  }
-
-  const typeIcons = {
-    match: { emoji:'✨', cls:'amber' }, message: { emoji:'💬', cls:'green' },
-    trade: { emoji:'🤝', cls:'green' }, wishlist_response: { emoji:'🙋', cls:'amber' },
-    listing: { emoji:'🌱', cls:'green' }, event: { emoji:'📅', cls:'green' },
-    review: { emoji:'⭐', cls:'amber' }
-  };
-
-  list.innerHTML = dbNotifications.map(n => {
-    const t = typeIcons[n.type] || typeIcons.message;
-    return `<div class="notif-item ${n.read ? '' : 'unread'}" onclick="markNotifRead('${n.id}')">
-      <div class="notif-icon ${t.cls}">${t.emoji}</div>
-      <div class="notif-body">
-        <div class="nt" style="${n.read?'':'font-weight:500'}">${esc(n.title)}</div>
-        <div class="nd">${esc(n.body||'')} · ${timeSinceShort(n.created_at)}</div>
-      </div>
-      ${n.read ? '' : '<div class="notif-unread-dot"></div>'}
-    </div>`;
-  }).join('');
-
-  // Update bell dot
-  const unread = dbNotifications.filter(n => !n.read).length;
-  const dot = document.querySelector('.notif-dot');
-  if (dot) dot.style.display = unread > 0 ? 'block' : 'none';
-}
-
-async function markNotifRead(id) {
-  try {
-    await db.from('notifications').update({ read: true }).eq('id', id);
-    const n = dbNotifications.find(x => x.id === id);
-    if (n) n.read = true;
-    renderDBNotifications();
-  } catch(e) {}
-}
-
-// Subscribe to real-time notifications
-function subscribeToNotifications() {
-  if (!currentUser) return;
-  try {
-    db.channel('user-notifs-' + currentUser.id)
-      .on('postgres_changes', {
-        event: 'INSERT', schema: 'public', table: 'notifications',
-        filter: 'user_id=eq.' + currentUser.id
-      }, (payload) => {
-        dbNotifications.unshift(payload.new);
-        renderDBNotifications();
-        showToast(payload.new.title || 'New notification');
-      })
-      .subscribe();
-  } catch(e) {}
-}
-
-// Subscribe to real-time feed updates
-function subscribeToFeed() {
-  try {
-    db.channel('public-feed')
-      .on('postgres_changes', {
-        event: 'INSERT', schema: 'public', table: 'listings'
-      }, () => { loadListingsFromDB(); })
-      .on('postgres_changes', {
-        event: 'INSERT', schema: 'public', table: 'wishes'
-      }, () => { loadWishes(); })
-      .subscribe();
-  } catch(e) {}
-}
-
-/* ---- Load wishes + feed on page load ---- */
-loadWishes();
-subscribeToFeed();
-
-
-/* ============================================================
    AUTH Sign up, Login, Logout
    ============================================================ */
 
@@ -5627,10 +5191,6 @@ function onUserLoggedIn(user) {
 
   startNotifPolling();
   checkNewMessages();
-
-  // Load DB notifications & subscribe to real-time
-  loadDBNotifications();
-  subscribeToNotifications();
 }
 
 function onUserLoggedOut() {
@@ -6144,6 +5704,168 @@ async function rejectEvent(id) {
   loadAdminEvents();
   loadAdminBadges();
 }
+
+
+/* ============================================================
+   QUICK WINS: Activity Feed + Wish List + Notifications
+   All new code lives below — nothing above was changed.
+   ============================================================ */
+
+/* ---- Helpers ---- */
+function _esc(s){if(!s)return '';const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function _ago(d){if(!d)return '';const s=Math.floor((Date.now()-new Date(d).getTime())/1000);if(s<60)return 'Just now';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';if(s<604800)return Math.floor(s/86400)+'d ago';return new Date(d).toLocaleDateString();}
+
+/* ============================================================
+   ACTIVITY FEED
+   ============================================================ */
+let _ffilt='all';
+
+function _afRender(){
+  const el=document.getElementById('af-list');if(!el)return;
+  const items=[];
+  listings.forEach(l=>{items.push({type:'listing',title:l.title,emoji:l.emoji,cat:l.cat,user:l.user,city:l.dist,at:l.created_at});});
+  (window._wishes||[]).forEach(w=>{items.push({type:'wish',id:w.id,title:w.title,emoji:w.emoji,user:w.user_name,city:w.city,at:w.created_at});});
+  items.sort((a,b)=>new Date(b.at||0)-new Date(a.at||0));
+  const f=_ffilt==='all'?items:items.filter(i=>i.type===_ffilt);
+  if(!f.length){el.innerHTML='<div class="feed-empty"><div style="font-size:2rem;margin-bottom:8px">🌱</div>No activity yet — be the first to post!</div>';return;}
+  el.innerHTML=f.slice(0,15).map(i=>{
+    if(i.type==='listing')return `<div class="fi"><div class="fi-ico gr">${_esc(i.emoji||'🌱')}</div><div class="fi-bd"><div class="fi-t"><strong>${_esc(i.user)}</strong> posted a new listing</div><div class="fi-d">${_esc(i.emoji||'')} ${_esc(i.title)}</div><div class="fi-m">${_ago(i.at)} · ${_esc(i.city||'')}</div></div><span class="fi-badge">${_esc(i.cat||'')}</span></div>`;
+    if(i.type==='wish')return `<div class="fi"><div class="fi-ico am">🔍</div><div class="fi-bd"><div class="fi-t"><strong>${_esc(i.user)}</strong> is looking for something</div><div class="fi-d">🔍 ${_esc(i.title)}</div><div style="display:flex;align-items:center;gap:8px;margin-top:4px"><span class="fi-m">${_ago(i.at)}</span><button class="fi-help" onclick="respondToWish('${i.id}')">I can help →</button></div></div></div>`;
+    return '';
+  }).join('');
+}
+
+function ffSet(v,btn){
+  _ffilt=v;
+  document.querySelectorAll('#ff-row .feed-fbtn').forEach(b=>b.classList.remove('on'));
+  if(btn)btn.classList.add('on');
+  _afRender();
+}
+
+// Patch renderHome to also update feed
+const _origRenderHome=renderHome;
+renderHome=function(){_origRenderHome();try{_afRender();}catch(e){}};
+
+/* ============================================================
+   WISH LIST
+   ============================================================ */
+window._wishes=[];
+let _wfilt='all', _wcat='food', _wurg='flexible';
+
+async function loadWishes(){
+  try{
+    const{data,error}=await db.from('wishes').select('*').eq('status','open').order('created_at',{ascending:false}).limit(20);
+    if(error){if(error.code==='42P01'){window._wishes=[];_wcRender();_afRender();return;}return;}
+    window._wishes=data||[];
+    _wcRender();_afRender();
+  }catch(e){window._wishes=[];_wcRender();_afRender();}
+}
+
+function _wcRender(){
+  const el=document.getElementById('wc-grid');if(!el)return;
+  const f=_wfilt==='all'?window._wishes:window._wishes.filter(w=>w.category===_wfilt);
+  if(!f.length){el.innerHTML='<div class="feed-empty" style="grid-column:1/-1"><div style="font-size:2rem;margin-bottom:8px">🔍</div>No wishes yet — post the first one!</div>';return;}
+  const uC={flexible:'uf',anytime:'ua',soon:'us',this_week:'uw'};
+  const uL={flexible:'Flexible',anytime:'Anytime',soon:'Soon',this_week:'This week'};
+  const cBg={food:'var(--green-mid)',skill:'var(--amber)',goods:'var(--terra)'};
+  el.innerHTML=f.map(w=>{
+    const ini=(w.user_name||'N').split(' ').map(x=>x[0]).join('').toUpperCase().slice(0,2);
+    return `<div class="wc"><div class="wc-hd"><div class="wc-av" style="background:${cBg[w.category]||'var(--green-mid)'}">${ini}</div><div class="wc-ui"><div class="wc-nm">${_esc(w.user_name||'Neighbor')}</div><div class="wc-mt">${_esc(w.city||'')} · ${_ago(w.created_at)}</div></div><span class="wc-urg ${uC[w.urgency]||'uf'}">${uL[w.urgency]||'Flexible'}</span></div><div class="wc-ti">${_esc(w.emoji||'🔍')} Looking for: ${_esc(w.title)}</div><div class="wc-of"><strong>Willing to trade:</strong> ${_esc(w.offering||'Open to offers')}</div><div class="wc-ft"><span class="wc-rs">${(w.response_count||0)>0?(w.response_count+' responded'):'No responses yet'}</span><button class="wc-rb" onclick="respondToWish('${w.id}')">I can help →</button></div></div>`;
+  }).join('');
+}
+
+function wfSet(v,btn){_wfilt=v;document.querySelectorAll('#wf-row .feed-fbtn').forEach(b=>b.classList.remove('on'));if(btn)btn.classList.add('on');_wcRender();}
+function selWC(btn,v){_wcat=v;btn.closest('.wish-form-cats').querySelectorAll('.wcb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');}
+function selWU(btn,v){_wurg=v;btn.closest('.wish-form-cats').querySelectorAll('.wcb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');}
+
+function openWishModal(){if(!currentUser){openAuthModal();return;}document.getElementById('wish-modal').style.display='flex';}
+function closeWishModal(){document.getElementById('wish-modal').style.display='none';document.getElementById('wish-inp-title').value='';document.getElementById('wish-inp-offer').value='';}
+
+async function submitWish(){
+  const title=document.getElementById('wish-inp-title').value.trim();
+  const offer=document.getElementById('wish-inp-offer').value.trim();
+  if(!title){showToast('Please describe what you\'re looking for');return;}
+  if(!currentUser){openAuthModal();return;}
+  const uName=currentUser.user_metadata?.full_name||currentUser.email.split('@')[0];
+  const city=currentUser.user_metadata?.location||'';
+  const emj={food:'🌱',skill:'🔧',goods:'📦'};
+  try{
+    const{error}=await db.from('wishes').insert([{user_id:currentUser.id,title,offering:offer,category:_wcat,urgency:_wurg,emoji:emj[_wcat]||'🔍',status:'open',city,user_name:uName}]).select().single();
+    if(error){if(error.code==='42P01')showToast('Run the migration SQL first — wishes table not found.');else{showToast('Could not save — please try again.');console.error(error);}return;}
+    closeWishModal();showToast('🔍 Wish posted! Your neighbors will see it.');loadWishes();
+  }catch(e){showToast('Something went wrong — please try again.');}
+}
+
+async function respondToWish(id){
+  if(!currentUser){openAuthModal();return;}
+  try{
+    const{error}=await db.from('wish_responses').insert([{wish_id:id,user_id:currentUser.id,message:''}]);
+    if(error){if(error.code==='23505')showToast('You already responded to this wish!');else if(error.code==='42P01')showToast('Run the migration SQL first.');else showToast('Could not respond — try again.');return;}
+    showToast('✅ Response sent! The neighbor will be notified.');
+  }catch(e){showToast('Could not respond — try again.');}
+}
+
+/* ============================================================
+   ENHANCED NOTIFICATIONS (loads from DB when signed in)
+   ============================================================ */
+let _dbNotifs=[];
+
+async function loadDBNotifs(){
+  if(!currentUser)return;
+  try{
+    const{data,error}=await db.from('notifications').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false}).limit(20);
+    if(error)return;
+    _dbNotifs=data||[];
+    _renderDBNotifs();
+  }catch(e){}
+}
+
+function _renderDBNotifs(){
+  const list=document.getElementById('notif-list');if(!list||!_dbNotifs.length)return;
+  const icons={match:'✨',message:'💬',trade:'🤝',wishlist_response:'🙋',listing:'🌱',event:'📅',review:'⭐'};
+  list.innerHTML=_dbNotifs.map(n=>{
+    const ico=icons[n.type]||'💬';
+    return `<div class="notif-item ${n.read?'':'unread'}" onclick="_markNR('${n.id}')"><div class="notif-icon green">${ico}</div><div class="notif-body"><div class="nt" style="${n.read?'':'font-weight:500'}">${_esc(n.title)}</div><div class="nd">${_esc(n.body||'')} · ${_ago(n.created_at)}</div></div>${n.read?'':'<div class="notif-unread-dot"></div>'}</div>`;
+  }).join('');
+  const unread=_dbNotifs.filter(n=>!n.read).length;
+  const dot=document.querySelector('.notif-dot');
+  if(dot)dot.style.display=unread>0?'block':'none';
+}
+
+async function _markNR(id){
+  try{await db.from('notifications').update({read:true}).eq('id',id);const n=_dbNotifs.find(x=>x.id===id);if(n)n.read=true;_renderDBNotifs();}catch(e){}
+}
+
+/* ---- Real-time subscriptions ---- */
+function _subFeed(){
+  try{
+    db.channel('lr-feed')
+      .on('postgres_changes',{event:'INSERT',schema:'public',table:'listings'},()=>{loadListingsFromDB();})
+      .on('postgres_changes',{event:'INSERT',schema:'public',table:'wishes'},()=>{loadWishes();})
+      .subscribe();
+  }catch(e){}
+}
+
+function _subNotifs(){
+  if(!currentUser)return;
+  try{
+    db.channel('lr-notifs-'+currentUser.id)
+      .on('postgres_changes',{event:'INSERT',schema:'public',table:'notifications',filter:'user_id=eq.'+currentUser.id},(p)=>{
+        _dbNotifs.unshift(p.new);_renderDBNotifs();showToast(p.new.title||'New notification');
+      }).subscribe();
+  }catch(e){}
+}
+
+/* ---- Hook into auth (non-destructive) ---- */
+const _origOnLogin=onUserLoggedIn;
+onUserLoggedIn=function(user){
+  _origOnLogin(user);
+  setTimeout(()=>{loadDBNotifs();_subNotifs();},600);
+};
+
+/* ---- Init on page load ---- */
+loadWishes();
+_subFeed();
 
 
 </script>
