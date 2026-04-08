@@ -5798,11 +5798,26 @@ async function submitWish(){
 
 async function respondToWish(id){
   if(!currentUser){openAuthModal();return;}
+
+  // Find the wish data
+  const wish = (window._wishes||[]).find(w=>w.id===id);
+  if(!wish){showToast('Could not find this wish.');return;}
+
+  // Don't let users respond to their own wish
+  if(wish.user_id===currentUser.id){showToast("That's your own wish!");return;}
+
+  // Record the response in the database
   try{
     const{error}=await db.from('wish_responses').insert([{wish_id:id,user_id:currentUser.id,message:''}]);
-    if(error){if(error.code==='23505')showToast('You already responded to this wish!');else if(error.code==='42P01')showToast('Run the migration SQL first.');else showToast('Could not respond — try again.');return;}
-    showToast('✅ Response sent! The neighbor will be notified.');
-  }catch(e){showToast('Could not respond — try again.');}
+    if(error&&error.code!=='23505'){
+      if(error.code==='42P01')showToast('Run the migration SQL first.');
+      else showToast('Could not respond — try again.');
+      return;
+    }
+  }catch(e){}
+
+  // Open a message thread with the wish poster
+  openMessageModal(wish.user_id, wish.user_name||'Neighbor', null, '🔍 Wish: '+wish.title);
 }
 
 /* ============================================================
